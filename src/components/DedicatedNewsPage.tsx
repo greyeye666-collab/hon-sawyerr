@@ -195,8 +195,28 @@ export const DedicatedNewsPage: React.FC<DedicatedNewsPageProps> = ({
             >
               <div className="img-zoom-container" style={{ height: '220px', position: 'relative' }}>
                 <img src={article.thumbnail} alt={article.title} />
-                <div style={{ position: 'absolute', top: '1rem', left: '1rem' }}>
-                  <span className="pill-category" style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'linear-gradient(to top, rgba(17, 20, 18, 0.45) 0%, transparent 60%)',
+                  }}
+                />
+                <div style={{ position: 'absolute', bottom: '1rem', left: '1.25rem' }}>
+                  <span
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.94)',
+                      backdropFilter: 'blur(8px)',
+                      color: 'var(--rich-black)',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.06em',
+                      textTransform: 'uppercase',
+                      padding: '0.28rem 0.75rem',
+                      borderRadius: '999px',
+                      border: '1px solid rgba(17, 20, 18, 0.08)',
+                    }}
+                  >
                     {article.category}
                   </span>
                 </div>

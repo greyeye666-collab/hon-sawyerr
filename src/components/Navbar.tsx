@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } from 'motion/react';
 import type { PageView } from '../types';
 import { MP_DETAILS } from '../data/mockData';
 import { MenuIcon, CloseIcon } from './Icons';
@@ -9,25 +10,48 @@ interface NavbarProps {
   onScrollToSection?: (sectionId: string) => void;
 }
 
+function rubberband(overshoot: number, dimension = 300, constant = 0.55): number {
+  return (overshoot * dimension * constant) / (dimension + constant * Math.abs(overshoot));
+}
+
 export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onScrollToSection }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  const drawerX = useMotionValue(0);
+  const samplesRef = useRef<Array<{ x: number; t: number }>>([]);
+  const startXRef = useRef(0);
+  const startOffsetRef = useRef(0);
+  const draggingRef = useRef(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      // Trigger scrolled state early (scrollY > 15) so as soon as user scrolls down, the distinctive look is active
-      setIsScrolled(window.scrollY > 15);
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 18);
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    drawerX.set(0);
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setIsMobileMenuOpen(false);
+    };
+    document.body.style.overflow = 'hidden';
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [isMobileMenuOpen, drawerX]);
 
   const navItems: { label: string; page: PageView; sectionId: string }[] = [
     { label: 'Home', page: 'home', sectionId: 'hero' },
     { label: 'About', page: 'about', sectionId: 'about' },
     { label: 'Impact & Focus Areas', page: 'impact', sectionId: 'impact' },
     { label: 'Updates & News', page: 'news', sectionId: 'news' },
+    { label: 'Blog', page: 'blog', sectionId: 'blog' },
     { label: 'Gallery', page: 'gallery', sectionId: 'gallery' },
     { label: 'Contact', page: 'contact', sectionId: 'contact' },
   ];
@@ -42,33 +66,80 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onScrol
     }
   };
 
+  const handleDrawerPointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (prefersReducedMotion) return;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    draggingRef.current = true;
+    startXRef.current = e.clientX;
+    startOffsetRef.current = drawerX.get();
+    samplesRef.current = [{ x: e.clientX, t: performance.now() }];
+  };
+
+  const handleDrawerPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (!draggingRef.current) return;
+    const rawDelta = e.clientX - startXRef.current + startOffsetRef.current;
+    const nextX = rawDelta < 0 ? -rubberband(Math.abs(rawDelta)) : rawDelta;
+    drawerX.set(nextX);
+
+    samplesRef.current.push({ x: e.clientX, t: performance.now() });
+    if (samplesRef.current.length > 5) samplesRef.current.shift();
+  };
+
+  const handleDrawerPointerRelease = () => {
+    if (!draggingRef.current) return;
+    draggingRef.current = false;
+
+    const samples = samplesRef.current;
+    let velocity = 0;
+    if (samples.length >= 2) {
+      const first = samples[0];
+      const last = samples[samples.length - 1];
+      const dt = (last.t - first.t) / 1000;
+      if (dt > 0.005) velocity = (last.x - first.x) / dt;
+    }
+
+    const currentX = drawerX.get();
+    if (currentX > 110 || velocity > 400) {
+      animate(drawerX, 420, {
+        type: 'spring',
+        bounce: 0,
+        duration: 0.3,
+        velocity,
+        onComplete: () => setIsMobileMenuOpen(false),
+      });
+    } else {
+      animate(drawerX, 0, {
+        type: 'spring',
+        bounce: 0,
+        duration: 0.34,
+        velocity,
+      });
+    }
+  };
+
   return (
     <header
+      className="apple-frosted-nav"
       style={{
         position: 'sticky',
         top: 0,
         zIndex: 1000,
         width: '100%',
-        transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
-        backgroundColor: isScrolled ? 'rgba(2, 40, 24, 0.98)' : 'rgba(3, 50, 30, 0.98)',
-        backgroundImage: isScrolled
-          ? 'linear-gradient(135deg, rgba(2, 36, 21, 0.98) 0%, rgba(0, 68, 38, 0.98) 50%, rgba(2, 36, 21, 0.98) 100%)'
-          : 'linear-gradient(135deg, rgba(3, 46, 28, 0.98) 0%, rgba(0, 78, 44, 0.98) 50%, rgba(3, 46, 28, 0.98) 100%)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        borderBottom: isScrolled
-          ? '2.5px solid #009E52'
-          : '1.5px solid rgba(0, 158, 82, 0.45)',
+        transition: 'background-color 240ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1)',
+        backgroundColor: isScrolled ? 'rgba(3, 34, 21, 0.82)' : 'rgba(4, 42, 26, 0.9)',
+        backdropFilter: 'blur(24px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+        borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
         boxShadow: isScrolled
-          ? '0 12px 35px rgba(0, 0, 0, 0.45), 0 2px 10px rgba(0, 158, 82, 0.35)'
-          : '0 4px 20px rgba(0, 0, 0, 0.25)',
+          ? '0 10px 30px rgba(0, 0, 0, 0.24)'
+          : '0 2px 12px rgba(0, 0, 0, 0.12)',
       }}
     >
-      {/* Top NDC Tri-Color Ribbon */}
-      <div style={{ height: '3.5px', width: '100%', display: 'flex' }}>
+      {/* Precision NDC Tri-Color Hairline */}
+      <div style={{ height: '2.5px', width: '100%', display: 'flex' }}>
         <div style={{ flex: 1, backgroundColor: '#009E52' }} />
-        <div style={{ width: '16px', backgroundColor: '#F59E0B' }} />
-        <div style={{ flex: 1, backgroundColor: '#EE2B42' }} />
+        <div style={{ width: '14px', backgroundColor: '#C9963B' }} />
+        <div style={{ flex: 1, backgroundColor: '#D61F33' }} />
       </div>
 
       <div
@@ -77,9 +148,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onScrol
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          paddingTop: isScrolled ? '0.7rem' : '0.9rem',
-          paddingBottom: isScrolled ? '0.7rem' : '0.9rem',
-          transition: 'padding 0.3s ease',
+          paddingTop: isScrolled ? '0.62rem' : '0.82rem',
+          paddingBottom: isScrolled ? '0.62rem' : '0.82rem',
+          transition: 'padding 240ms cubic-bezier(0.22, 1, 0.36, 1)',
         }}
       >
         {/* Brand / Name & Monogram */}
@@ -96,26 +167,34 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onScrol
             padding: 0,
             display: 'flex',
             alignItems: 'center',
-            gap: '0.85rem',
+            gap: '0.8rem',
+            transition: 'transform 100ms ease-out',
+          }}
+          onPointerDown={(e) => {
+            e.currentTarget.style.transform = 'scale(0.975)';
+          }}
+          onPointerUp={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
+          onPointerLeave={(e) => {
+            e.currentTarget.style.transform = 'scale(1)';
           }}
           aria-label="Hon. Queenstar Sawyerr - Home"
         >
-          {/* Monogram Seal */}
           <div
             style={{
-              width: '42px',
-              height: '42px',
+              width: '40px',
+              height: '40px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle at 35% 35%, #009E52 0%, #004D2C 100%)',
-              border: '2px solid #F59E0B',
+              background: 'linear-gradient(155deg, #008A4B 0%, #004D2C 100%)',
+              border: '1.5px solid rgba(243, 229, 194, 0.72)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               color: '#FFFFFF',
-              fontWeight: 800,
+              fontWeight: 700,
               fontFamily: 'var(--font-serif)',
-              fontSize: '1.1rem',
-              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.35), 0 0 10px rgba(245, 158, 11, 0.4)',
+              fontSize: '1.02rem',
               flexShrink: 0,
             }}
           >
@@ -123,31 +202,28 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onScrol
           </div>
 
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <span
                 style={{
                   color: '#FFFFFF',
                   fontFamily: 'var(--font-serif)',
                   fontWeight: 700,
-                  fontSize: '1.08rem',
-                  letterSpacing: '0.015em',
-                  textShadow: '0 1px 3px rgba(0, 0, 0, 0.4)',
+                  fontSize: '1.04rem',
+                  letterSpacing: '-0.01em',
                 }}
               >
                 Hon. Queenstar Sawyerr
               </span>
               <span
                 style={{
-                  backgroundColor: '#EE2B42',
+                  backgroundColor: 'rgba(214, 31, 51, 0.9)',
                   color: '#FFFFFF',
-                  border: '1px solid rgba(255, 255, 255, 0.3)',
-                  fontSize: '0.65rem',
-                  fontWeight: 800,
-                  padding: '0.12rem 0.5rem',
+                  fontSize: '0.62rem',
+                  fontWeight: 700,
+                  padding: '0.12rem 0.48rem',
                   borderRadius: '999px',
                   letterSpacing: '0.06em',
                   textTransform: 'uppercase',
-                  boxShadow: '0 2px 8px rgba(238, 43, 66, 0.5)',
                 }}
               >
                 NDC
@@ -155,8 +231,8 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onScrol
             </div>
             <div
               style={{
-                color: '#FDE68A',
-                fontSize: '0.72rem',
+                color: 'rgba(243, 229, 194, 0.88)',
+                fontSize: '0.7rem',
                 fontWeight: 600,
                 letterSpacing: '0.06em',
                 textTransform: 'uppercase',
@@ -167,9 +243,9 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onScrol
           </div>
         </button>
 
-        {/* Desktop Nav Links */}
-        <nav style={{ display: 'none' }} className="desktop-nav">
-          <ul style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', listStyle: 'none', margin: 0, padding: 0 }}>
+        {/* Desktop Nav Links with Critically Damped Spring Pill */}
+        <nav style={{ display: 'none' }} className="desktop-nav" aria-label="Primary Navigation">
+          <ul style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', listStyle: 'none', margin: 0, padding: 0 }}>
             {navItems.map((item) => {
               const isActive = currentPage === item.page;
               return (
@@ -177,52 +253,47 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onScrol
                   <button
                     onClick={() => handleNavClick(item)}
                     style={{
-                      background: isActive
-                        ? 'linear-gradient(135deg, rgba(0, 158, 82, 0.5) 0%, rgba(0, 122, 62, 0.65) 100%)'
-                        : 'transparent',
-                      border: isActive
-                        ? '1px solid rgba(16, 185, 129, 0.6)'
-                        : '1px solid transparent',
-                      borderRadius: '8px',
-                      color: isActive ? '#FFFFFF' : 'rgba(255, 255, 255, 0.92)',
-                      fontWeight: isActive ? 700 : 600,
-                      fontSize: '0.88rem',
+                      background: 'transparent',
+                      border: 'none',
+                      borderRadius: '999px',
+                      color: isActive ? '#FFFFFF' : 'rgba(255, 255, 255, 0.82)',
+                      fontWeight: isActive ? 600 : 500,
+                      fontSize: '0.86rem',
                       cursor: 'pointer',
-                      padding: '0.5rem 0.85rem',
+                      padding: '0.48rem 0.9rem',
                       position: 'relative',
-                      letterSpacing: '0.02em',
-                      transition: 'all 0.25s ease',
-                      boxShadow: isActive ? '0 4px 12px rgba(0, 158, 82, 0.35)' : 'none',
+                      letterSpacing: '-0.005em',
+                      transition: 'color 180ms ease, transform 100ms ease-out',
+                    }}
+                    onPointerDown={(e) => {
+                      e.currentTarget.style.transform = 'scale(0.96)';
+                    }}
+                    onPointerUp={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                    onPointerLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                      if (!isActive) e.currentTarget.style.color = 'rgba(255, 255, 255, 0.82)';
                     }}
                     onMouseEnter={(e) => {
-                      if (!isActive) {
-                        e.currentTarget.style.color = '#FBBF24';
-                        e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
-                        e.currentTarget.style.borderColor = 'rgba(245, 158, 11, 0.35)';
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (!isActive) {
-                        e.currentTarget.style.color = 'rgba(255, 255, 255, 0.92)';
-                        e.currentTarget.style.backgroundColor = 'transparent';
-                        e.currentTarget.style.borderColor = 'transparent';
-                      }
+                      if (!isActive) e.currentTarget.style.color = '#FFFFFF';
                     }}
                   >
-                    {item.label}
                     {isActive && (
-                      <span
+                      <motion.span
+                        layoutId="navbar-active-pill"
+                        transition={{ type: 'spring', bounce: 0, duration: 0.35 }}
                         style={{
                           position: 'absolute',
-                          bottom: '-1px',
-                          left: '12%',
-                          right: '12%',
-                          height: '2.5px',
-                          borderRadius: '2px',
-                          background: 'linear-gradient(90deg, #009E52 0%, #F59E0B 50%, #EE2B42 100%)',
+                          inset: 0,
+                          borderRadius: '999px',
+                          backgroundColor: 'rgba(255, 255, 255, 0.14)',
+                          border: '1px solid rgba(255, 255, 255, 0.22)',
+                          zIndex: -1,
                         }}
                       />
                     )}
+                    {item.label}
                   </button>
                 </li>
               );
@@ -231,145 +302,187 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onScrol
         </nav>
 
         {/* Right Action CTA */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <button
             onClick={() => {
               onNavigate('contact');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
+            className="btn-primary-red"
             style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.5rem',
-              background: 'linear-gradient(135deg, #EE2B42 0%, #C51426 100%)',
-              color: '#FFFFFF',
-              fontWeight: 700,
-              fontSize: '0.85rem',
-              letterSpacing: '0.02em',
-              padding: '0.62rem 1.35rem',
-              borderRadius: '999px',
-              border: '1.5px solid rgba(255, 255, 255, 0.3)',
-              boxShadow: '0 4px 16px rgba(238, 43, 66, 0.45)',
-              cursor: 'pointer',
-              transition: 'all 0.25s ease',
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, #FF4757 0%, #EE2B42 100%)';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 8px 24px rgba(238, 43, 66, 0.6)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = 'linear-gradient(135deg, #EE2B42 0%, #C51426 100%)';
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 16px rgba(238, 43, 66, 0.45)';
+              padding: '0.56rem 1.25rem',
+              minHeight: '40px',
+              fontSize: '0.84rem',
+              boxShadow: '0 4px 14px rgba(214, 31, 51, 0.3)',
             }}
           >
             Get Involved
           </button>
 
-          {/* Mobile Hamburger Toggle */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             style={{
-              background: 'rgba(0, 158, 82, 0.35)',
-              border: '1.5px solid rgba(16, 185, 129, 0.5)',
-              borderRadius: '8px',
+              background: 'rgba(255, 255, 255, 0.12)',
+              border: '1px solid rgba(255, 255, 255, 0.22)',
+              borderRadius: '999px',
               color: '#FFFFFF',
               cursor: 'pointer',
-              padding: '0.5rem',
+              width: '44px',
+              height: '44px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
+              transition: 'transform 100ms ease-out',
             }}
             className="mobile-menu-btn"
-            aria-label="Toggle Navigation Menu"
+            aria-label={isMobileMenuOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
+            aria-expanded={isMobileMenuOpen}
           >
-            {isMobileMenuOpen ? <CloseIcon size={22} /> : <MenuIcon size={22} />}
+            {isMobileMenuOpen ? <CloseIcon size={20} /> : <MenuIcon size={20} />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Drawer Menu */}
-      {isMobileMenuOpen && (
-        <div
-          style={{
-            backgroundColor: '#022E1A',
-            backgroundImage: 'linear-gradient(180deg, #022E1A 0%, #011E11 100%)',
-            borderTop: '2px solid #009E52',
-            padding: '1.5rem',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '0.85rem',
-            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.5)',
-          }}
-        >
-          {navItems.map((item) => (
-            <button
-              key={item.label}
-              onClick={() => handleNavClick(item)}
+      {/* Apple 1:1 Pointer-Draggable Mobile Sheet Drawer */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: prefersReducedMotion ? 0.15 : 0.22 }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setIsMobileMenuOpen(false);
+            }}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 1100,
+              backgroundColor: 'rgba(5, 14, 9, 0.56)',
+              backdropFilter: 'blur(6px)',
+              display: 'flex',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <motion.div
+              className="apple-frosted-drawer"
+              role="dialog"
+              aria-modal="true"
+              aria-label="Navigation Menu"
               style={{
-                background: currentPage === item.page ? 'rgba(0, 158, 82, 0.35)' : 'none',
-                border: currentPage === item.page ? '1px solid rgba(16, 185, 129, 0.5)' : 'none',
-                borderRadius: '8px',
-                textAlign: 'left',
-                color: currentPage === item.page ? '#FBBF24' : '#FFFFFF',
-                fontSize: '1rem',
-                fontWeight: 600,
-                padding: '0.65rem 0.85rem',
-                cursor: 'pointer',
+                x: prefersReducedMotion ? undefined : drawerX,
+                width: 'min(100%, 360px)',
+                height: '100dvh',
+                backgroundColor: 'rgba(4, 36, 22, 0.92)',
+                backdropFilter: 'blur(28px) saturate(180%)',
+                WebkitBackdropFilter: 'blur(28px) saturate(180%)',
+                borderLeft: '1px solid rgba(255, 255, 255, 0.16)',
+                padding: '1.5rem',
                 display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                transition: 'all 0.2s ease',
+                flexDirection: 'column',
+                gap: '0.65rem',
+                boxShadow: '-16px 0 48px rgba(0, 0, 0, 0.45)',
+                touchAction: 'pan-y',
               }}
+              initial={prefersReducedMotion ? { opacity: 0 } : { x: '100%' }}
+              animate={prefersReducedMotion ? { opacity: 1 } : { x: 0 }}
+              exit={prefersReducedMotion ? { opacity: 0 } : { x: '100%' }}
+              transition={{ type: 'spring', bounce: 0, duration: 0.34 }}
+              onPointerDown={handleDrawerPointerDown}
+              onPointerMove={handleDrawerPointerMove}
+              onPointerUp={handleDrawerPointerRelease}
+              onPointerCancel={handleDrawerPointerRelease}
             >
-              <span>{item.label}</span>
-              {currentPage === item.page && (
-                <span
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingBottom: '1rem',
+                  marginBottom: '0.5rem',
+                  borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+                }}
+              >
+                <span style={{ color: '#FFFFFF', fontFamily: 'var(--font-serif)', fontWeight: 700, fontSize: '1.05rem' }}>
+                  Navigation
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  aria-label="Close Navigation Menu"
                   style={{
-                    width: '8px',
-                    height: '8px',
+                    width: '40px',
+                    height: '40px',
                     borderRadius: '50%',
-                    backgroundColor: '#F59E0B',
-                    boxShadow: '0 0 8px #F59E0B',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    color: '#FFFFFF',
+                    display: 'grid',
+                    placeItems: 'center',
+                    cursor: 'pointer',
                   }}
-                />
-              )}
-            </button>
-          ))}
+                >
+                  <CloseIcon size={18} />
+                </button>
+              </div>
 
-          <div style={{ marginTop: '0.75rem', display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <button
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                onNavigate('contact');
-              }}
-              style={{
-                background: 'linear-gradient(135deg, #EE2B42 0%, #C51426 100%)',
-                color: '#FFFFFF',
-                fontWeight: 700,
-                fontSize: '0.92rem',
-                padding: '0.85rem',
-                borderRadius: '999px',
-                border: '1.5px solid rgba(255, 255, 255, 0.25)',
-                cursor: 'pointer',
-                width: '100%',
-                boxShadow: '0 6px 20px rgba(238, 43, 66, 0.4)',
-              }}
-            >
-              Constituent Service Desk
-            </button>
-            <div style={{ textAlign: 'center', fontSize: '0.8rem', color: '#FDE68A', fontWeight: 500 }}>
-              Hotline: {MP_DETAILS.hotlinePhone}
-            </div>
-          </div>
-        </div>
-      )}
+              {navItems.map((item) => {
+                const isActive = currentPage === item.page;
+                return (
+                  <button
+                    key={item.label}
+                    onClick={() => handleNavClick(item)}
+                    style={{
+                      background: isActive ? 'rgba(0, 158, 82, 0.28)' : 'transparent',
+                      border: isActive ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid transparent',
+                      borderRadius: '12px',
+                      textAlign: 'left',
+                      color: isActive ? '#FFFFFF' : 'rgba(255, 255, 255, 0.85)',
+                      fontSize: '1rem',
+                      fontWeight: isActive ? 700 : 500,
+                      padding: '0.8rem 1rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      transition: 'transform 100ms ease-out, background-color 180ms ease',
+                    }}
+                  >
+                    <span>{item.label}</span>
+                    {isActive && (
+                      <span
+                        style={{
+                          width: '7px',
+                          height: '7px',
+                          borderRadius: '50%',
+                          backgroundColor: '#F3E5C2',
+                        }}
+                      />
+                    )}
+                  </button>
+                );
+              })}
 
-      {/* Responsive layout helper */}
+              <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '0.85rem', paddingTop: '1.25rem', borderTop: '1px solid rgba(255, 255, 255, 0.12)' }}>
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    onNavigate('contact');
+                  }}
+                  className="btn-primary-red"
+                  style={{ width: '100%' }}
+                >
+                  Constituent Service Desk
+                </button>
+                <div style={{ textAlign: 'center', fontSize: '0.8rem', color: 'rgba(243, 229, 194, 0.88)', fontWeight: 500 }}>
+                  Hotline: {MP_DETAILS.hotlinePhone}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <style>{`
         @media (min-width: 992px) {
           .desktop-nav {

@@ -230,33 +230,51 @@ export const DedicatedImpactPage: React.FC<DedicatedImpactPageProps> = ({
             >
               <div className="img-zoom-container" style={{ height: '240px', position: 'relative' }}>
                 <img src={project.image} alt={project.title} />
-                <div style={{ position: 'absolute', top: '1rem', left: '1rem' }}>
-                  <span className="pill-category" style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
-                    {project.category}
-                  </span>
-                </div>
                 <div
                   style={{
                     position: 'absolute',
-                    bottom: '1rem',
-                    right: '1rem',
-                    backgroundColor: 'rgba(17, 17, 17, 0.85)',
-                    color: '#C5A059',
-                    fontSize: '0.78rem',
-                    fontWeight: 700,
-                    padding: '0.3rem 0.75rem',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(197, 160, 89, 0.35)',
+                    inset: 0,
+                    background: 'linear-gradient(to top, rgba(17, 20, 18, 0.45) 0%, transparent 60%)',
                   }}
-                >
-                  {project.impactMetric}
+                />
+                <div style={{ position: 'absolute', bottom: '1rem', left: '1.25rem' }}>
+                  <span
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.94)',
+                      backdropFilter: 'blur(8px)',
+                      color: 'var(--rich-black)',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      letterSpacing: '0.06em',
+                      textTransform: 'uppercase',
+                      padding: '0.28rem 0.75rem',
+                      borderRadius: '999px',
+                      border: '1px solid rgba(17, 20, 18, 0.08)',
+                    }}
+                  >
+                    {project.category}
+                  </span>
                 </div>
               </div>
 
-              <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#77726C', fontSize: '0.82rem', marginBottom: '0.5rem' }}>
-                  <MapPinIcon size={14} className="text-[#006B3F]" />
-                  <span>{project.location}</span>
+              <div style={{ padding: '1.85rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#6A736E', fontSize: '0.8rem' }}>
+                    <MapPinIcon size={14} className="text-[#007A43]" />
+                    <span>{project.location}</span>
+                  </div>
+                  <span
+                    style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      color: 'var(--ndc-green-dark)',
+                      backgroundColor: 'rgba(0, 122, 67, 0.08)',
+                      padding: '0.2rem 0.6rem',
+                      borderRadius: '6px',
+                    }}
+                  >
+                    {project.impactMetric}
+                  </span>
                 </div>
 
                 <h3

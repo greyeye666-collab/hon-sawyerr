@@ -1,72 +1,93 @@
 import React, { useState } from 'react';
+import { motion } from 'motion/react';
 import type { Project, PageView } from '../types';
 import { PROJECTS } from '../data/mockData';
-import { ArrowRightIcon, MapPinIcon } from './Icons';
+import { ArrowRightIcon, MapPinIcon, CheckIcon, SparklesIcon } from './Icons';
 
 interface ImpactSectionProps {
   onSelectProject: (project: Project) => void;
   onNavigate: (page: PageView) => void;
 }
 
+const APPLE_SPRING = { type: 'spring' as const, bounce: 0, duration: 0.38 };
+
 export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, onNavigate }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
   const categories = ['All', 'Education', 'Healthcare', 'Women & Economy', 'Infrastructure', 'Youth & Skills'];
 
-  const filteredProjects = selectedCategory === 'All'
-    ? PROJECTS
-    : PROJECTS.filter((p) => p.category === selectedCategory);
+  const filteredProjects =
+    selectedCategory === 'All'
+      ? PROJECTS
+      : PROJECTS.filter((p) => p.category === selectedCategory);
+
+  const flagshipProject = filteredProjects[0];
+  const secondaryProjects = filteredProjects.slice(1);
 
   return (
     <section
       id="impact"
       style={{
         backgroundColor: 'var(--bg-warm-gray)',
-        paddingTop: '6.5rem',
-        paddingBottom: '6.5rem',
+        paddingTop: 'clamp(4.5rem, 7vw, 6.5rem)',
+        paddingBottom: 'clamp(4.5rem, 7vw, 6.5rem)',
         position: 'relative',
         borderTop: '1px solid var(--border-light)',
       }}
     >
       <div className="container-custom">
-        {/* Header Title */}
-        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+        {/* Section Masthead */}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={APPLE_SPRING}
+          style={{ textAlign: 'center', marginBottom: '3.25rem' }}
+        >
           <div className="section-tag" style={{ justifyContent: 'center' }}>
-            <span style={{ width: '12px', height: '2px', backgroundColor: '#006B3F' }} />
-            <span>Key Focus Areas &amp; Grassroots Progress</span>
-            <span style={{ width: '12px', height: '2px', backgroundColor: '#CE1126' }} />
+            <span style={{ width: '12px', height: '2px', backgroundColor: 'var(--ndc-green)' }} />
+            <span>Constituency Development Record</span>
+            <span style={{ width: '12px', height: '2px', backgroundColor: 'var(--ndc-red)' }} />
           </div>
 
           <h2
             style={{
-              fontSize: 'clamp(2rem, 3.8vw, 3rem)',
+              fontSize: 'clamp(2rem, 3.8vw, 3.2rem)',
               fontFamily: 'var(--font-serif)',
               marginTop: '0.5rem',
               color: 'var(--rich-black)',
+              letterSpacing: '-0.024em',
             }}
           >
-            Impact &amp; Focus Areas
+            Grassroots Impact &amp; Focus Areas
           </h2>
 
-          <p style={{ maxWidth: '650px', margin: '0.75rem auto 0', color: '#5C5751', fontSize: '1.05rem' }}>
-            Delivering tangible development across Agona East through education, economic independence, healthcare,
-            clean potable water, and youth empowerment.
+          <p style={{ maxWidth: '640px', margin: '0.85rem auto 0', color: '#525A55', fontSize: '1.04rem', lineHeight: 1.68 }}>
+            A decade of tangible, verified interventions transforming livelihoods, expanding educational access, and strengthening health systems across Agona East.
           </p>
 
-          <div className="ndc-accent-ribbon" style={{ margin: '1rem auto 0', maxWidth: '100px' }}>
+          <div className="ndc-accent-ribbon" style={{ margin: '1.25rem auto 0' }}>
             <div className="ribbon-green" />
             <div className="ribbon-gold" />
             <div className="ribbon-red" />
           </div>
 
-          {/* Category Filter Pills */}
+          {/* Apple Segmented Filter Strip */}
           <div
+            role="tablist"
+            aria-label="Filter Projects by Focus Area"
             style={{
-              display: 'flex',
+              display: 'inline-flex',
               justifyContent: 'center',
-              gap: '0.6rem',
+              gap: '0.35rem',
               flexWrap: 'wrap',
               marginTop: '2.5rem',
+              padding: '0.38rem',
+              backgroundColor: 'rgba(255, 255, 255, 0.92)',
+              backdropFilter: 'blur(12px)',
+              borderRadius: '999px',
+              border: '1px solid var(--border-light)',
+              boxShadow: 'var(--shadow-sm)',
             }}
           >
             {categories.map((cat) => {
@@ -74,166 +95,413 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
               return (
                 <button
                   key={cat}
+                  role="tab"
+                  aria-selected={isSelected}
                   onClick={() => setSelectedCategory(cat)}
                   style={{
+                    position: 'relative',
                     border: 'none',
                     cursor: 'pointer',
-                    padding: '0.6rem 1.35rem',
+                    padding: '0.55rem 1.25rem',
+                    minHeight: '40px',
                     borderRadius: '999px',
-                    fontSize: '0.85rem',
-                    fontWeight: 700,
-                    transition: 'var(--transition-smooth)',
-                    backgroundColor: isSelected ? 'var(--ndc-green)' : '#FFFFFF',
-                    color: isSelected ? '#FFFFFF' : '#4A4643',
-                    borderWidth: '1px',
-                    borderStyle: 'solid',
-                    borderColor: isSelected ? 'var(--ndc-green)' : 'var(--border-light)',
-                    boxShadow: isSelected ? '0 4px 14px rgba(0, 107, 63, 0.25)' : 'var(--shadow-sm)',
+                    fontSize: '0.84rem',
+                    fontWeight: isSelected ? 600 : 500,
+                    backgroundColor: 'transparent',
+                    color: isSelected ? '#FFFFFF' : '#434A46',
+                    zIndex: 1,
+                    transition: 'color 180ms ease, transform 100ms ease-out',
                   }}
+                  onPointerDown={(e) => (e.currentTarget.style.transform = 'scale(0.96)')}
+                  onPointerUp={(e) => (e.currentTarget.style.transform = 'scale(1)')}
+                  onPointerLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
                 >
+                  {isSelected && (
+                    <motion.span
+                      layoutId="impact-category-pill"
+                      transition={{ type: 'spring', bounce: 0, duration: 0.34 }}
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        borderRadius: '999px',
+                        backgroundColor: 'var(--ndc-green)',
+                        boxShadow: '0 3px 12px rgba(0, 122, 67, 0.28)',
+                        zIndex: -1,
+                      }}
+                    />
+                  )}
                   {cat}
                 </button>
               );
             })}
           </div>
-        </div>
+        </motion.div>
 
-        {/* 3 Column Refined Card Grid */}
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-            gap: '2.25rem',
-          }}
-        >
-          {filteredProjects.map((project) => (
-            <div
-              key={project.id}
-              className="luxury-card"
-              style={{
-                cursor: 'pointer',
-                backgroundColor: '#FFFFFF',
-              }}
-              onClick={() => onSelectProject(project)}
-            >
-              {/* Soft Image & Category Pill */}
-              <div className="img-zoom-container" style={{ height: '220px', position: 'relative' }}>
-                <img src={project.image} alt={project.title} />
-
-                {/* Floating Tag in Green or Red */}
-                <div style={{ position: 'absolute', top: '1rem', left: '1rem' }}>
-                  <span
-                    className={
-                      project.category === 'Education'
-                        ? 'pill-category'
-                        : project.category === 'Women & Economy'
-                        ? 'pill-red'
-                        : 'pill-category'
-                    }
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(8px)' }}
-                  >
-                    {project.category}
-                  </span>
+        {/* Flagship Feature Spread (Asymmetric Editorial Layout) */}
+        {flagshipProject && (
+          <motion.div
+            layout
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={APPLE_SPRING}
+            style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '24px',
+              border: '1px solid rgba(17, 20, 18, 0.09)',
+              overflow: 'hidden',
+              boxShadow: 'var(--shadow-md)',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+              marginBottom: '3rem',
+            }}
+          >
+            {/* Left Photographic Plate */}
+            <div style={{ position: 'relative', minHeight: '380px', overflow: 'hidden' }}>
+              <img
+                src={flagshipProject.image}
+                alt={flagshipProject.title}
+                loading="lazy"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  display: 'block',
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(to top, rgba(15, 24, 19, 0.75) 0%, transparent 60%)',
+                }}
+              />
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: '1.25rem',
+                  left: '1.5rem',
+                  right: '1.5rem',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: '0.75rem',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#F3E5C2', fontSize: '0.82rem' }}>
+                  <MapPinIcon size={14} className="text-[#C9963B]" />
+                  <span>{flagshipProject.location}</span>
                 </div>
-
-                {/* Metric Badge */}
                 <div
                   style={{
-                    position: 'absolute',
-                    bottom: '1rem',
-                    right: '1rem',
-                    backgroundColor: 'rgba(17, 17, 17, 0.9)',
-                    backdropFilter: 'blur(8px)',
-                    color: '#E7D5B0',
-                    fontSize: '0.75rem',
+                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                    color: 'var(--ndc-green-dark)',
+                    fontSize: '0.74rem',
                     fontWeight: 700,
-                    padding: '0.35rem 0.8rem',
-                    borderRadius: '8px',
-                    border: '1px solid rgba(197, 160, 89, 0.35)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    padding: '0.3rem 0.8rem',
+                    borderRadius: '999px',
                   }}
                 >
-                  {project.impactMetric}
-                </div>
-              </div>
-
-              {/* Card Body */}
-              <div style={{ padding: '1.85rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.4rem',
-                    color: '#7A7570',
-                    fontSize: '0.8rem',
-                    marginBottom: '0.6rem',
-                  }}
-                >
-                  <MapPinIcon size={14} className="text-[#006B3F]" />
-                  <span>{project.location}</span>
-                </div>
-
-                <h3
-                  style={{
-                    fontSize: '1.25rem',
-                    fontFamily: 'var(--font-serif)',
-                    fontWeight: 700,
-                    marginBottom: '0.75rem',
-                    color: 'var(--rich-black)',
-                    lineHeight: 1.35,
-                  }}
-                >
-                  {project.title}
-                </h3>
-
-                <p
-                  style={{
-                    fontSize: '0.92rem',
-                    color: '#55504A',
-                    lineHeight: 1.65,
-                    marginBottom: '1.5rem',
-                    flex: 1,
-                  }}
-                >
-                  {project.shortDescription}
-                </p>
-
-                {/* Learn More Action Button */}
-                <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '1rem' }}>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onSelectProject(project);
-                    }}
-                    style={{
-                      background: 'none',
-                      border: 'none',
-                      padding: 0,
-                      color: 'var(--ndc-green)',
-                      fontWeight: 700,
-                      fontSize: '0.92rem',
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '0.5rem',
-                      cursor: 'pointer',
-                      transition: 'gap 0.2s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = '#004D2C';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = 'var(--ndc-green)';
-                    }}
-                  >
-                    <span>View Project Details</span>
-                    <ArrowRightIcon size={16} />
-                  </button>
+                  {flagshipProject.completionYear}
                 </div>
               </div>
             </div>
-          ))}
-        </div>
 
-        {/* View All Dedicated Impact Page CTA */}
+            {/* Right Editorial Dossier */}
+            <div style={{ padding: 'clamp(2rem, 4vw, 3rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.85rem' }}>
+                <span
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.35rem',
+                    color: 'var(--ndc-green)',
+                    fontSize: '0.76rem',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.1em',
+                  }}
+                >
+                  <SparklesIcon size={13} />
+                  <span>Flagship Initiative • {flagshipProject.category}</span>
+                </span>
+              </div>
+
+              <h3
+                style={{
+                  fontSize: 'clamp(1.5rem, 2.5vw, 2.1rem)',
+                  fontFamily: 'var(--font-serif)',
+                  fontWeight: 700,
+                  color: 'var(--rich-black)',
+                  lineHeight: 1.25,
+                  marginBottom: '1rem',
+                  letterSpacing: '-0.02em',
+                }}
+              >
+                {flagshipProject.title}
+              </h3>
+
+              <p style={{ fontSize: '0.98rem', color: '#4E5752', lineHeight: 1.68, marginBottom: '1.5rem' }}>
+                {flagshipProject.shortDescription}
+              </p>
+
+              {/* Key Verified Milestones */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', marginBottom: '1.75rem' }}>
+                {flagshipProject.keyHighlights.slice(0, 3).map((item, idx) => (
+                  <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.65rem' }}>
+                    <div
+                      style={{
+                        width: '18px',
+                        height: '18px',
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(0, 122, 67, 0.12)',
+                        color: 'var(--ndc-green)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        marginTop: '2px',
+                      }}
+                    >
+                      <CheckIcon size={11} />
+                    </div>
+                    <span style={{ fontSize: '0.88rem', color: '#3A423D', lineHeight: 1.5 }}>
+                      {item}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Quantitative Impact Seal & CTA */}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  paddingTop: '1.25rem',
+                  borderTop: '1px solid var(--border-light)',
+                  flexWrap: 'wrap',
+                  gap: '1rem',
+                }}
+              >
+                <div
+                  style={{
+                    backgroundColor: 'rgba(0, 122, 67, 0.08)',
+                    border: '1px solid rgba(0, 122, 67, 0.2)',
+                    padding: '0.45rem 1rem',
+                    borderRadius: '8px',
+                  }}
+                >
+                  <span style={{ fontSize: '0.72rem', textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--muted-gray)', display: 'block' }}>
+                    Verified Reach
+                  </span>
+                  <span style={{ fontSize: '0.94rem', fontWeight: 700, color: 'var(--ndc-green-dark)' }}>
+                    {flagshipProject.impactMetric}
+                  </span>
+                </div>
+
+                <button
+                  onClick={() => onSelectProject(flagshipProject)}
+                  className="btn-primary-green"
+                  style={{ padding: '0.75rem 1.6rem', fontSize: '0.88rem' }}
+                >
+                  <span>Examine Full Dossier</span>
+                  <ArrowRightIcon size={15} />
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+
+        {/* Secondary Initiatives: Editorial Gazette Index Grid */}
+        {secondaryProjects.length > 0 && (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+              gap: '2.25rem',
+            }}
+          >
+            {secondaryProjects.map((project, index) => (
+              <motion.article
+                layout
+                key={project.id}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={APPLE_SPRING}
+                onClick={() => onSelectProject(project)}
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  borderRadius: '20px',
+                  border: '1px solid rgba(17, 20, 18, 0.08)',
+                  overflow: 'hidden',
+                  boxShadow: 'var(--shadow-sm)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  cursor: 'pointer',
+                  transition: 'transform 200ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 200ms cubic-bezier(0.22, 1, 0.36, 1), border-color 200ms ease',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-3px)';
+                  e.currentTarget.style.borderColor = 'rgba(0, 122, 67, 0.22)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-md)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.borderColor = 'rgba(17, 20, 18, 0.08)';
+                  e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
+                }}
+              >
+                {/* Photo Plate with Integrated Editorial Overline */}
+                <div style={{ height: '210px', position: 'relative', overflow: 'hidden' }}>
+                  <img
+                    src={project.image}
+                    alt={project.title}
+                    loading="lazy"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block',
+                      transition: 'transform 300ms ease-out',
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(to top, rgba(17, 20, 18, 0.5) 0%, transparent 60%)',
+                    }}
+                  />
+                  {/* Subtle index number watermark */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '0.85rem',
+                      right: '1rem',
+                      fontFamily: 'var(--font-serif)',
+                      fontSize: '1.2rem',
+                      fontWeight: 700,
+                      color: 'rgba(255, 255, 255, 0.85)',
+                      textShadow: '0 2px 8px rgba(0,0,0,0.4)',
+                    }}
+                  >
+                    #{String(index + 2).padStart(2, '0')}
+                  </div>
+
+                  <div style={{ position: 'absolute', bottom: '0.85rem', left: '1rem' }}>
+                    <span
+                      style={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.94)',
+                        backdropFilter: 'blur(8px)',
+                        color: 'var(--rich-black)',
+                        fontSize: '0.72rem',
+                        fontWeight: 700,
+                        letterSpacing: '0.06em',
+                        textTransform: 'uppercase',
+                        padding: '0.28rem 0.72rem',
+                        borderRadius: '999px',
+                        border: '1px solid rgba(17, 20, 18, 0.06)',
+                      }}
+                    >
+                      {project.category}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Editorial Content Block */}
+                <div style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      color: 'var(--muted-gray)',
+                      fontSize: '0.8rem',
+                      marginBottom: '0.65rem',
+                    }}
+                  >
+                    <MapPinIcon size={13} className="text-[#007A43]" />
+                    <span>{project.location}</span>
+                  </div>
+
+                  <h4
+                    style={{
+                      fontSize: '1.2rem',
+                      fontFamily: 'var(--font-serif)',
+                      fontWeight: 700,
+                      marginBottom: '0.65rem',
+                      color: 'var(--rich-black)',
+                      lineHeight: 1.32,
+                    }}
+                  >
+                    {project.title}
+                  </h4>
+
+                  <p
+                    style={{
+                      fontSize: '0.91rem',
+                      color: '#4F5752',
+                      lineHeight: 1.65,
+                      marginBottom: '1.35rem',
+                      flex: 1,
+                      display: '-webkit-box',
+                      WebkitLineClamp: 3,
+                      WebkitBoxOrient: 'vertical',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    {project.shortDescription}
+                  </p>
+
+                  {/* Impact Metric & Link */}
+                  <div
+                    style={{
+                      borderTop: '1px solid var(--border-light)',
+                      paddingTop: '1rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      gap: '0.75rem',
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: '0.78rem',
+                        fontWeight: 600,
+                        color: 'var(--ndc-green-dark)',
+                        backgroundColor: 'rgba(0, 122, 67, 0.08)',
+                        padding: '0.22rem 0.65rem',
+                        borderRadius: '6px',
+                      }}
+                    >
+                      {project.impactMetric}
+                    </span>
+
+                    <span
+                      style={{
+                        color: 'var(--ndc-green)',
+                        fontWeight: 600,
+                        fontSize: '0.86rem',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                      }}
+                    >
+                      <span>Read Dossier</span>
+                      <ArrowRightIcon size={14} />
+                    </span>
+                  </div>
+                </div>
+              </motion.article>
+            ))}
+          </div>
+        )}
+
+        {/* Global Dashboard Navigation CTA */}
         <div style={{ textAlign: 'center', marginTop: '3.75rem' }}>
           <button
             onClick={() => {
@@ -241,10 +509,9 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             className="btn-outline-green"
-            style={{ padding: '0.9rem 2.4rem' }}
           >
             <span>Explore Complete Development Dashboard</span>
-            <ArrowRightIcon size={18} />
+            <ArrowRightIcon size={17} />
           </button>
         </div>
       </div>

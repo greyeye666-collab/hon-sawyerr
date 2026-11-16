@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useId, useState } from 'react';
+import { motion } from 'motion/react';
 import { MP_DETAILS, CONSTITUENCY_TOWNS } from '../data/mockData';
 import {
   MailIcon,
@@ -12,7 +13,10 @@ import {
   CheckCircleIcon,
 } from './Icons';
 
+const APPLE_SPRING = { type: 'spring' as const, bounce: 0, duration: 0.42 };
+
 export const ContactSection: React.FC = () => {
+  const uid = useId();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -30,7 +34,6 @@ export const ContactSection: React.FC = () => {
     e.preventDefault();
     if (!formData.fullName || !formData.phone) return;
 
-    // Generate random reference number
     const randomRef = `AE-${Math.floor(100000 + Math.random() * 900000)}`;
     setRefNumber(randomRef);
     setSubmitted(true);
@@ -49,24 +52,40 @@ export const ContactSection: React.FC = () => {
     setSubmitted(false);
   };
 
+  const inputStyle: React.CSSProperties = {
+    width: '100%',
+    padding: '0.82rem 1rem',
+    borderRadius: '12px',
+    border: '1px solid rgba(17, 20, 18, 0.14)',
+    fontSize: '0.94rem',
+    fontFamily: 'inherit',
+    backgroundColor: 'var(--bg-cream)',
+    transition: 'border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease',
+  };
+
   return (
     <section
       id="contact"
       style={{
         backgroundColor: 'var(--bg-cream)',
-        paddingTop: '6.5rem',
-        paddingBottom: '6.5rem',
+        paddingTop: 'clamp(4.5rem, 7vw, 6.5rem)',
+        paddingBottom: 'clamp(4.5rem, 7vw, 6.5rem)',
         position: 'relative',
         borderTop: '1px solid var(--border-light)',
       }}
     >
       <div className="container-custom">
-        {/* Section Header */}
-        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={APPLE_SPRING}
+          style={{ textAlign: 'center', marginBottom: '3.5rem' }}
+        >
           <div className="section-tag" style={{ justifyContent: 'center' }}>
-            <span style={{ width: '12px', height: '2px', backgroundColor: '#006B3F' }} />
+            <span style={{ width: '12px', height: '2px', backgroundColor: 'var(--ndc-green)' }} />
             <span>Accessible Leadership &amp; Grassroots Service</span>
-            <span style={{ width: '12px', height: '2px', backgroundColor: '#CE1126' }} />
+            <span style={{ width: '12px', height: '2px', backgroundColor: 'var(--ndc-red)' }} />
           </div>
 
           <h2
@@ -80,23 +99,22 @@ export const ContactSection: React.FC = () => {
             Contact &amp; Get Involved
           </h2>
 
-          <p style={{ maxWidth: '620px', margin: '0.75rem auto 0', color: '#5C5751', fontSize: '1.05rem' }}>
+          <p style={{ maxWidth: '620px', margin: '0.85rem auto 0', color: '#525A55', fontSize: '1.03rem' }}>
             Whether you require constituent assistance, have a community proposal, or want to join Mama Pokua&#39;s volunteer corps, we are here for you.
           </p>
 
-          <div className="ndc-accent-ribbon" style={{ margin: '1rem auto 0', maxWidth: '100px' }}>
+          <div className="ndc-accent-ribbon" style={{ margin: '1.15rem auto 0' }}>
             <div className="ribbon-green" />
             <div className="ribbon-gold" />
             <div className="ribbon-red" />
           </div>
-        </div>
+        </motion.div>
 
-        {/* Elegant Split Layout: Contact Form + Office Details */}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '3rem',
+            gap: '2.75rem',
             alignItems: 'start',
           }}
         >
@@ -104,32 +122,32 @@ export const ContactSection: React.FC = () => {
           <div
             style={{
               backgroundColor: '#FFFFFF',
-              borderRadius: '24px',
-              padding: '2.5rem',
+              borderRadius: '22px',
+              padding: 'clamp(1.5rem, 3.5vw, 2.5rem)',
               boxShadow: 'var(--shadow-sm)',
               border: '1px solid var(--border-light)',
             }}
           >
             {submitted ? (
-              <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
+              <div style={{ textAlign: 'center', padding: '2rem 1rem' }} role="status">
                 <div
                   style={{
                     width: '64px',
                     height: '64px',
                     borderRadius: '50%',
-                    backgroundColor: 'rgba(0, 107, 63, 0.1)',
+                    backgroundColor: 'rgba(0, 122, 67, 0.1)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto 1.5rem',
                   }}
                 >
-                  <CheckCircleIcon size={36} className="text-[#006B3F]" />
+                  <CheckCircleIcon size={34} className="text-[#007A43]" />
                 </div>
 
                 <h3
                   style={{
-                    fontSize: '1.65rem',
+                    fontSize: '1.6rem',
                     fontFamily: 'var(--font-serif)',
                     color: 'var(--ndc-green)',
                     marginBottom: '0.5rem',
@@ -138,8 +156,8 @@ export const ContactSection: React.FC = () => {
                   Message Received With Gratitude!
                 </h3>
 
-                <p style={{ color: '#55504A', fontSize: '1rem', lineHeight: 1.65, marginBottom: '1.5rem' }}>
-                  Thank you, <strong>{formData.fullName}</strong>. Your communication has been dispatched to the Agona East
+                <p style={{ color: '#4F5752', fontSize: '0.98rem', lineHeight: 1.65, marginBottom: '1.5rem' }}>
+                  Thank you, <strong>{formData.fullName}</strong>. Your communication has been recorded for the Agona East
                   Constituency Secretariat and Parliamentary Desk.
                 </p>
 
@@ -148,15 +166,15 @@ export const ContactSection: React.FC = () => {
                     backgroundColor: 'var(--bg-warm-gray)',
                     padding: '1rem 1.5rem',
                     borderRadius: '14px',
-                    border: '1px dashed #006B3F',
+                    border: '1px solid var(--border-subtle)',
                     display: 'inline-block',
                     marginBottom: '2rem',
                   }}
                 >
-                  <div style={{ fontSize: '0.75rem', color: '#7E7972', textTransform: 'uppercase', fontWeight: 700 }}>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--muted-gray)', textTransform: 'uppercase', fontWeight: 700 }}>
                     Inquiry Reference Number
                   </div>
-                  <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--rich-black)', letterSpacing: '0.05em' }}>
+                  <div style={{ fontSize: '1.28rem', fontWeight: 800, color: 'var(--rich-black)', letterSpacing: '0.04em' }}>
                     {refNumber}
                   </div>
                 </div>
@@ -168,7 +186,7 @@ export const ContactSection: React.FC = () => {
                 </div>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
                 <div>
                   <h3
                     style={{
@@ -180,102 +198,67 @@ export const ContactSection: React.FC = () => {
                   >
                     Direct Message to Mama Pokua
                   </h3>
-                  <p style={{ fontSize: '0.88rem', color: '#77726C' }}>
+                  <p style={{ fontSize: '0.88rem', color: 'var(--muted-gray)' }}>
                     All constituent matters are handled with strict confidentiality and dedicated attention.
                   </p>
                 </div>
 
-                {/* Name */}
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--rich-black)' }}>
+                  <label htmlFor={`${uid}-name`} style={{ display: 'block', fontSize: '0.84rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--rich-black)' }}>
                     Full Name *
                   </label>
                   <input
+                    id={`${uid}-name`}
                     type="text"
                     required
                     placeholder="e.g. Kwame Mensah"
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '0.85rem 1rem',
-                      borderRadius: '12px',
-                      border: '1px solid var(--border-light)',
-                      fontSize: '0.95rem',
-                      fontFamily: 'inherit',
-                      outline: 'none',
-                      backgroundColor: 'var(--bg-cream)',
-                    }}
+                    style={inputStyle}
                   />
                 </div>
 
-                {/* Email & Phone */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--rich-black)' }}>
+                    <label htmlFor={`${uid}-phone`} style={{ display: 'block', fontSize: '0.84rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--rich-black)' }}>
                       Phone / WhatsApp *
                     </label>
                     <input
+                      id={`${uid}-phone`}
                       type="tel"
                       required
                       placeholder="+233 24 000 0000"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                      style={{
-                        width: '100%',
-                        padding: '0.85rem 1rem',
-                        borderRadius: '12px',
-                        border: '1px solid var(--border-light)',
-                        fontSize: '0.95rem',
-                        fontFamily: 'inherit',
-                        outline: 'none',
-                        backgroundColor: 'var(--bg-cream)',
-                      }}
+                      style={inputStyle}
                     />
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--rich-black)' }}>
+                    <label htmlFor={`${uid}-email`} style={{ display: 'block', fontSize: '0.84rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--rich-black)' }}>
                       Email Address
                     </label>
                     <input
+                      id={`${uid}-email`}
                       type="email"
                       placeholder="your.email@example.com"
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                      style={{
-                        width: '100%',
-                        padding: '0.85rem 1rem',
-                        borderRadius: '12px',
-                        border: '1px solid var(--border-light)',
-                        fontSize: '0.95rem',
-                        fontFamily: 'inherit',
-                        outline: 'none',
-                        backgroundColor: 'var(--bg-cream)',
-                      }}
+                      style={inputStyle}
                     />
                   </div>
                 </div>
 
-                {/* Town & Category */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--rich-black)' }}>
+                    <label htmlFor={`${uid}-town`} style={{ display: 'block', fontSize: '0.84rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--rich-black)' }}>
                       Community / Town in Agona East
                     </label>
                     <select
+                      id={`${uid}-town`}
                       value={formData.town}
                       onChange={(e) => setFormData({ ...formData, town: e.target.value })}
-                      style={{
-                        width: '100%',
-                        padding: '0.85rem 1rem',
-                        borderRadius: '12px',
-                        border: '1px solid var(--border-light)',
-                        fontSize: '0.92rem',
-                        fontFamily: 'inherit',
-                        outline: 'none',
-                        backgroundColor: 'var(--bg-cream)',
-                      }}
+                      style={inputStyle}
                     >
                       {CONSTITUENCY_TOWNS.map((town) => (
                         <option key={town} value={town}>
@@ -286,22 +269,14 @@ export const ContactSection: React.FC = () => {
                   </div>
 
                   <div>
-                    <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--rich-black)' }}>
+                    <label htmlFor={`${uid}-category`} style={{ display: 'block', fontSize: '0.84rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--rich-black)' }}>
                       Nature of Inquiry
                     </label>
                     <select
+                      id={`${uid}-category`}
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      style={{
-                        width: '100%',
-                        padding: '0.85rem 1rem',
-                        borderRadius: '12px',
-                        border: '1px solid var(--border-light)',
-                        fontSize: '0.92rem',
-                        fontFamily: 'inherit',
-                        outline: 'none',
-                        backgroundColor: 'var(--bg-cream)',
-                      }}
+                      style={inputStyle}
                     >
                       <option value="Constituent Assistance">Constituent Assistance</option>
                       <option value="Community Project Suggestion">Community Project Suggestion</option>
@@ -313,34 +288,24 @@ export const ContactSection: React.FC = () => {
                   </div>
                 </div>
 
-                {/* Message */}
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--rich-black)' }}>
+                  <label htmlFor={`${uid}-message`} style={{ display: 'block', fontSize: '0.84rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--rich-black)' }}>
                     Your Message / Request *
                   </label>
                   <textarea
+                    id={`${uid}-message`}
                     required
                     rows={4}
                     placeholder="Describe how Hon. Sawyerr and the constituency secretariat can assist you or your community..."
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '0.85rem 1rem',
-                      borderRadius: '12px',
-                      border: '1px solid var(--border-light)',
-                      fontSize: '0.95rem',
-                      fontFamily: 'inherit',
-                      outline: 'none',
-                      backgroundColor: 'var(--bg-cream)',
-                      resize: 'vertical',
-                    }}
+                    style={{ ...inputStyle, resize: 'vertical' }}
                   />
                 </div>
 
-                {/* Volunteer Checkbox */}
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', cursor: 'pointer', fontSize: '0.88rem' }}>
+                <label htmlFor={`${uid}-volunteer`} style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', cursor: 'pointer', fontSize: '0.88rem' }}>
                   <input
+                    id={`${uid}-volunteer`}
                     type="checkbox"
                     checked={formData.volunteer}
                     onChange={(e) => setFormData({ ...formData, volunteer: e.target.checked })}
@@ -349,16 +314,13 @@ export const ContactSection: React.FC = () => {
                   <span>I want to join Mama Pokua&#39;s grassroots volunteer and campaign team.</span>
                 </label>
 
-                {/* Buttons in Soft Green and Bold Red */}
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
+                <div style={{ display: 'flex', gap: '0.85rem', marginTop: '0.35rem', flexWrap: 'wrap' }}>
                   <button type="submit" className="btn-primary-green" style={{ flex: 1 }}>
                     Submit Message
                   </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      setFormData({ ...formData, volunteer: true });
-                    }}
+                    onClick={() => setFormData({ ...formData, volunteer: true })}
                     className="btn-primary-red"
                   >
                     Join Volunteer Team
@@ -368,86 +330,81 @@ export const ContactSection: React.FC = () => {
             )}
           </div>
 
-          {/* Right Column: Office Details & Call to Action */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            {/* Constituency Secretariat Card */}
+          {/* Right Column: Office Details */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <div
               style={{
                 backgroundColor: '#FFFFFF',
-                borderRadius: '24px',
-                padding: '2.25rem',
+                borderRadius: '22px',
+                padding: '2rem',
                 border: '1px solid var(--border-light)',
                 boxShadow: 'var(--shadow-sm)',
-                borderLeft: '5px solid var(--ndc-green)',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', marginBottom: '0.65rem' }}>
                 <span className="pill-category">Constituency Office</span>
-                <span style={{ fontSize: '0.8rem', color: '#7E7972' }}>Agona East</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--muted-gray)' }}>Agona East</span>
               </div>
 
-              <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: 'var(--rich-black)', marginBottom: '0.75rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: 'var(--rich-black)', marginBottom: '0.85rem' }}>
                 Agona East Secretariat
               </h3>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.92rem', color: '#55504A' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', fontSize: '0.92rem', color: '#4F5752' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.65rem' }}>
-                  <MapPinIcon size={18} className="text-[#006B3F] flex-shrink-0" />
+                  <MapPinIcon size={18} className="text-[#007A43] flex-shrink-0" />
                   <span>{MP_DETAILS.officeAddress}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                  <PhoneIcon size={18} className="text-[#006B3F] flex-shrink-0" />
+                  <PhoneIcon size={18} className="text-[#007A43] flex-shrink-0" />
                   <span>Hotline: {MP_DETAILS.hotlinePhone} / {MP_DETAILS.constituencyPhone}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                  <MailIcon size={18} className="text-[#006B3F] flex-shrink-0" />
+                  <MailIcon size={18} className="text-[#007A43] flex-shrink-0" />
                   <span>{MP_DETAILS.officeEmail}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                  <ClockIcon size={18} className="text-[#006B3F] flex-shrink-0" />
+                  <ClockIcon size={18} className="text-[#007A43] flex-shrink-0" />
                   <span>Mon – Fri: 8:30 AM – 5:00 PM (Constituent surgery on Saturdays)</span>
                 </div>
               </div>
             </div>
 
-            {/* Parliament Office Card */}
             <div
               style={{
                 backgroundColor: '#FFFFFF',
-                borderRadius: '24px',
-                padding: '2.25rem',
+                borderRadius: '22px',
+                padding: '2rem',
                 border: '1px solid var(--border-light)',
                 boxShadow: 'var(--shadow-sm)',
-                borderLeft: '5px solid var(--ndc-red)',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', marginBottom: '0.65rem' }}>
                 <span className="pill-red">Parliamentary Chamber</span>
-                <span style={{ fontSize: '0.8rem', color: '#7E7972' }}>Accra</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--muted-gray)' }}>Accra</span>
               </div>
 
-              <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: 'var(--rich-black)', marginBottom: '0.75rem' }}>
+              <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: 'var(--rich-black)', marginBottom: '0.85rem' }}>
                 Parliament House of Ghana
               </h3>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.92rem', color: '#55504A' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', fontSize: '0.92rem', color: '#4F5752' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.65rem' }}>
-                  <MapPinIcon size={18} className="text-[#CE1126] flex-shrink-0" />
+                  <MapPinIcon size={18} className="text-[#D61F33] flex-shrink-0" />
                   <span>{MP_DETAILS.parliamentAddress}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                  <MailIcon size={18} className="text-[#CE1126] flex-shrink-0" />
+                  <MailIcon size={18} className="text-[#D61F33] flex-shrink-0" />
                   <span>{MP_DETAILS.parliamentEmail}</span>
                 </div>
               </div>
             </div>
 
-            {/* Social Media Channels */}
             <div
               style={{
-                backgroundColor: '#111111',
+                backgroundColor: '#111412',
                 color: '#FFFFFF',
-                borderRadius: '24px',
+                borderRadius: '22px',
                 padding: '2rem',
                 boxShadow: 'var(--shadow-md)',
               }}
@@ -462,49 +419,25 @@ export const ContactSection: React.FC = () => {
               >
                 Official Social Media Channels
               </h3>
-              <p style={{ color: 'rgba(255, 255, 255, 0.7)', fontSize: '0.85rem', marginBottom: '1.25rem' }}>
+              <p style={{ color: 'rgba(255, 255, 255, 0.72)', fontSize: '0.85rem', marginBottom: '1.25rem' }}>
                 Follow Hon. Queenstar Maame Pokua Sawyerr for daily updates, live floor appearances, and community broadcasts.
               </p>
 
-              <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-                <a
-                  href="https://facebook.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-glass"
-                  style={{ padding: '0.55rem 1rem', fontSize: '0.82rem' }}
-                >
-                  <FacebookIcon size={16} />
+              <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
+                <a href="https://facebook.com" target="_blank" rel="noreferrer" className="btn-glass" style={{ padding: '0.52rem 0.95rem', fontSize: '0.82rem' }}>
+                  <FacebookIcon size={15} />
                   <span>Facebook</span>
                 </a>
-                <a
-                  href="https://x.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-glass"
-                  style={{ padding: '0.55rem 1rem', fontSize: '0.82rem' }}
-                >
-                  <TwitterIcon size={16} />
+                <a href="https://x.com" target="_blank" rel="noreferrer" className="btn-glass" style={{ padding: '0.52rem 0.95rem', fontSize: '0.82rem' }}>
+                  <TwitterIcon size={15} />
                   <span>Twitter (X)</span>
                 </a>
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-glass"
-                  style={{ padding: '0.55rem 1rem', fontSize: '0.82rem' }}
-                >
-                  <InstagramIcon size={16} />
+                <a href="https://instagram.com" target="_blank" rel="noreferrer" className="btn-glass" style={{ padding: '0.52rem 0.95rem', fontSize: '0.82rem' }}>
+                  <InstagramIcon size={15} />
                   <span>Instagram</span>
                 </a>
-                <a
-                  href="https://youtube.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="btn-glass"
-                  style={{ padding: '0.55rem 1rem', fontSize: '0.82rem' }}
-                >
-                  <YoutubeIcon size={16} />
+                <a href="https://youtube.com" target="_blank" rel="noreferrer" className="btn-glass" style={{ padding: '0.52rem 0.95rem', fontSize: '0.82rem' }}>
+                  <YoutubeIcon size={15} />
                   <span>YouTube</span>
                 </a>
               </div>

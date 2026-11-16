@@ -1,4 +1,4 @@
-import type { Project, NewsArticle, GalleryItem, CoreValue, TimelineMilestone } from '../types';
+import type { Project, NewsArticle, GalleryItem, CoreValue, TimelineMilestone, BlogPost } from '../types';
 import H2Img from '../assets/H2.jpg';
 
 export const MP_DETAILS = {
@@ -437,3 +437,130 @@ export const CONSTITUENCY_TOWNS = [
   'Agona Mensakrom',
   'Diaspora / Other',
 ];
+
+export const BLOG_POSTS: BlogPost[] = [
+  {
+    id: 'educational-equity-rural-ghana',
+    title: 'The Agona East Educational Renaissance: Why Nutrition and Basic Tools Determine a Child\'s Future',
+    slug: 'agona-east-educational-renaissance-nutrition-basic-tools',
+    category: 'Education & Youth',
+    publishDate: 'October 14, 2024',
+    readTime: '6 min read',
+    coverImage: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80',
+    featured: true,
+    excerpt: 'A hungry child cannot master algebra, and a candidate without mathematical instruments enters the examination hall defeated before the bell rings. Over the past decade, our annual BECE interventions have demonstrated that educational equity is not about complex rhetoric—it begins with dignity in the classroom.',
+    author: {
+      name: 'Hon. Queenstar Maame Pokua Sawyerr',
+      role: 'Member of Parliament, Agona East Constituency',
+      avatar: H2Img,
+    },
+    featuredQuote: 'True empowerment does not trickle down from distant offices in Accra. It is planted when a child in Duakwa receives a school desk, a nutritious hot meal, and the quiet assurance that their dreams matter to their Member of Parliament.',
+    tags: ['Education', 'BECE Candidates', 'Youth Development', 'Agona East', 'Rural Equity'],
+    content: [
+      'Every August when the Basic Education Certificate Examination (BECE) approaches, I am reminded of why I first sought public office. Education in rural Ghana has never suffered from a deficit of intellectual ambition. Our boys and girls in Agona Nsaba, Kwanyako, and Duakwa possess identical curiosities and raw cognitive potential as their counterparts in Cantonments or Airport Residential. What separates them is not capacity, but the quiet, grinding friction of basic material deprivation.',
+      'Over a decade ago, during one of my early constituency tours through our basic schools, I watched a brilliant young girl in a farming village struggling through a mock mathematics examination. She was borrowing a wooden ruler from her classmate every few minutes, her hands trembling with anxiety as the clock ticked. When I asked her teachers why so many candidates were unprepared with standardized mathematical sets, the answer was heartbreakingly simple: for a subsistence cocoa farming family with three school-going children, purchasing certified compasses, dividers, and protractors represents a choice between exam tools and dinner.',
+      'That afternoon, the "Maame Pokua School Feeding & BECE Candidate Support Initiative" was born. We made a binding commitment that no student across all 42 Junior High Schools in Agona East would ever sit for the BECE without certified geometry sets, writing materials, and a warm nutritious hot meal served right at their examination centers.',
+      'Critics occasionally ask whether providing mathematical instruments and hot lunches is "substantive policy." To that, I respond with the official WAEC examination statistics of Agona East over the past ten years. When you alleviate the visceral terror of hunger and exam unpreparedness, pass rates ascend. Girls who previously dropped out after basic school now gain admissions into Wesley Girls, Holy Child, Mfantsiman, and Swedru Senior High School. Several of our earliest beneficiaries have now completed university degrees in nursing, engineering, and education, returning to Agona East as professionals.',
+      'As we look ahead, the challenge before our educational system is modernization. We must connect our rural schools to digital literacy labs and equip our teachers with contemporary pedagogical tools. But even as we aspire to artificial intelligence and code in the curriculum, we must never forget the foundational truth: dignity begins with a desk, a book, a meal, and a leader who refuses to let any child be left behind.'
+    ]
+  },
+  {
+    id: 'decentralisation-grassroots-representation',
+    title: 'A Decade on the Frontlines: Decentralisation and What True Grassroots Representation Demands',
+    slug: 'decade-on-the-frontlines-decentralisation-grassroots-representation',
+    category: 'Legislative Insights',
+    publishDate: 'September 22, 2024',
+    readTime: '8 min read',
+    coverImage: 'https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=1200&q=80',
+    featured: false,
+    excerpt: 'The primary duty of a Member of Parliament is constitutional legislation, but for a rural representative, parliament begins at the durbar ground and ends by the bedside of a sick constituent. Here are my reflections on balancing parliamentary scrutiny in Accra with everyday community advocacy.',
+    author: {
+      name: 'Hon. Queenstar Maame Pokua Sawyerr',
+      role: 'Member of Parliament, Agona East Constituency',
+      avatar: H2Img,
+    },
+    featuredQuote: 'Legislation drafted in the air-conditioned chambers of Job 600 must withstand the scrutiny of a cocoa farmer in Mankrong. If our laws do not lower the cost of living or improve the price of produce, we are merely engaging in sophisticated theatre.',
+    tags: ['Parliament of Ghana', 'Governance', 'Decentralisation', 'Constituency Realities'],
+    content: [
+      'In political science textbooks, the constitutional role of a Ghanaian parliamentarian is neatly categorized into three pillars: legislation, oversight, and representation. In the chamber of Parliament, we debate appropriation bills, interrogate ministerial budgets, and serve on standing and select committees. But the moment you cross the Ayensu river into Agona East, the abstract theories of constitutional governance are immediately tested against the lived realities of our people.',
+      'In a rural district, your constituents do not measure your parliamentary tenure solely by how many hansard pages feature your interventions—though legislative vigilance is paramount. They measure leadership by whether the bridge linking their farm gate to the market was repaired before the heavy rains washed away their cassava harvest. They judge your stewardship by whether the community CHPS compound has a reliable nurse and maternal delivery bed.',
+      'During my tenure as Deputy Central Regional Minister, I supervised regional development projects across twenty-two administrative districts. That executive experience reinforced my conviction that true decentralisation in Ghana remains incomplete. Local assemblies frequently struggle with delayed Common Fund disbursements, forcing Members of Parliament to shoulder responsibilities that ideally belong to municipal statutory budgets.',
+      'Rather than complaining about institutional limitations, I chose the path of active grassroots partnership. By working hand-in-hand with our revered chiefs, queen mothers, assembly members, and unit committee heads, we have prioritized high-yield community infrastructure: over 140 mechanized boreholes, rural health compound refurbishments, and school infrastructure repairs.',
+      'Our democracy is strongest when the distance between the lawmaker and the citizen is dissolved. Whenever I sit under the shade of a neem tree during community durbars listening to our elders and youth, I am reminded that public service is not a privilege of rank; it is a sacred covenant of accountability.'
+    ]
+  },
+  {
+    id: 'investing-in-market-women',
+    title: 'Unlocking Rural Wealth: Why Investing Directly in Market Women Yields Ghana\'s Highest Societal Returns',
+    slug: 'unlocking-rural-wealth-investing-directly-in-market-women',
+    category: 'Women Empowerment',
+    publishDate: 'August 18, 2024',
+    readTime: '5 min read',
+    coverImage: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1200&q=80',
+    featured: false,
+    excerpt: 'When an informal market trader in Agona Nsaba or Kwanyako receives interest-free seed capital, the dividend is immediate: school fees are paid, clinic visits are settled, and local food supply chains stay alive. Women are not just economic participants—they are the shock absorbers of our rural economy.',
+    author: {
+      name: 'Hon. Queenstar Maame Pokua Sawyerr',
+      role: 'Member of Parliament, Agona East Constituency',
+      avatar: H2Img,
+    },
+    featuredQuote: 'Give a woman trader working capital and she does not merely expand her stall; she transforms her household, educates her children, and stabilises the entire community.',
+    tags: ['Women in Trade', 'Microfinance', 'Rural Economy', 'Livelihoods', 'Agona Nsaba'],
+    content: [
+      'Walk through the Agona Nsaba or Swedru markets at 5:00 AM on a market day, and you will observe the true economic engine of Ghana. Long before government ministries unlock their doors, hundreds of women are already offloading plantain, smoked fish, palm oil, and fresh vegetables transported from surrounding farming hamlets. These women operate on margins that would astonish commercial bankers, yet their repayment discipline and resourcefulness are peerless.',
+      'For years, commercial financial institutions have treated the informal market woman as high-risk, demanding collateral that rural women rarely possess. When they are forced to borrow from predatory informal lenders, exorbitant interest rates swallow their profits before their merchandise is even sold.',
+      'Recognizing this structural barrier, we instituted the Agona East Women Economic Empowerment & Seed Capital Fund. The mechanism is intentionally straightforward: providing structured, interest-free micro-grants and rotating credit directly to organized market associations and trade groups, paired with essential financial literacy training.',
+      'The results have been transformative. Over GH₵ 4.5 million in cumulative seed capital has circulated through the hands of over 6,500 petty traders, gari processors, bakers, and seamstresses across Agona East. Default rates are near zero because the program is anchored on mutual trust, community co-guarantee, and transparent oversight.',
+      'When you empower a woman financially, the return on investment is multi-generational. Her profits do not disappear into speculative ventures; they are reinvested in children\'s school uniforms, NHIS cards, and nutritious family meals. Sustainable national development will remain an illusion until we place rural women at the center of fiscal strategy.'
+    ]
+  },
+  {
+    id: 'clean-water-healthcare-infrastructure',
+    title: 'Beyond the Floor of the House: Bringing Safe Water and Maternal Health to Every Hamlet',
+    slug: 'bringing-safe-water-maternal-health-hamlet-agona-east',
+    category: 'Rural Development',
+    publishDate: 'July 05, 2024',
+    readTime: '7 min read',
+    coverImage: 'https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=1200&q=80',
+    featured: false,
+    excerpt: 'A CHPS compound without running potable water or reliable solar lighting is only half an answer to rural healthcare. Over 140 mechanized boreholes later, our fight for health infrastructure continues to redefine community resilience across Agona East.',
+    author: {
+      name: 'Hon. Queenstar Maame Pokua Sawyerr',
+      role: 'Member of Parliament, Agona East Constituency',
+      avatar: H2Img,
+    },
+    featuredQuote: 'Access to clean drinking water is not a political favor. It is a fundamental human right that protects mothers, children, and the dignity of rural living.',
+    tags: ['Healthcare', 'Potable Water', 'Infrastructure', 'Public Health', 'Maternal Health'],
+    content: [
+      'In many rural farming communities across Central Region, preventable waterborne diseases such as cholera, bilharzia, and dysentery have historically extracted an unacceptable toll on productivity and human life. When school-going girls spend two hours every dawn carrying heavy buckets from polluted streams, their classroom attendance suffers before the school day even commences.',
+      'Early in my first term as Member of Parliament, I resolved that clean water access must be treated with the urgency of a public health emergency. We initiated a sustained campaign to drill and commission mechanized boreholes across underserved settlements in Agona East. Today, with over 140 operational water facilities delivering potable water to tens of thousands of households, water-related hospital admissions in our district health centers have declined dramatically.',
+      'Simultaneously, we focused our energy on rural maternal healthcare. No woman should risk complications or loss of life while bringing a new citizen into this world simply because a clinic lacks a functional delivery bed or solar lighting during a midnight blackout. By equipping local CHPS compounds with clean solar systems, sterile maternity wards, and providing essential medical supplies, we are restoring hope to expectant mothers.',
+      'Quality healthcare cannot be the exclusive preserve of urban centers. Every citizen in Agona East, no matter how remote their village, deserves to know that when their child falls ill, professional medical care and clean water are within reach.'
+    ]
+  },
+  {
+    id: 'youth-apprenticeship-vocational-skills',
+    title: 'The Dignity of Artisanship: Re-imagining Youth Employment Through Apprenticeship',
+    slug: 'dignity-of-artisanship-reimagining-youth-employment-apprenticeship',
+    category: 'Community Reflections',
+    publishDate: 'May 30, 2024',
+    readTime: '6 min read',
+    coverImage: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1200&q=80',
+    featured: false,
+    excerpt: 'Not every talented young person in Agona East will sit in a tertiary lecture hall, but every young person possesses hands capable of building, fabricating, designing, and creating enterprise. How our master-apprentice sponsorship model is creating self-reliant livelihoods.',
+    author: {
+      name: 'Hon. Queenstar Maame Pokua Sawyerr',
+      role: 'Member of Parliament, Agona East Constituency',
+      avatar: H2Img,
+    },
+    featuredQuote: 'Equipping a young man or woman with a trade and their own startup equipment breaks the cycle of generational dependency more effectively than any temporary handout.',
+    tags: ['Youth Employment', 'Vocational Skills', 'Apprenticeship', 'Local Industry', 'Agona Kwanyako'],
+    content: [
+      'Ghana\'s youth unemployment crisis cannot be resolved solely through white-collar public sector recruitment. While tertiary education remains vital, our communities possess an immense, often undervalued reservoir of practical talent in masonry, carpentry, fashion design, electrical installation, cosmetology, and modern automotive mechanics.',
+      'Too often, ambitious young school leavers who wish to learn a vocation are turned away because their families cannot afford the apprenticeship registration fees or the necessary starter toolkits. To bridge this gap, we established the Agona East Youth Apprenticeship Sponsorship Scheme.',
+      'We partner directly with accredited master craftsmen and seasoned trade associations. We cover full apprenticeship fees for selected youth, monitor their training progression, and upon graduation, present each certified artisan with complete professional start-up toolkits—industrial sewing machines, hair dryers, masonry kits, and welding equipment.',
+      'Over 1,200 young men and women across Agona East have graduated from this program into economic independence. Many have established their own workshops and are now training younger apprentices. This is the multiplier effect of targeted public investment: turning job seekers into job creators right in their home communities.'
+    ]
+  }
+];
+

@@ -5,8 +5,30 @@ export type PageView =
   | 'project-detail'
   | 'news'
   | 'article-detail'
+  | 'blog'
+  | 'blog-detail'
   | 'gallery'
   | 'contact';
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  category: 'Legislative Insights' | 'Rural Development' | 'Education & Youth' | 'Women Empowerment' | 'Community Reflections';
+  publishDate: string;
+  readTime: string;
+  coverImage: string;
+  excerpt: string;
+  content: string[];
+  featured?: boolean;
+  author: {
+    name: string;
+    role: string;
+    avatar?: string;
+  };
+  featuredQuote?: string;
+  tags: string[];
+}
 
 export interface Project {
   id: string;
