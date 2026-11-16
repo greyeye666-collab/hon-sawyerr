@@ -54,9 +54,10 @@ export const ContactSection: React.FC = () => {
       id="contact"
       style={{
         backgroundColor: 'var(--bg-cream)',
-        paddingTop: '6rem',
-        paddingBottom: '6rem',
+        paddingTop: '6.5rem',
+        paddingBottom: '6.5rem',
         position: 'relative',
+        borderTop: '1px solid var(--border-light)',
       }}
     >
       <div className="container-custom">
@@ -76,11 +77,11 @@ export const ContactSection: React.FC = () => {
               color: 'var(--rich-black)',
             }}
           >
-            Connect With Mama Pokua &amp; The Office
+            Contact &amp; Get Involved
           </h2>
 
-          <p style={{ maxWidth: '620px', margin: '0.75rem auto 0', color: '#66615C', fontSize: '1.05rem' }}>
-            Whether you have a community project suggestion, require constituent assistance, or wish to join our volunteer network, our doors are always wide open.
+          <p style={{ maxWidth: '620px', margin: '0.75rem auto 0', color: '#5C5751', fontSize: '1.05rem' }}>
+            Whether you require constituent assistance, have a community proposal, or want to join Mama Pokua&#39;s volunteer corps, we are here for you.
           </p>
 
           <div className="ndc-accent-ribbon" style={{ margin: '1rem auto 0', maxWidth: '100px' }}>
@@ -90,7 +91,7 @@ export const ContactSection: React.FC = () => {
           </div>
         </div>
 
-        {/* Two-Column Grid: Form + Office Details */}
+        {/* Elegant Split Layout: Contact Form + Office Details */}
         <div
           style={{
             display: 'grid',
@@ -99,13 +100,13 @@ export const ContactSection: React.FC = () => {
             alignItems: 'start',
           }}
         >
-          {/* Left Column: Elegant Contact Form */}
+          {/* Left Column: Contact Form */}
           <div
             style={{
               backgroundColor: '#FFFFFF',
               borderRadius: '24px',
               padding: '2.5rem',
-              boxShadow: 'var(--shadow-md)',
+              boxShadow: 'var(--shadow-sm)',
               border: '1px solid var(--border-light)',
             }}
           >
@@ -137,25 +138,25 @@ export const ContactSection: React.FC = () => {
                   Message Received With Gratitude!
                 </h3>
 
-                <p style={{ color: '#55504A', fontSize: '1rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
+                <p style={{ color: '#55504A', fontSize: '1rem', lineHeight: 1.65, marginBottom: '1.5rem' }}>
                   Thank you, <strong>{formData.fullName}</strong>. Your communication has been dispatched to the Agona East
                   Constituency Secretariat and Parliamentary Desk.
                 </p>
 
                 <div
                   style={{
-                    backgroundColor: 'var(--bg-cream)',
-                    padding: '1rem',
-                    borderRadius: '12px',
-                    border: '1px dashed #C5A059',
+                    backgroundColor: 'var(--bg-warm-gray)',
+                    padding: '1rem 1.5rem',
+                    borderRadius: '14px',
+                    border: '1px dashed #006B3F',
                     display: 'inline-block',
                     marginBottom: '2rem',
                   }}
                 >
-                  <div style={{ fontSize: '0.78rem', color: '#88827C', textTransform: 'uppercase', fontWeight: 600 }}>
-                    Inquiry Reference Ticket
+                  <div style={{ fontSize: '0.75rem', color: '#7E7972', textTransform: 'uppercase', fontWeight: 700 }}>
+                    Inquiry Reference Number
                   </div>
-                  <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--rich-black)', letterSpacing: '0.05em' }}>
+                  <div style={{ fontSize: '1.3rem', fontWeight: 800, color: 'var(--rich-black)', letterSpacing: '0.05em' }}>
                     {refNumber}
                   </div>
                 </div>
@@ -171,16 +172,16 @@ export const ContactSection: React.FC = () => {
                 <div>
                   <h3
                     style={{
-                      fontSize: '1.4rem',
+                      fontSize: '1.35rem',
                       fontFamily: 'var(--font-serif)',
                       marginBottom: '0.25rem',
                       color: 'var(--rich-black)',
                     }}
                   >
-                    Send a Message to Mama Pokua
+                    Direct Message to Mama Pokua
                   </h3>
                   <p style={{ fontSize: '0.88rem', color: '#77726C' }}>
-                    Please fill out the form below. All constituent matters are handled with strict privacy and care.
+                    All constituent matters are handled with strict confidentiality and dedicated attention.
                   </p>
                 </div>
 
@@ -198,7 +199,7 @@ export const ContactSection: React.FC = () => {
                     style={{
                       width: '100%',
                       padding: '0.85rem 1rem',
-                      borderRadius: '10px',
+                      borderRadius: '12px',
                       border: '1px solid var(--border-light)',
                       fontSize: '0.95rem',
                       fontFamily: 'inherit',
@@ -212,7 +213,7 @@ export const ContactSection: React.FC = () => {
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
                   <div>
                     <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--rich-black)' }}>
-                      Phone / WhatsApp Number *
+                      Phone / WhatsApp *
                     </label>
                     <input
                       type="tel"
@@ -223,7 +224,7 @@ export const ContactSection: React.FC = () => {
                       style={{
                         width: '100%',
                         padding: '0.85rem 1rem',
-                        borderRadius: '10px',
+                        borderRadius: '12px',
                         border: '1px solid var(--border-light)',
                         fontSize: '0.95rem',
                         fontFamily: 'inherit',
@@ -245,7 +246,7 @@ export const ContactSection: React.FC = () => {
                       style={{
                         width: '100%',
                         padding: '0.85rem 1rem',
-                        borderRadius: '10px',
+                        borderRadius: '12px',
                         border: '1px solid var(--border-light)',
                         fontSize: '0.95rem',
                         fontFamily: 'inherit',
@@ -268,7 +269,7 @@ export const ContactSection: React.FC = () => {
                       style={{
                         width: '100%',
                         padding: '0.85rem 1rem',
-                        borderRadius: '10px',
+                        borderRadius: '12px',
                         border: '1px solid var(--border-light)',
                         fontSize: '0.92rem',
                         fontFamily: 'inherit',
@@ -294,7 +295,7 @@ export const ContactSection: React.FC = () => {
                       style={{
                         width: '100%',
                         padding: '0.85rem 1rem',
-                        borderRadius: '10px',
+                        borderRadius: '12px',
                         border: '1px solid var(--border-light)',
                         fontSize: '0.92rem',
                         fontFamily: 'inherit',
@@ -315,7 +316,7 @@ export const ContactSection: React.FC = () => {
                 {/* Message */}
                 <div>
                   <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 600, marginBottom: '0.35rem', color: 'var(--rich-black)' }}>
-                    Your Message / Proposal *
+                    Your Message / Request *
                   </label>
                   <textarea
                     required
@@ -326,7 +327,7 @@ export const ContactSection: React.FC = () => {
                     style={{
                       width: '100%',
                       padding: '0.85rem 1rem',
-                      borderRadius: '10px',
+                      borderRadius: '12px',
                       border: '1px solid var(--border-light)',
                       fontSize: '0.95rem',
                       fontFamily: 'inherit',
@@ -345,13 +346,13 @@ export const ContactSection: React.FC = () => {
                     onChange={(e) => setFormData({ ...formData, volunteer: e.target.checked })}
                     style={{ width: '18px', height: '18px', accentColor: 'var(--ndc-green)' }}
                   />
-                  <span>I would like to volunteer for Mama Pokua&#39;s grassroots community initiatives.</span>
+                  <span>I want to join Mama Pokua&#39;s grassroots volunteer and campaign team.</span>
                 </label>
 
-                {/* Submit Button */}
-                <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
+                {/* Buttons in Soft Green and Bold Red */}
+                <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem', flexWrap: 'wrap' }}>
                   <button type="submit" className="btn-primary-green" style={{ flex: 1 }}>
-                    Submit Communication
+                    Submit Message
                   </button>
                   <button
                     type="button"
@@ -359,7 +360,6 @@ export const ContactSection: React.FC = () => {
                       setFormData({ ...formData, volunteer: true });
                     }}
                     className="btn-primary-red"
-                    style={{ flexShrink: 0 }}
                   >
                     Join Volunteer Team
                   </button>
@@ -368,81 +368,81 @@ export const ContactSection: React.FC = () => {
             )}
           </div>
 
-          {/* Right Column: Office Locations & Social Details */}
+          {/* Right Column: Office Details & Call to Action */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-            {/* Agona East Secretariat Card */}
+            {/* Constituency Secretariat Card */}
             <div
               style={{
                 backgroundColor: '#FFFFFF',
                 borderRadius: '24px',
-                padding: '2rem',
+                padding: '2.25rem',
                 border: '1px solid var(--border-light)',
                 boxShadow: 'var(--shadow-sm)',
                 borderLeft: '5px solid var(--ndc-green)',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                <span className="pill-category">Local Office</span>
-                <span style={{ fontSize: '0.8rem', color: '#88827C' }}>Agona East</span>
+                <span className="pill-category">Constituency Office</span>
+                <span style={{ fontSize: '0.8rem', color: '#7E7972' }}>Agona East</span>
               </div>
 
               <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: 'var(--rich-black)', marginBottom: '0.75rem' }}>
-                Agona East Constituency Secretariat
+                Agona East Secretariat
               </h3>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.9rem', color: '#55504A' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.92rem', color: '#55504A' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.65rem' }}>
                   <MapPinIcon size={18} className="text-[#006B3F] flex-shrink-0" />
                   <span>{MP_DETAILS.officeAddress}</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                   <PhoneIcon size={18} className="text-[#006B3F] flex-shrink-0" />
                   <span>Hotline: {MP_DETAILS.hotlinePhone} / {MP_DETAILS.constituencyPhone}</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                   <MailIcon size={18} className="text-[#006B3F] flex-shrink-0" />
                   <span>{MP_DETAILS.officeEmail}</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                   <ClockIcon size={18} className="text-[#006B3F] flex-shrink-0" />
                   <span>Mon – Fri: 8:30 AM – 5:00 PM (Constituent surgery on Saturdays)</span>
                 </div>
               </div>
             </div>
 
-            {/* Parliamentary Office Card */}
+            {/* Parliament Office Card */}
             <div
               style={{
                 backgroundColor: '#FFFFFF',
                 borderRadius: '24px',
-                padding: '2rem',
+                padding: '2.25rem',
                 border: '1px solid var(--border-light)',
                 boxShadow: 'var(--shadow-sm)',
                 borderLeft: '5px solid var(--ndc-red)',
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.5rem' }}>
-                <span className="pill-red">Parliamentary Chambers</span>
-                <span style={{ fontSize: '0.8rem', color: '#88827C' }}>Accra</span>
+                <span className="pill-red">Parliamentary Chamber</span>
+                <span style={{ fontSize: '0.8rem', color: '#7E7972' }}>Accra</span>
               </div>
 
               <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: 'var(--rich-black)', marginBottom: '0.75rem' }}>
                 Parliament House of Ghana
               </h3>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.9rem', color: '#55504A' }}>
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.92rem', color: '#55504A' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.65rem' }}>
                   <MapPinIcon size={18} className="text-[#CE1126] flex-shrink-0" />
                   <span>{MP_DETAILS.parliamentAddress}</span>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                   <MailIcon size={18} className="text-[#CE1126] flex-shrink-0" />
                   <span>{MP_DETAILS.parliamentEmail}</span>
                 </div>
               </div>
             </div>
 
-            {/* Social Media & Direct Connection */}
+            {/* Social Media Channels */}
             <div
               style={{
                 backgroundColor: '#111111',

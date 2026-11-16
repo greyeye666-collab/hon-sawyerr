@@ -17,9 +17,10 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectArticle, onNav
       id="news"
       style={{
         backgroundColor: 'var(--bg-cream)',
-        paddingTop: '6rem',
-        paddingBottom: '6rem',
+        paddingTop: '6.5rem',
+        paddingBottom: '6.5rem',
         position: 'relative',
+        borderTop: '1px solid var(--border-light)',
       }}
     >
       <div className="container-custom">
@@ -39,11 +40,11 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectArticle, onNav
               color: 'var(--rich-black)',
             }}
           >
-            Latest News &amp; Activity Updates
+            Updates &amp; News
           </h2>
 
-          <p style={{ maxWidth: '600px', margin: '0.75rem auto 0', color: '#66615C', fontSize: '1.05rem' }}>
-            Stay informed with verified press releases, parliamentary speeches, and community progress across Agona East.
+          <p style={{ maxWidth: '620px', margin: '0.75rem auto 0', color: '#5C5751', fontSize: '1.05rem' }}>
+            Verified press statements, parliamentary contributions, and community activities from the Office of Hon. Queenstar Maame Pokua Sawyerr.
           </p>
 
           <div className="ndc-accent-ribbon" style={{ margin: '1rem auto 0', maxWidth: '100px' }}>
@@ -60,7 +61,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectArticle, onNav
             backgroundColor: '#FFFFFF',
             borderRadius: '24px',
             overflow: 'hidden',
-            border: '1px solid rgba(232, 227, 220, 0.9)',
+            border: '1px solid var(--border-light)',
             boxShadow: 'var(--shadow-md)',
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
@@ -70,7 +71,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectArticle, onNav
           }}
           className="luxury-card"
         >
-          <div className="img-zoom-container" style={{ minHeight: '320px', position: 'relative' }}>
+          <div className="img-zoom-container" style={{ minHeight: '340px', position: 'relative' }}>
             <img src={featuredArticle.thumbnail} alt={featuredArticle.title} />
             <div style={{ position: 'absolute', top: '1.25rem', left: '1.25rem' }}>
               <span className="pill-red">Featured Headline</span>
@@ -78,12 +79,12 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectArticle, onNav
           </div>
 
           <div style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#88827C', fontSize: '0.82rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.85rem', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#7E7972', fontSize: '0.82rem' }}>
                 <CalendarIcon size={14} className="text-[#006B3F]" />
                 <span>{featuredArticle.date}</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#88827C', fontSize: '0.82rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#7E7972', fontSize: '0.82rem' }}>
                 <ClockIcon size={14} className="text-[#006B3F]" />
                 <span>{featuredArticle.readTime}</span>
               </div>
@@ -130,32 +131,37 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectArticle, onNav
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-            gap: '2rem',
+            gap: '2.25rem',
           }}
         >
-          {regularArticles.map((article) => (
+          {regularArticles.map((article, index) => (
             <div
               key={article.id}
               className="luxury-card"
-              style={{ cursor: 'pointer' }}
+              style={{ cursor: 'pointer', backgroundColor: '#FFFFFF' }}
               onClick={() => onSelectArticle(article)}
             >
               <div className="img-zoom-container" style={{ height: '210px', position: 'relative' }}>
                 <img src={article.thumbnail} alt={article.title} />
+                
+                {/* Category tag in Green or Red */}
                 <div style={{ position: 'absolute', top: '1rem', left: '1rem' }}>
-                  <span className="pill-category" style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)' }}>
+                  <span
+                    className={index % 2 === 0 ? 'pill-category' : 'pill-red'}
+                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(8px)' }}
+                  >
                     {article.category}
                   </span>
                 </div>
               </div>
 
-              <div style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
+              <div style={{ padding: '1.85rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '0.75rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#88827C', fontSize: '0.78rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#7E7972', fontSize: '0.8rem' }}>
                     <CalendarIcon size={14} className="text-[#006B3F]" />
                     <span>{article.date}</span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#88827C', fontSize: '0.78rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', color: '#7E7972', fontSize: '0.8rem' }}>
                     <ClockIcon size={14} className="text-[#006B3F]" />
                     <span>{article.readTime}</span>
                   </div>
@@ -163,7 +169,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectArticle, onNav
 
                 <h3
                   style={{
-                    fontSize: '1.15rem',
+                    fontSize: '1.2rem',
                     fontFamily: 'var(--font-serif)',
                     fontWeight: 700,
                     marginBottom: '0.75rem',
@@ -176,17 +182,17 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectArticle, onNav
 
                 <p
                   style={{
-                    fontSize: '0.88rem',
-                    color: '#66615C',
-                    lineHeight: 1.6,
-                    marginBottom: '1.25rem',
+                    fontSize: '0.9rem',
+                    color: '#55504A',
+                    lineHeight: 1.65,
+                    marginBottom: '1.35rem',
                     flex: 1,
                   }}
                 >
                   {article.excerpt}
                 </p>
 
-                <div style={{ borderTop: '1px solid rgba(232, 227, 220, 0.8)', paddingTop: '1rem' }}>
+                <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '1rem' }}>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -198,7 +204,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectArticle, onNav
                       padding: 0,
                       color: 'var(--ndc-green)',
                       fontWeight: 700,
-                      fontSize: '0.88rem',
+                      fontSize: '0.9rem',
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '0.4rem',
@@ -215,14 +221,14 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectArticle, onNav
         </div>
 
         {/* View All Dedicated News Page CTA */}
-        <div style={{ textAlign: 'center', marginTop: '3.5rem' }}>
+        <div style={{ textAlign: 'center', marginTop: '3.75rem' }}>
           <button
             onClick={() => {
               onNavigate('news');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="btn-outline-gold"
-            style={{ padding: '0.85rem 2.2rem' }}
+            className="btn-outline-green"
+            style={{ padding: '0.9rem 2.4rem' }}
           >
             <span>View Full Press &amp; Media Archive</span>
             <ArrowRightIcon size={18} />

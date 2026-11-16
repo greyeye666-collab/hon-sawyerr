@@ -21,18 +21,19 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
     <section
       id="impact"
       style={{
-        backgroundColor: '#FFFFFF',
-        paddingTop: '6rem',
-        paddingBottom: '6rem',
+        backgroundColor: 'var(--bg-warm-gray)',
+        paddingTop: '6.5rem',
+        paddingBottom: '6.5rem',
         position: 'relative',
+        borderTop: '1px solid var(--border-light)',
       }}
     >
       <div className="container-custom">
         {/* Header Title */}
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <div className="section-tag" style={{ justifyContent: 'center' }}>
             <span style={{ width: '12px', height: '2px', backgroundColor: '#006B3F' }} />
-            <span>Transforming Agona East</span>
+            <span>Key Focus Areas &amp; Grassroots Progress</span>
             <span style={{ width: '12px', height: '2px', backgroundColor: '#CE1126' }} />
           </div>
 
@@ -44,12 +45,12 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
               color: 'var(--rich-black)',
             }}
           >
-            Good Works &amp; Grassroots Impact
+            Impact &amp; Focus Areas
           </h2>
 
-          <p style={{ maxWidth: '650px', margin: '0.75rem auto 0', color: '#66615C', fontSize: '1.05rem' }}>
-            Tangible, sustainable interventions delivering real improvements in education, healthcare, clean water,
-            women entrepreneurship, and community infrastructure.
+          <p style={{ maxWidth: '650px', margin: '0.75rem auto 0', color: '#5C5751', fontSize: '1.05rem' }}>
+            Delivering tangible development across Agona East through education, economic independence, healthcare,
+            clean potable water, and youth empowerment.
           </p>
 
           <div className="ndc-accent-ribbon" style={{ margin: '1rem auto 0', maxWidth: '100px' }}>
@@ -58,7 +59,7 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
             <div className="ribbon-red" />
           </div>
 
-          {/* Category Filter Tabs */}
+          {/* Category Filter Pills */}
           <div
             style={{
               display: 'flex',
@@ -77,17 +78,17 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
                   style={{
                     border: 'none',
                     cursor: 'pointer',
-                    padding: '0.55rem 1.25rem',
+                    padding: '0.6rem 1.35rem',
                     borderRadius: '999px',
                     fontSize: '0.85rem',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     transition: 'var(--transition-smooth)',
-                    backgroundColor: isSelected ? '#006B3F' : 'var(--bg-cream)',
+                    backgroundColor: isSelected ? 'var(--ndc-green)' : '#FFFFFF',
                     color: isSelected ? '#FFFFFF' : '#4A4643',
                     borderWidth: '1px',
                     borderStyle: 'solid',
-                    borderColor: isSelected ? '#006B3F' : 'var(--border-light)',
-                    boxShadow: isSelected ? '0 4px 14px rgba(0, 107, 63, 0.25)' : 'none',
+                    borderColor: isSelected ? 'var(--ndc-green)' : 'var(--border-light)',
+                    boxShadow: isSelected ? '0 4px 14px rgba(0, 107, 63, 0.25)' : 'var(--shadow-sm)',
                   }}
                 >
                   {cat}
@@ -97,12 +98,12 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
           </div>
         </div>
 
-        {/* 3 or 4 Column Elegant Grid of Project Cards */}
+        {/* 3 Column Refined Card Grid */}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-            gap: '2rem',
+            gap: '2.25rem',
           }}
         >
           {filteredProjects.map((project) => (
@@ -111,21 +112,22 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
               className="luxury-card"
               style={{
                 cursor: 'pointer',
+                backgroundColor: '#FFFFFF',
               }}
               onClick={() => onSelectProject(project)}
             >
-              {/* Card Thumbnail */}
+              {/* Soft Image & Category Pill */}
               <div className="img-zoom-container" style={{ height: '220px', position: 'relative' }}>
                 <img src={project.image} alt={project.title} />
 
-                {/* Floating Category Pill */}
+                {/* Floating Tag in Green or Red */}
                 <div style={{ position: 'absolute', top: '1rem', left: '1rem' }}>
                   <span
                     className={
                       project.category === 'Education'
                         ? 'pill-category'
                         : project.category === 'Women & Economy'
-                        ? 'pill-gold'
+                        ? 'pill-red'
                         : 'pill-category'
                     }
                     style={{ backgroundColor: 'rgba(255, 255, 255, 0.95)', backdropFilter: 'blur(8px)' }}
@@ -140,12 +142,12 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
                     position: 'absolute',
                     bottom: '1rem',
                     right: '1rem',
-                    backgroundColor: 'rgba(17, 17, 17, 0.88)',
+                    backgroundColor: 'rgba(17, 17, 17, 0.9)',
                     backdropFilter: 'blur(8px)',
-                    color: '#C5A059',
+                    color: '#E7D5B0',
                     fontSize: '0.75rem',
                     fontWeight: 700,
-                    padding: '0.3rem 0.75rem',
+                    padding: '0.35rem 0.8rem',
                     borderRadius: '8px',
                     border: '1px solid rgba(197, 160, 89, 0.35)',
                   }}
@@ -155,15 +157,14 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
               </div>
 
               {/* Card Body */}
-              <div style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
-                {/* Location indicator */}
+              <div style={{ padding: '1.85rem', display: 'flex', flexDirection: 'column', flex: 1 }}>
                 <div
                   style={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: '0.4rem',
                     color: '#7A7570',
-                    fontSize: '0.78rem',
+                    fontSize: '0.8rem',
                     marginBottom: '0.6rem',
                   }}
                 >
@@ -186,9 +187,9 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
 
                 <p
                   style={{
-                    fontSize: '0.9rem',
+                    fontSize: '0.92rem',
                     color: '#55504A',
-                    lineHeight: 1.6,
+                    lineHeight: 1.65,
                     marginBottom: '1.5rem',
                     flex: 1,
                   }}
@@ -196,8 +197,8 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
                   {project.shortDescription}
                 </p>
 
-                {/* Learn More Button */}
-                <div style={{ borderTop: '1px solid rgba(232, 227, 220, 0.8)', paddingTop: '1rem' }}>
+                {/* Learn More Action Button */}
+                <div style={{ borderTop: '1px solid var(--border-light)', paddingTop: '1rem' }}>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -209,7 +210,7 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
                       padding: 0,
                       color: 'var(--ndc-green)',
                       fontWeight: 700,
-                      fontSize: '0.9rem',
+                      fontSize: '0.92rem',
                       display: 'inline-flex',
                       alignItems: 'center',
                       gap: '0.5rem',
@@ -223,7 +224,7 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
                       e.currentTarget.style.color = 'var(--ndc-green)';
                     }}
                   >
-                    <span>Learn More Details</span>
+                    <span>View Project Details</span>
                     <ArrowRightIcon size={16} />
                   </button>
                 </div>
@@ -233,14 +234,14 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
         </div>
 
         {/* View All Dedicated Impact Page CTA */}
-        <div style={{ textAlign: 'center', marginTop: '3.5rem' }}>
+        <div style={{ textAlign: 'center', marginTop: '3.75rem' }}>
           <button
             onClick={() => {
               onNavigate('impact');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="btn-outline-gold"
-            style={{ padding: '0.85rem 2.2rem' }}
+            className="btn-outline-green"
+            style={{ padding: '0.9rem 2.4rem' }}
           >
             <span>Explore Complete Development Dashboard</span>
             <ArrowRightIcon size={18} />

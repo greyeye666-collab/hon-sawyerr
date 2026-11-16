@@ -1,64 +1,56 @@
 import React from 'react';
-import { MP_DETAILS, CORE_VALUES } from '../data/mockData';
+import { MP_DETAILS } from '../data/mockData';
 import type { PageView } from '../types';
-import { ArrowRightIcon, QuoteIcon, HeartIcon, BookIcon, TrendingUpIcon, ShieldIcon, UsersIcon, ScaleIcon } from './Icons';
+import { ArrowRightIcon, QuoteIcon, AwardIcon, ShieldIcon, BookIcon, UsersIcon } from './Icons';
+import H2Img from '../assets/H2.jpg';
 
 interface AboutSectionProps {
   onNavigate: (page: PageView) => void;
 }
 
 export const AboutSection: React.FC<AboutSectionProps> = ({ onNavigate }) => {
-  const renderIcon = (name: string) => {
-    switch (name) {
-      case 'heart':
-        return <HeartIcon size={20} className="text-[#006B3F]" />;
-      case 'book':
-        return <BookIcon size={20} className="text-[#006B3F]" />;
-      case 'trending-up':
-        return <TrendingUpIcon size={20} className="text-[#006B3F]" />;
-      case 'shield':
-        return <ShieldIcon size={20} className="text-[#006B3F]" />;
-      case 'users':
-        return <UsersIcon size={20} className="text-[#006B3F]" />;
-      case 'scale':
-        return <ScaleIcon size={20} className="text-[#006B3F]" />;
-      default:
-        return <HeartIcon size={20} className="text-[#006B3F]" />;
-    }
-  };
+  const keyRoles = [
+    {
+      title: 'Member of Parliament, Agona East',
+      subtitle: 'Serving 3 Consecutive Terms (2012, 2016, 2020 to Date)',
+      icon: <AwardIcon size={18} className="text-[#006B3F]" />,
+    },
+    {
+      title: 'Former Deputy Central Regional Minister',
+      subtitle: 'Government of Ghana, Ministry of Local Government & Regional Administration',
+      icon: <ShieldIcon size={18} className="text-[#006B3F]" />,
+    },
+    {
+      title: 'Parliamentary Committee Member',
+      subtitle: 'Youth, Sports & Culture Committee | Privileges Committee of Parliament',
+      icon: <BookIcon size={18} className="text-[#006B3F]" />,
+    },
+    {
+      title: 'Grassroots Development Champion',
+      subtitle: 'Founder of Maame Pokua School Support & Women Micro-Finance Initiative',
+      icon: <UsersIcon size={18} className="text-[#006B3F]" />,
+    },
+  ];
 
   return (
     <section
       id="about"
       style={{
         backgroundColor: 'var(--bg-cream)',
-        paddingTop: '6rem',
-        paddingBottom: '6rem',
+        paddingTop: '6.5rem',
+        paddingBottom: '6.5rem',
         position: 'relative',
-        overflow: 'hidden',
       }}
     >
-      {/* Subtle green watermark pattern or glow */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '0',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '80%',
-          height: '1px',
-          background: 'linear-gradient(90deg, transparent 0%, rgba(0, 107, 63, 0.25) 50%, transparent 100%)',
-        }}
-      />
-
       <div className="container-custom">
-        {/* Section Tag */}
+        {/* Section Header */}
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <div className="section-tag" style={{ justifyContent: 'center' }}>
             <span style={{ width: '12px', height: '2px', backgroundColor: '#006B3F' }} />
-            <span>The Heart of Leadership</span>
+            <span>Dedicated Service &amp; Leadership</span>
             <span style={{ width: '12px', height: '2px', backgroundColor: '#CE1126' }} />
           </div>
+
           <h2
             style={{
               fontSize: 'clamp(2rem, 3.8vw, 3rem)',
@@ -67,8 +59,9 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onNavigate }) => {
               color: 'var(--rich-black)',
             }}
           >
-            A Journey of Compassion, Resilience &amp; Service
+            A Life of Compassion, Service &amp; Advocacy
           </h2>
+
           <div className="ndc-accent-ribbon" style={{ margin: '0.85rem auto 0', maxWidth: '100px' }}>
             <div className="ribbon-green" />
             <div className="ribbon-gold" />
@@ -76,7 +69,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onNavigate }) => {
           </div>
         </div>
 
-        {/* Two-Column Layout */}
+        {/* Clean Two-Column Layout */}
         <div
           style={{
             display: 'grid',
@@ -85,55 +78,55 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onNavigate }) => {
             alignItems: 'center',
           }}
         >
-          {/* Left Column: Portrait & Quote Card */}
+          {/* Left Column: Portrait and Prominent Quote */}
           <div style={{ position: 'relative' }}>
             <div
               style={{
                 position: 'relative',
                 borderRadius: '24px',
                 overflow: 'hidden',
-                boxShadow: 'var(--shadow-xl)',
+                boxShadow: 'var(--shadow-lg)',
                 border: '4px solid #FFFFFF',
                 backgroundColor: '#FFFFFF',
               }}
             >
               <div className="img-zoom-container" style={{ aspectRatio: '4 / 5' }}>
                 <img
-                  src={MP_DETAILS.portraitAbout}
+                  src={H2Img}
                   alt={MP_DETAILS.fullName}
                   style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                 />
               </div>
 
-              {/* Bottom Quote Banner */}
+              {/* Prominent Quote from the MP */}
               <div
                 style={{
-                  padding: '1.75rem',
+                  padding: '2rem',
                   backgroundColor: '#FFFFFF',
-                  borderTop: '1px solid rgba(232, 227, 220, 0.9)',
+                  borderTop: '1px solid var(--border-light)',
                 }}
               >
-                <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start' }}>
-                  <QuoteIcon size={32} className="text-[#C5A059] flex-shrink-0" />
+                <div style={{ display: 'flex', gap: '0.85rem', alignItems: 'flex-start' }}>
+                  <QuoteIcon size={34} className="text-[#006B3F] flex-shrink-0" />
                   <div>
                     <blockquote
                       style={{
                         fontFamily: 'var(--font-serif)',
-                        fontSize: '1.05rem',
+                        fontSize: '1.12rem',
                         fontStyle: 'italic',
                         color: 'var(--rich-black)',
                         margin: 0,
                         lineHeight: 1.6,
                       }}
                     >
-                      &quot;A leader is defined not by the grandeur of the office, but by how many lives she touches with
-                      sincere love and opportunity.&quot;
+                      &quot;Leadership is about service to the vulnerable. When we empower a child with education
+                      and support a mother with dignity, we build a nation.&quot;
                     </blockquote>
                     <cite
                       style={{
                         display: 'block',
-                        marginTop: '0.65rem',
-                        fontSize: '0.85rem',
+                        marginTop: '0.75rem',
+                        fontSize: '0.88rem',
                         fontWeight: 700,
                         color: 'var(--ndc-green)',
                         fontStyle: 'normal',
@@ -145,41 +138,9 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onNavigate }) => {
                 </div>
               </div>
             </div>
-
-            {/* Corner Decorative Accent */}
-            <div
-              style={{
-                position: 'absolute',
-                bottom: '-1.5rem',
-                right: '-1.5rem',
-                backgroundColor: '#006B3F',
-                color: '#FFFFFF',
-                padding: '1.25rem 1.75rem',
-                borderRadius: '18px',
-                boxShadow: 'var(--shadow-lg)',
-                border: '2px solid #C5A059',
-                display: 'none',
-              }}
-              className="badge-experience"
-            >
-              <div style={{ fontSize: '1.6rem', fontWeight: 800, fontFamily: 'var(--font-serif)', lineHeight: 1 }}>
-                3 Terms
-              </div>
-              <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', opacity: 0.9 }}>
-                Parliamentary Voice
-              </div>
-            </div>
-
-            <style>{`
-              @media (min-width: 768px) {
-                .badge-experience {
-                  display: block !important;
-                }
-              }
-            `}</style>
           </div>
 
-          {/* Right Column: Short Personal Story + Core Values */}
+          {/* Right Column: Short Personal Story + Key Roles + "More About" Button */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
             <div>
               <span
@@ -188,11 +149,12 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onNavigate }) => {
                   fontWeight: 700,
                   fontSize: '0.85rem',
                   textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
+                  letterSpacing: '0.12em',
                 }}
               >
-                Meet Mama Pokua
+                Biography Overview
               </span>
+
               <h3
                 style={{
                   fontSize: 'clamp(1.75rem, 3vw, 2.3rem)',
@@ -202,25 +164,26 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onNavigate }) => {
                   lineHeight: 1.25,
                 }}
               >
-                Steadfast Advocacy for the People of Agona East
+                Championing Agona East with Relentless Dedication
               </h3>
-              <p style={{ fontSize: '1.05rem', color: '#4A4643', marginBottom: '1rem' }}>
-                Hon. Queenstar Maame Pokua Sawyerr is a seasoned public servant, philanthropic trailblazer, and veteran
-                legislator in the Parliament of Ghana. First elected to represent Agona East in 2012, she has earned the
-                enduring admiration of her constituents through her grassroots warmth, accessibility, and transformative social programs.
+
+              <p style={{ fontSize: '1.05rem', color: '#443F3A', marginBottom: '1rem', lineHeight: 1.8 }}>
+                Affectionately called <strong>&quot;Mama Pokua&quot;</strong>, Hon. Queenstar Maame Pokua Sawyerr has
+                dedicated her life to the socio-economic empowerment of Agona East. First elected to Parliament in 2012,
+                she has consistently proven that effective leadership begins with genuine presence among the people.
               </p>
-              <p style={{ fontSize: '1.05rem', color: '#4A4643' }}>
-                Having served as Deputy Central Regional Minister, she spearheaded vital regional educational, health, and
-                road connectivity interventions. In Parliament, she remains a fierce champion on committees advocating for
-                youth development, rural infrastructure subventions, and gender parity.
+
+              <p style={{ fontSize: '1.05rem', color: '#443F3A', lineHeight: 1.8 }}>
+                From serving as Deputy Central Regional Minister to championing education, maternal healthcare, clean water,
+                and microfinance for market women, she represents the gold standard of compassionate servant leadership.
               </p>
             </div>
 
-            {/* Core Values Grid */}
+            {/* Key Roles Listed Elegantly */}
             <div>
               <h4
                 style={{
-                  fontSize: '1.1rem',
+                  fontSize: '1.05rem',
                   fontFamily: 'var(--font-serif)',
                   marginBottom: '1rem',
                   color: 'var(--rich-black)',
@@ -228,55 +191,54 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onNavigate }) => {
                   paddingBottom: '0.5rem',
                 }}
               >
-                Guiding Core Values
+                Distinguished Roles &amp; Responsibilities
               </h4>
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-                  gap: '1rem',
-                }}
-              >
-                {CORE_VALUES.slice(0, 4).map((value, idx) => (
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+                {keyRoles.map((role, idx) => (
                   <div
                     key={idx}
                     style={{
-                      backgroundColor: '#FFFFFF',
-                      padding: '1.25rem',
+                      backgroundColor: 'var(--bg-warm-gray)',
+                      padding: '1rem 1.25rem',
                       borderRadius: '14px',
-                      border: '1px solid rgba(232, 227, 220, 0.9)',
-                      boxShadow: 'var(--shadow-sm)',
+                      border: '1px solid var(--border-light)',
+                      display: 'flex',
+                      alignItems: 'flex-start',
+                      gap: '0.85rem',
+                      transition: 'var(--transition-smooth)',
                     }}
                   >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '0.4rem' }}>
-                      <div
-                        style={{
-                          width: '32px',
-                          height: '32px',
-                          borderRadius: '8px',
-                          backgroundColor: 'rgba(0, 107, 63, 0.08)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          color: '#006B3F',
-                        }}
-                      >
-                        {renderIcon(value.iconName)}
-                      </div>
+                    <div
+                      style={{
+                        width: '34px',
+                        height: '34px',
+                        borderRadius: '10px',
+                        backgroundColor: '#FFFFFF',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        boxShadow: 'var(--shadow-sm)',
+                      }}
+                    >
+                      {role.icon}
+                    </div>
+                    <div>
                       <div style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--rich-black)' }}>
-                        {value.title}
+                        {role.title}
+                      </div>
+                      <div style={{ fontSize: '0.82rem', color: '#66615C', marginTop: '0.15rem' }}>
+                        {role.subtitle}
                       </div>
                     </div>
-                    <p style={{ fontSize: '0.85rem', color: '#66615C', margin: 0, lineHeight: 1.55 }}>
-                      {value.description}
-                    </p>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Action Button: Opens Full Biography Dedicated Page */}
-            <div style={{ paddingTop: '0.5rem' }}>
+            {/* "More About" Button */}
+            <div style={{ paddingTop: '0.75rem' }}>
               <button
                 onClick={() => {
                   onNavigate('about');
@@ -284,7 +246,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onNavigate }) => {
                 }}
                 className="btn-primary-green"
               >
-                <span>Read Full Biography &amp; Record</span>
+                <span>More About Mama Pokua</span>
                 <ArrowRightIcon size={18} />
               </button>
             </div>

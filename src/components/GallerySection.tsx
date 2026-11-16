@@ -28,7 +28,6 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!activeItem) return;
-
       if (e.key === 'Escape') {
         setActiveItem(null);
       } else if (e.key === 'ArrowRight') {
@@ -60,18 +59,19 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
     <section
       id="gallery"
       style={{
-        backgroundColor: '#FFFFFF',
-        paddingTop: '6rem',
-        paddingBottom: '6rem',
+        backgroundColor: 'var(--bg-warm-gray)',
+        paddingTop: '6.5rem',
+        paddingBottom: '6.5rem',
         position: 'relative',
+        borderTop: '1px solid var(--border-light)',
       }}
     >
       <div className="container-custom">
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
           <div className="section-tag" style={{ justifyContent: 'center' }}>
             <span style={{ width: '12px', height: '2px', backgroundColor: '#006B3F' }} />
-            <span>Moments of Leadership</span>
+            <span>Moments of Leadership &amp; Community</span>
             <span style={{ width: '12px', height: '2px', backgroundColor: '#CE1126' }} />
           </div>
 
@@ -83,10 +83,10 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
               color: 'var(--rich-black)',
             }}
           >
-            Community &amp; Leadership Gallery
+            Gallery
           </h2>
 
-          <p style={{ maxWidth: '600px', margin: '0.75rem auto 0', color: '#66615C', fontSize: '1.05rem' }}>
+          <p style={{ maxWidth: '620px', margin: '0.75rem auto 0', color: '#5C5751', fontSize: '1.05rem' }}>
             A photographic chronicle of grassroots engagements, school durbars, healthcare interventions, and traditional celebrations across Agona East.
           </p>
 
@@ -115,16 +115,17 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
                   style={{
                     border: 'none',
                     cursor: 'pointer',
-                    padding: '0.55rem 1.25rem',
+                    padding: '0.6rem 1.35rem',
                     borderRadius: '999px',
                     fontSize: '0.85rem',
-                    fontWeight: 600,
+                    fontWeight: 700,
                     transition: 'var(--transition-smooth)',
-                    backgroundColor: isSelected ? '#006B3F' : 'var(--bg-cream)',
+                    backgroundColor: isSelected ? 'var(--ndc-green)' : '#FFFFFF',
                     color: isSelected ? '#FFFFFF' : '#4A4643',
                     borderWidth: '1px',
                     borderStyle: 'solid',
-                    borderColor: isSelected ? '#006B3F' : 'var(--border-light)',
+                    borderColor: isSelected ? 'var(--ndc-green)' : 'var(--border-light)',
+                    boxShadow: isSelected ? '0 4px 14px rgba(0, 107, 63, 0.25)' : 'var(--shadow-sm)',
                   }}
                 >
                   {cat}
@@ -134,12 +135,12 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
           </div>
         </div>
 
-        {/* Masonry / Dynamic Grid */}
+        {/* Refined Photo Grid with Soft Hover Effects */}
         <div
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-            gap: '1.5rem',
+            gap: '1.75rem',
           }}
         >
           {filteredItems.map((item) => (
@@ -148,12 +149,13 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
               onClick={() => setActiveItem(item)}
               style={{
                 position: 'relative',
-                borderRadius: '18px',
+                borderRadius: '20px',
                 overflow: 'hidden',
                 boxShadow: 'var(--shadow-sm)',
                 cursor: 'pointer',
-                height: '280px',
+                height: '290px',
                 backgroundColor: '#1A1A1A',
+                border: '1px solid var(--border-light)',
               }}
               className="gallery-card-item img-zoom-container"
             >
@@ -168,27 +170,26 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
                 }}
               />
 
-              {/* Soft Gradient Overlay on Hover with Caption */}
+              {/* Soft Dark Overlay on Hover with Clean Typography */}
               <div
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'linear-gradient(180deg, rgba(17, 17, 17, 0.1) 0%, rgba(17, 17, 17, 0.85) 100%)',
+                  background: 'linear-gradient(180deg, rgba(17, 17, 17, 0.05) 0%, rgba(17, 17, 17, 0.88) 100%)',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  padding: '1.25rem',
+                  padding: '1.5rem',
                   color: '#FFFFFF',
-                  opacity: 0.9,
                   transition: 'opacity 0.3s ease',
                 }}
               >
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <span
                     style={{
-                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.25)',
                       backdropFilter: 'blur(8px)',
-                      padding: '0.25rem 0.65rem',
+                      padding: '0.25rem 0.75rem',
                       borderRadius: '999px',
                       fontSize: '0.72rem',
                       fontWeight: 700,
@@ -217,7 +218,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
                 <div>
                   <h4
                     style={{
-                      fontSize: '1.05rem',
+                      fontSize: '1.1rem',
                       fontFamily: 'var(--font-serif)',
                       fontWeight: 700,
                       marginBottom: '0.35rem',
@@ -232,8 +233,8 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.75rem',
-                      fontSize: '0.75rem',
-                      color: 'rgba(255, 255, 255, 0.75)',
+                      fontSize: '0.78rem',
+                      color: 'rgba(255, 255, 255, 0.8)',
                     }}
                   >
                     <span>{item.location}</span>
@@ -247,14 +248,14 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
         </div>
 
         {/* View All Dedicated Gallery Page CTA */}
-        <div style={{ textAlign: 'center', marginTop: '3.5rem' }}>
+        <div style={{ textAlign: 'center', marginTop: '3.75rem' }}>
           <button
             onClick={() => {
               onNavigate('gallery');
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            className="btn-outline-gold"
-            style={{ padding: '0.85rem 2.2rem' }}
+            className="btn-outline-green"
+            style={{ padding: '0.9rem 2.4rem' }}
           >
             <span>Open Dedicated Media Archive</span>
             <ArrowRightIcon size={18} />
@@ -262,7 +263,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
         </div>
       </div>
 
-      {/* Lightbox Modal */}
+      {/* Interactive Lightbox Modal */}
       {activeItem && (
         <div
           className="lightbox-backdrop"
@@ -348,7 +349,6 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
                 }}
               />
 
-              {/* Prev / Next Floating Arrows */}
               <button
                 onClick={handlePrev}
                 style={{
@@ -356,7 +356,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
                   left: '1rem',
                   top: '50%',
                   transform: 'translateY(-50%)',
-                  backgroundColor: 'rgba(17, 17, 17, 0.75)',
+                  backgroundColor: 'rgba(17, 17, 17, 0.8)',
                   backdropFilter: 'blur(8px)',
                   color: '#FFFFFF',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -380,7 +380,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
                   right: '1rem',
                   top: '50%',
                   transform: 'translateY(-50%)',
-                  backgroundColor: 'rgba(17, 17, 17, 0.75)',
+                  backgroundColor: 'rgba(17, 17, 17, 0.8)',
                   backdropFilter: 'blur(8px)',
                   color: '#FFFFFF',
                   border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -415,7 +415,7 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
                 {activeItem.caption}
               </p>
 
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', fontSize: '0.8rem', color: '#C5A059' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem', fontSize: '0.8rem', color: '#E7D5B0' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
                   <MapPinIcon size={14} />
                   <span>{activeItem.location}</span>

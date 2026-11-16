@@ -4,6 +4,7 @@ import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { AboutSection } from './components/AboutSection';
 import { ImpactSection } from './components/ImpactSection';
+import { StatsBar } from './components/StatsBar';
 import { NewsSection } from './components/NewsSection';
 import { GallerySection } from './components/GallerySection';
 import { ContactSection } from './components/ContactSection';
@@ -78,6 +79,7 @@ export function App() {
               onSelectProject={handleSelectProject}
               onNavigate={handleNavigate}
             />
+            <StatsBar />
             <NewsSection
               onSelectArticle={handleSelectArticle}
               onNavigate={handleNavigate}
