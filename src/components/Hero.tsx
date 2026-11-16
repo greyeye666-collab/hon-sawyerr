@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { animate, motion, useMotionValue, useReducedMotion } from 'motion/react';
 import type { PageView } from '../types';
 import { ArrowRightIcon, ArrowLeftIcon, EyeIcon, EyeOffIcon } from './Icons';
 
@@ -40,197 +41,326 @@ interface HeroSlide {
   }[];
 }
 
+function project(initialVelocityPxPerSec: number, decelerationRate = 0.996): number {
+  return ((initialVelocityPxPerSec / 1000) * decelerationRate) / (1 - decelerationRate);
+}
+
+function rubberband(overshoot: number, dimension: number, constant = 0.55): number {
+  return (overshoot * dimension * constant) / (dimension + constant * Math.abs(overshoot));
+}
+
+const SLIDES: HeroSlide[] = [
+  {
+    id: 1,
+    type: 'landscape',
+    tag: 'Leadership with the People',
+    badgeColor: 'green',
+    title: 'Leadership with Integrity.',
+    titleHighlight: 'Service with Impact.',
+    description:
+      'Serving the good people of Agona East with steadfast compassion, educational empowerment, and sustainable community development.',
+    landscapeImage: img1,
+  },
+  {
+    id: 2,
+    type: 'paired-portrait',
+    tag: 'Servant Leadership & Passion',
+    badgeColor: 'red',
+    title: 'Mama Pokua: A Mother for All,',
+    titleHighlight: 'A Champion for the Youth.',
+    description:
+      'Affectionately called "Mama Pokua", Hon. Sawyerr is renowned across the Central Region for putting the people first in every legislative decision.',
+    portraitImages: [
+      { src: img2, caption: 'Grassroots Warmth' },
+      { src: img3, caption: 'Mama Pokua in Agona East' },
+    ],
+  },
+  {
+    id: 3,
+    type: 'landscape',
+    tag: 'Transforming Communities',
+    badgeColor: 'green',
+    title: 'Delivering Tangible Progress',
+    titleHighlight: 'Across Agona East.',
+    description:
+      'From clean mechanized water boreholes to maternal health clinics and school infrastructure, delivering real development to every village.',
+    landscapeImage: img4,
+  },
+  {
+    id: 4,
+    type: 'paired-portrait',
+    tag: 'Women & Grassroots Economy',
+    badgeColor: 'green',
+    title: 'Empowering Mothers & Traders',
+    titleHighlight: 'with Economic Dignity.',
+    description:
+      'Disbursing revolving seed grants and processing equipment to thousands of market women and farming cooperatives across Agona East.',
+    portraitImages: [
+      { src: img5, caption: 'Market Women Support' },
+      { src: img6, caption: 'Grassroots Engagement' },
+      { src: img7, caption: 'Economic Independence' },
+    ],
+  },
+  {
+    id: 5,
+    type: 'landscape',
+    tag: 'Education for Every Child',
+    badgeColor: 'red',
+    title: 'Securing the Next Generation',
+    titleHighlight: 'Through Education.',
+    description:
+      'Over 35,000 candidates supplied with free mathematical sets and hot nutritious lunch packages during BECE examinations across 42 schools.',
+    landscapeImage: img8,
+  },
+  {
+    id: 6,
+    type: 'paired-portrait',
+    tag: 'Parliamentary Stewardship',
+    badgeColor: 'green',
+    title: 'A Fierce Voice in the',
+    titleHighlight: 'Parliament of Ghana.',
+    description:
+      'Championing rural health subventions, road maintenance, and youth employment on the floor of the 8th Parliament with integrity.',
+    portraitImages: [
+      { src: img9, caption: 'Parliamentary Caucus' },
+      { src: img10, caption: 'Legislative Leadership' },
+      { src: img11, caption: 'Public Accountability' },
+    ],
+  },
+  {
+    id: 7,
+    type: 'paired-portrait',
+    tag: 'Agona East Forward',
+    badgeColor: 'red',
+    title: 'United in Strength.',
+    titleHighlight: 'Focused on Progress.',
+    description:
+      'Building a resilient, inclusive, and prosperous constituency through unity, mutual respect, and active civic participation.',
+    portraitImages: [
+      { src: img12, caption: 'Community Durbar' },
+      { src: img13, caption: 'Cultural Heritage' },
+      { src: img14, caption: 'Youth & Artisans' },
+    ],
+  },
+  {
+    id: 8,
+    type: 'paired-portrait',
+    tag: 'Grassroots Resilience',
+    badgeColor: 'green',
+    title: 'A Mother to All.',
+    titleHighlight: 'A Pillar of Agona East.',
+    description:
+      'Standing firmly beside market women, farmers, students, and traditional leaders with unwavering compassion and accessible leadership.',
+    portraitImages: [
+      { src: img15, caption: 'Mama Pokua with Constituents' },
+      { src: h2Img, caption: 'Servant of Agona East' },
+    ],
+  },
+];
+
 export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isCardMinimized, setIsCardMinimized] = useState(false);
-  const slideTimerRef = useRef<number | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
 
-  const slides: HeroSlide[] = [
-    // Slide 1: Single Landscape (Grand Community Gathering)
-    {
-      id: 1,
-      type: 'landscape',
-      tag: 'Leadership with the People',
-      badgeColor: 'green',
-      title: 'Leadership with Integrity.',
-      titleHighlight: 'Service with Impact.',
-      description:
-        'Serving the good people of Agona East with steadfast compassion, educational empowerment, and sustainable community development.',
-      landscapeImage: img1,
-    },
-    // Slide 2: Paired 2 Portraits Side by Side (50% / 50%)
-    {
-      id: 2,
-      type: 'paired-portrait',
-      tag: 'Servant Leadership & Passion',
-      badgeColor: 'red',
-      title: 'Mama Pokua: A Mother for All,',
-      titleHighlight: 'A Champion for the Youth.',
-      description:
-        'Affectionately called "Mama Pokua", Hon. Sawyerr is renowned across the Central Region for putting the people first in every legislative decision.',
-      portraitImages: [
-        { src: img2, caption: 'Grassroots Warmth' },
-        { src: img3, caption: 'Mama Pokua in Agona East' },
-      ],
-    },
-    // Slide 3: Single Landscape (Project Commissioning & Delivery)
-    {
-      id: 3,
-      type: 'landscape',
-      tag: 'Transforming Communities',
-      badgeColor: 'green',
-      title: 'Delivering Tangible Progress',
-      titleHighlight: 'Across Agona East.',
-      description:
-        'From clean mechanized water boreholes to maternal health clinics and school infrastructure, delivering real development to every village.',
-      landscapeImage: img4,
-    },
-    // Slide 4: Paired 3 Portraits Side by Side (33.3% / 33.3% / 33.3%)
-    {
-      id: 4,
-      type: 'paired-portrait',
-      tag: 'Women & Grassroots Economy',
-      badgeColor: 'green',
-      title: 'Empowering Mothers & Traders',
-      titleHighlight: 'with Economic Dignity.',
-      description:
-        'Disbursing revolving seed grants and processing equipment to thousands of market women and farming cooperatives across Agona East.',
-      portraitImages: [
-        { src: img5, caption: 'Market Women Support' },
-        { src: img6, caption: 'Grassroots Engagement' },
-        { src: img7, caption: 'Economic Independence' },
-      ],
-    },
-    // Slide 5: Single Landscape (Students & Youth Orientation)
-    {
-      id: 5,
-      type: 'landscape',
-      tag: 'Education for Every Child',
-      badgeColor: 'red',
-      title: 'Securing the Next Generation',
-      titleHighlight: 'Through Education.',
-      description:
-        'Over 35,000 candidates supplied with free mathematical sets and hot nutritious lunch packages during BECE examinations across 42 schools.',
-      landscapeImage: img8,
-    },
-    // Slide 6: Paired 3 Portraits Side by Side (33.3% / 33.3% / 33.3%)
-    {
-      id: 6,
-      type: 'paired-portrait',
-      tag: 'Parliamentary Stewardship',
-      badgeColor: 'green',
-      title: 'A Fierce Voice in the',
-      titleHighlight: 'Parliament of Ghana.',
-      description:
-        'Championing rural health subventions, road maintenance, and youth employment on the floor of the 8th Parliament with integrity.',
-      portraitImages: [
-        { src: img9, caption: 'Parliamentary Caucus' },
-        { src: img10, caption: 'Legislative Leadership' },
-        { src: img11, caption: 'Public Accountability' },
-      ],
-    },
-    // Slide 7: Paired 3 Portraits Side by Side (33.3% / 33.3% / 33.3%)
-    {
-      id: 7,
-      type: 'paired-portrait',
-      tag: 'Agona East Forward',
-      badgeColor: 'red',
-      title: 'United in Strength.',
-      titleHighlight: 'Focused on Progress.',
-      description:
-        'Building a resilient, inclusive, and prosperous constituency through unity, mutual respect, and active civic participation.',
-      portraitImages: [
-        { src: img12, caption: 'Community Durbar' },
-        { src: img13, caption: 'Cultural Heritage' },
-        { src: img14, caption: 'Youth & Artisans' },
-      ],
-    },
-    // Slide 8: Paired 2 Portraits Side by Side (50% / 50%)
-    {
-      id: 8,
-      type: 'paired-portrait',
-      tag: 'Grassroots Resilience',
-      badgeColor: 'green',
-      title: 'A Mother to All.',
-      titleHighlight: 'A Pillar of Agona East.',
-      description:
-        'Standing firmly beside market women, farmers, students, and traditional leaders with unwavering compassion and accessible leadership.',
-      portraitImages: [
-        { src: img15, caption: 'Mama Pokua with Constituents' },
-        { src: h2Img, caption: 'Servant of Agona East' },
-      ],
-    },
-  ];
+  const containerRef = useRef<HTMLElement | null>(null);
+  const trackX = useMotionValue(0);
+  const dragStateRef = useRef({
+    active: false,
+    committed: false,
+    startX: 0,
+    startY: 0,
+    startTrackX: 0,
+    width: 1200,
+    samples: [] as Array<{ x: number; t: number }>,
+  });
 
-  // Smooth automatic slider: slides slowly and smoothly every 7 seconds (not too fast)
+  const springToSlide = useCallback(
+    (index: number, velocity = 0) => {
+      const clamped = Math.max(0, Math.min(SLIDES.length - 1, index));
+      const width = containerRef.current?.clientWidth || window.innerWidth;
+      const targetX = -clamped * width;
+      setCurrentSlideIndex(clamped);
+
+      if (prefersReducedMotion) {
+        trackX.set(targetX);
+        return;
+      }
+
+      animate(trackX, targetX, {
+        type: 'spring',
+        bounce: 0,
+        duration: 0.48,
+        velocity,
+      });
+    },
+    [prefersReducedMotion, trackX]
+  );
+
+  // Keep track aligned on viewport resize
   useEffect(() => {
-    slideTimerRef.current = window.setInterval(() => {
-      setCurrentSlideIndex((prev) => (prev + 1) % slides.length);
-    }, 7000);
-
-    return () => {
-      if (slideTimerRef.current) clearInterval(slideTimerRef.current);
+    const syncWidth = () => {
+      const width = containerRef.current?.clientWidth || window.innerWidth;
+      trackX.set(-currentSlideIndex * width);
     };
-  }, [slides.length]);
+    window.addEventListener('resize', syncWidth);
+    return () => window.removeEventListener('resize', syncWidth);
+  }, [currentSlideIndex, trackX]);
+
+  // Auto-advance cleanly when idle and motion is allowed
+  useEffect(() => {
+    if (isPaused || prefersReducedMotion) return;
+    const timer = window.setInterval(() => {
+      const next = (currentSlideIndex + 1) % SLIDES.length;
+      springToSlide(next);
+    }, 7000);
+    return () => clearInterval(timer);
+  }, [currentSlideIndex, isPaused, prefersReducedMotion, springToSlide]);
+
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    // Allow interactive buttons inside hero to work cleanly without capturing clicks
+    if ((e.target as HTMLElement).closest('button, a')) return;
+    if (prefersReducedMotion) return;
+
+    const width = containerRef.current?.clientWidth || window.innerWidth;
+    dragStateRef.current = {
+      active: true,
+      committed: false,
+      startX: e.clientX,
+      startY: e.clientY,
+      startTrackX: trackX.get(),
+      width,
+      samples: [{ x: e.clientX, t: performance.now() }],
+    };
+    setIsPaused(true);
+    e.currentTarget.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const d = dragStateRef.current;
+    if (!d.active) return;
+
+    const dx = e.clientX - d.startX;
+    const dy = e.clientY - d.startY;
+
+    // 10px hysteresis before committing horizontal drag
+    if (!d.committed) {
+      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 10) {
+        d.active = false;
+        setIsPaused(false);
+        return;
+      }
+      if (Math.abs(dx) < 10) return;
+      d.committed = true;
+    }
+
+    const minX = -(SLIDES.length - 1) * d.width;
+    const rawX = d.startTrackX + dx;
+    let clampedX = rawX;
+    if (rawX > 0) {
+      clampedX = rubberband(rawX, d.width);
+    } else if (rawX < minX) {
+      clampedX = minX - rubberband(minX - rawX, d.width);
+    }
+    trackX.set(clampedX);
+
+    d.samples.push({ x: e.clientX, t: performance.now() });
+    if (d.samples.length > 5) d.samples.shift();
+  };
+
+  const handlePointerRelease = () => {
+    const d = dragStateRef.current;
+    if (!d.active) return;
+    d.active = false;
+    setIsPaused(false);
+
+    if (!d.committed) return;
+
+    let velocity = 0;
+    if (d.samples.length >= 2) {
+      const first = d.samples[0];
+      const last = d.samples[d.samples.length - 1];
+      const dt = (last.t - first.t) / 1000;
+      if (dt > 0.005) velocity = (last.x - first.x) / dt;
+    }
+
+    // Momentum projection to nearest slide snap point
+    const currentX = trackX.get();
+    const projectedX = currentX + project(velocity, 0.995);
+    const projectedIndex = Math.round(-projectedX / d.width);
+    const clampedIndex = Math.max(0, Math.min(SLIDES.length - 1, projectedIndex));
+    springToSlide(clampedIndex, velocity);
+  };
 
   const handlePrevSlide = () => {
-    setCurrentSlideIndex((prev) => (prev - 1 + slides.length) % slides.length);
+    springToSlide((currentSlideIndex - 1 + SLIDES.length) % SLIDES.length);
   };
 
   const handleNextSlide = () => {
-    setCurrentSlideIndex((prev) => (prev + 1) % slides.length);
+    springToSlide((currentSlideIndex + 1) % SLIDES.length);
   };
 
   return (
     <section
       id="hero"
+      ref={containerRef}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
       style={{
         position: 'relative',
         backgroundColor: '#0A0E0C',
         color: '#FFFFFF',
-        height: '90vh',
-        minHeight: '660px',
-        maxHeight: '920px',
+        height: '88dvh',
+        minHeight: '640px',
+        maxHeight: '900px',
         width: '100%',
         overflow: 'hidden',
         display: 'flex',
         flexDirection: 'column',
       }}
     >
-      {/* Top Subtle Animated Progress Line */}
+      {/* Top Subtle Progress Line */}
       <div
         style={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
-          height: '4px',
+          height: '3px',
           zIndex: 40,
           backgroundColor: 'rgba(255, 255, 255, 0.1)',
         }}
       >
-        <div
-          key={currentSlideIndex}
-          style={{
-            height: '100%',
-            background: 'linear-gradient(90deg, #009E52 0%, #F59E0B 50%, #EE2B42 100%)',
-            animation: 'autoSlideProgress 7s linear infinite',
-          }}
-        />
+        {!prefersReducedMotion && !isPaused && (
+          <div
+            key={currentSlideIndex}
+            style={{
+              height: '100%',
+              background: 'linear-gradient(90deg, #009E52 0%, #C9963B 50%, #D61F33 100%)',
+              animation: 'autoSlideProgress 7s linear infinite',
+            }}
+          />
+        )}
       </div>
 
-      {/* HORIZONTAL SLIDING CAROUSEL TRACK (Slow, silky-smooth 1.4s transition) */}
-      <div
+      {/* 1:1 Pointer-Trackable Carousel Track */}
+      <motion.div
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerRelease}
+        onPointerCancel={handlePointerRelease}
         style={{
+          x: trackX,
           display: 'flex',
           width: '100%',
           height: '100%',
-          transform: `translateX(-${currentSlideIndex * 100}%)`,
-          transition: 'transform 1.4s cubic-bezier(0.25, 1, 0.35, 1)',
           willChange: 'transform',
+          cursor: 'grab',
+          touchAction: 'pan-y',
         }}
       >
-        {slides.map((slide) => (
+        {SLIDES.map((slide) => (
           <div
             key={slide.id}
             style={{
@@ -242,17 +372,16 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
               overflow: 'hidden',
               display: 'flex',
               alignItems: 'center',
+              userSelect: 'none',
             }}
             className="hero-slide-item"
           >
-            {/* 1. SLIDE BACKGROUND: 100% IMAGES */}
-
-            {/* A) If Landscape: 1 full-bleed image filling 100% width and height */}
             {slide.type === 'landscape' && slide.landscapeImage && (
               <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
                 <img
                   src={slide.landscapeImage}
                   alt={slide.title}
+                  draggable={false}
                   className="hero-slide-img"
                   style={{
                     width: '100%',
@@ -260,13 +389,12 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                     objectFit: 'cover',
                     objectPosition: 'center 35%',
                     display: 'block',
-                    filter: 'contrast(1.04) saturate(1.08)',
+                    filter: 'contrast(1.03) saturate(1.04)',
                   }}
                 />
               </div>
             )}
 
-            {/* B) If Portraits: ALL PORTRAITS PAIRED SIDE BY SIDE FILLING 100% OF SLIDER */}
             {slide.type === 'paired-portrait' && slide.portraitImages && (
               <div
                 style={{
@@ -289,13 +417,14 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                       overflow: 'hidden',
                       borderRight:
                         pIdx < slide.portraitImages!.length - 1
-                          ? '2.5px solid rgba(255, 255, 255, 0.25)'
+                          ? '1px solid rgba(255, 255, 255, 0.2)'
                           : 'none',
                     }}
                   >
                     <img
                       src={pImg.src}
                       alt={pImg.caption}
+                      draggable={false}
                       className="hero-slide-img"
                       style={{
                         width: '100%',
@@ -303,11 +432,10 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                         objectFit: 'cover',
                         objectPosition: 'center 20%',
                         display: 'block',
-                        filter: 'contrast(1.04) saturate(1.08)',
+                        filter: 'contrast(1.03) saturate(1.04)',
                       }}
                     />
 
-                    {/* Subtle caption tag near top/bottom */}
                     <div
                       className="portrait-caption-pill"
                       style={{
@@ -315,17 +443,18 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                         bottom: '5.5rem',
                         left: '50%',
                         transform: 'translateX(-50%)',
-                        backgroundColor: 'rgba(10, 14, 12, 0.72)',
-                        backdropFilter: 'blur(8px)',
+                        backgroundColor: 'rgba(10, 14, 12, 0.65)',
+                        backdropFilter: 'blur(12px) saturate(160%)',
+                        WebkitBackdropFilter: 'blur(12px) saturate(160%)',
                         color: '#FFFFFF',
                         fontSize: '0.72rem',
-                        fontWeight: 700,
-                        padding: '0.25rem 0.85rem',
+                        fontWeight: 600,
+                        padding: '0.28rem 0.9rem',
                         borderRadius: '999px',
-                        border: '1px solid rgba(255, 255, 255, 0.25)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
                         whiteSpace: 'nowrap',
                         zIndex: 15,
-                        letterSpacing: '0.04em',
+                        letterSpacing: '0.02em',
                       }}
                     >
                       {pImg.caption}
@@ -335,7 +464,6 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
               </div>
             )}
 
-            {/* Soft, gentle dark overlay: on desktop left-to-right; on mobile bottom-to-top only behind text so her face is 100% crystal clear */}
             <div
               className="hero-dark-overlay"
               style={{
@@ -343,12 +471,11 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                 inset: 0,
                 zIndex: 2,
                 background:
-                  'linear-gradient(90deg, rgba(10, 14, 12, 0.88) 0%, rgba(10, 14, 12, 0.6) 40%, rgba(10, 14, 12, 0.15) 70%, transparent 100%)',
+                  'linear-gradient(90deg, rgba(10, 14, 12, 0.82) 0%, rgba(10, 14, 12, 0.48) 42%, rgba(10, 14, 12, 0.1) 72%, transparent 100%)',
                 pointerEvents: 'none',
               }}
             />
 
-            {/* 2. FOREGROUND CONTENT OVERLAY */}
             <div
               className="container-custom hero-content-wrapper"
               style={{
@@ -356,10 +483,10 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                 zIndex: 10,
                 width: '100%',
                 paddingTop: '2rem',
-                paddingBottom: '3.5rem',
+                paddingBottom: '3.75rem',
               }}
             >
-              {/* Mobile "Make Way / View Full Photo" Quick Control Button */}
+              {/* Mobile Quick Toggle */}
               <div className="mobile-view-photo-bar">
                 <button
                   type="button"
@@ -368,17 +495,15 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.45rem',
-                    backgroundColor: isCardMinimized ? '#009E52' : 'rgba(10, 20, 14, 0.85)',
-                    backdropFilter: 'blur(8px)',
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    backgroundColor: isCardMinimized ? '#007A43' : 'rgba(10, 18, 14, 0.78)',
+                    backdropFilter: 'blur(12px)',
+                    border: '1px solid rgba(255, 255, 255, 0.28)',
                     color: '#FFFFFF',
                     borderRadius: '999px',
-                    padding: '0.38rem 0.95rem',
-                    fontSize: '0.78rem',
-                    fontWeight: 700,
+                    padding: '0.4rem 0.95rem',
+                    fontSize: '0.76rem',
+                    fontWeight: 600,
                     cursor: 'pointer',
-                    boxShadow: '0 4px 14px rgba(0, 0, 0, 0.45)',
-                    transition: 'all 0.25s ease',
                   }}
                   aria-label={isCardMinimized ? 'Show Slide Details' : 'View Full Photo'}
                 >
@@ -390,13 +515,12 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                   ) : (
                     <>
                       <EyeOffIcon size={15} />
-                      <span>Make Way (View Photo)</span>
+                      <span>View Photo</span>
                     </>
                   )}
                 </button>
               </div>
 
-              {/* Minimized Pill on Mobile when user clicked View Full Photo */}
               {isCardMinimized ? (
                 <div
                   onClick={() => setIsCardMinimized(false)}
@@ -405,12 +529,12 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    backgroundColor: 'rgba(5, 18, 12, 0.94)',
-                    border: '1.5px solid rgba(0, 158, 82, 0.65)',
+                    backgroundColor: 'rgba(8, 22, 14, 0.88)',
+                    backdropFilter: 'blur(16px)',
+                    border: '1px solid rgba(255, 255, 255, 0.22)',
                     borderRadius: '999px',
-                    padding: '0.65rem 1.15rem',
+                    padding: '0.68rem 1.2rem',
                     cursor: 'pointer',
-                    boxShadow: '0 8px 25px rgba(0, 0, 0, 0.7)',
                     width: '100%',
                     maxWidth: '420px',
                     margin: '0 auto',
@@ -418,135 +542,119 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', overflow: 'hidden' }}>
                     <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#009E52', flexShrink: 0 }} />
-                    <span style={{ color: '#FFFFFF', fontSize: '0.84rem', fontWeight: 700, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                    <span style={{ color: '#FFFFFF', fontSize: '0.84rem', fontWeight: 600, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
                       {slide.title}
                     </span>
                   </div>
-                  <span style={{ color: '#FDE68A', fontSize: '0.75rem', fontWeight: 800, flexShrink: 0, paddingLeft: '0.5rem' }}>
-                    Show Details ↑
+                  <span style={{ color: '#F3E5C2', fontSize: '0.75rem', fontWeight: 700, flexShrink: 0, paddingLeft: '0.5rem' }}>
+                    Show ↑
                   </span>
                 </div>
               ) : (
-                /* Floating Content Glass Card */
                 <div
+                  className="hero-glass-box apple-frosted-card"
                   style={{
-                    maxWidth: '640px',
-                    backgroundColor: 'rgba(10, 14, 12, 0.55)',
-                    backdropFilter: 'blur(16px)',
-                    WebkitBackdropFilter: 'blur(16px)',
-                    padding: '2.5rem',
+                    maxWidth: '610px',
+                    backgroundColor: 'rgba(10, 18, 14, 0.6)',
+                    backdropFilter: 'blur(26px) saturate(180%)',
+                    WebkitBackdropFilter: 'blur(26px) saturate(180%)',
+                    padding: '2.35rem',
                     borderRadius: '24px',
-                    border: '1.5px solid rgba(255, 255, 255, 0.18)',
-                    boxShadow: '0 20px 50px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 158, 82, 0.25)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    boxShadow: '0 24px 60px rgba(0, 0, 0, 0.42)',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '1.25rem',
+                    gap: '1.15rem',
                   }}
-                  className="hero-glass-box"
                 >
-                  {/* Badges */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
                     <div
+                      className="hero-badge-parliament"
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '0.45rem',
-                        backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                        backdropFilter: 'blur(10px)',
-                        border: '1px solid rgba(255, 255, 255, 0.3)',
-                        padding: '0.35rem 0.95rem',
+                        backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                        border: '1px solid rgba(255, 255, 255, 0.22)',
+                        padding: '0.32rem 0.9rem',
                         borderRadius: '999px',
-                        fontSize: '0.78rem',
-                        fontWeight: 800,
-                        letterSpacing: '0.06em',
+                        fontSize: '0.73rem',
+                        fontWeight: 700,
+                        letterSpacing: '0.05em',
                         textTransform: 'uppercase',
                         color: '#FFFFFF',
                       }}
-                      className="hero-badge-parliament"
                     >
-                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#009E52' }} />
-                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#EE2B42' }} />
+                      <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#009E52' }} />
+                      <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#D61F33' }} />
                       <span>NDC Parliamentary Caucus</span>
                     </div>
 
                     <span
                       style={{
                         backgroundColor:
-                          slide.badgeColor === 'green' ? 'rgba(0, 158, 82, 0.32)' : 'rgba(238, 43, 66, 0.32)',
-                        color: slide.badgeColor === 'green' ? '#86EFAC' : '#FCA5A5',
+                          slide.badgeColor === 'green' ? 'rgba(0, 158, 82, 0.24)' : 'rgba(214, 31, 51, 0.24)',
+                        color: slide.badgeColor === 'green' ? '#A7F3D0' : '#FECACA',
                         border: `1px solid ${
-                          slide.badgeColor === 'green' ? 'rgba(0, 158, 82, 0.6)' : 'rgba(238, 43, 66, 0.6)'
+                          slide.badgeColor === 'green' ? 'rgba(167, 243, 208, 0.35)' : 'rgba(254, 202, 202, 0.35)'
                         }`,
-                        fontSize: '0.75rem',
-                        fontWeight: 700,
+                        fontSize: '0.72rem',
+                        fontWeight: 600,
                         padding: '0.3rem 0.85rem',
                         borderRadius: '999px',
-                        letterSpacing: '0.04em',
+                        letterSpacing: '0.03em',
                       }}
                     >
                       {slide.tag}
                     </span>
                   </div>
 
-                  {/* Bright Vibrant NDC Accent Line */}
-                  <div className="ndc-accent-ribbon" style={{ maxWidth: '130px', height: '4px' }}>
-                    <div className="ribbon-green" />
-                    <div className="ribbon-gold" />
-                    <div className="ribbon-red" />
-                  </div>
-
-                  {/* Headline */}
                   <h1
                     className="hero-title-text"
                     style={{
-                      fontSize: 'clamp(2.1rem, 4.2vw, 3.5rem)',
+                      fontSize: 'clamp(2.15rem, 4vw, 3.45rem)',
                       fontFamily: 'var(--font-serif)',
                       fontWeight: 700,
-                      lineHeight: 1.15,
+                      lineHeight: 1.12,
                       color: '#FFFFFF',
                       margin: 0,
-                      letterSpacing: '-0.025em',
-                      textShadow: '0 4px 18px rgba(0, 0, 0, 0.6)',
+                      letterSpacing: '-0.028em',
                     }}
                   >
                     {slide.title}{' '}
                     <span
                       style={{
                         display: 'block',
-                        background: 'linear-gradient(135deg, #FFFFFF 0%, #FDE68A 50%, #F59E0B 100%)',
-                        WebkitBackgroundClip: 'text',
-                        WebkitTextFillColor: 'transparent',
+                        color: '#F3E5C2',
                         fontStyle: 'italic',
+                        fontWeight: 600,
+                        marginTop: '0.12rem',
                       }}
                     >
                       {slide.titleHighlight}
                     </span>
                   </h1>
 
-                  {/* Description */}
                   <p
                     className="hero-desc-text"
                     style={{
-                      fontSize: 'clamp(0.98rem, 1.5vw, 1.12rem)',
-                      color: 'rgba(255, 255, 255, 0.92)',
-                      lineHeight: 1.65,
+                      fontSize: 'clamp(0.98rem, 1.35vw, 1.08rem)',
+                      color: 'rgba(255, 255, 255, 0.88)',
+                      lineHeight: 1.62,
                       margin: 0,
-                      fontWeight: 300,
-                      textShadow: '0 2px 10px rgba(0, 0, 0, 0.5)',
+                      fontWeight: 400,
                     }}
                   >
                     {slide.description}
                   </p>
 
-                  {/* Action Buttons */}
                   <div
                     className="hero-actions-row"
-                    style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', paddingTop: '0.4rem' }}
+                    style={{ display: 'flex', gap: '0.85rem', flexWrap: 'wrap', paddingTop: '0.35rem' }}
                   >
                     <button
                       onClick={onExploreProjects}
                       className="btn-primary-green hero-btn-primary"
-                      style={{ fontSize: '0.95rem', padding: '0.9rem 2rem' }}
                     >
                       <span>Explore Focus Areas</span>
                       <ArrowRightIcon size={17} />
@@ -558,9 +666,8 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                         window.scrollTo({ top: 0, behavior: 'smooth' });
                       }}
                       className="btn-outline-red hero-btn-secondary"
-                      style={{ fontSize: '0.95rem', padding: '0.9rem 1.85rem' }}
                     >
-                      <span>Read Mama Pokua's Story</span>
+                      <span>Read Mama Pokua&apos;s Story</span>
                     </button>
                   </div>
                 </div>
@@ -568,7 +675,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
             </div>
           </div>
         ))}
-      </div>
+      </motion.div>
 
       {/* BOTTOM SLIDER NAVIGATION BAR */}
       <div
@@ -591,17 +698,17 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
           }}
         >
           {/* Indicator Pills */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            {slides.map((s, sIdx) => {
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+            {SLIDES.map((s, sIdx) => {
               const isCurrent = sIdx === currentSlideIndex;
               return (
                 <button
                   key={s.id}
-                  onClick={() => setCurrentSlideIndex(sIdx)}
+                  onClick={() => springToSlide(sIdx)}
                   style={{
                     background: 'none',
                     border: 'none',
-                    padding: '0.25rem',
+                    padding: '0.35rem 0.25rem',
                     cursor: 'pointer',
                   }}
                   aria-label={`Go to slide ${sIdx + 1}`}
@@ -609,12 +716,11 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                   <span
                     style={{
                       display: 'block',
-                      width: isCurrent ? '34px' : '9px',
-                      height: '8px',
+                      width: isCurrent ? '30px' : '8px',
+                      height: '7px',
                       borderRadius: '999px',
-                      backgroundColor: isCurrent ? '#009E52' : 'rgba(255, 255, 255, 0.4)',
-                      boxShadow: isCurrent ? '0 0 14px rgba(0, 158, 82, 0.7)' : 'none',
-                      transition: 'all 0.4s ease',
+                      backgroundColor: isCurrent ? '#FFFFFF' : 'rgba(255, 255, 255, 0.42)',
+                      transition: 'width 260ms cubic-bezier(0.22, 1, 0.36, 1), background-color 200ms ease',
                     }}
                   />
                 </button>
@@ -622,38 +728,41 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
             })}
           </div>
 
-          {/* Slide Counter: 01 / 08 */}
-          <div style={{ fontSize: '0.85rem', fontWeight: 800, color: '#FDE68A', letterSpacing: '0.08em' }}>
+          <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#F3E5C2', letterSpacing: '0.08em' }}>
             <span>0{currentSlideIndex + 1}</span>
             <span style={{ color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.4rem' }}>/</span>
-            <span style={{ color: 'rgba(255, 255, 255, 0.7)' }}>0{slides.length}</span>
+            <span style={{ color: 'rgba(255, 255, 255, 0.72)' }}>0{SLIDES.length}</span>
           </div>
 
-          {/* Arrows for manual navigation */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <button
               onClick={handlePrevSlide}
               style={{
-                width: '42px',
-                height: '42px',
+                width: '44px',
+                height: '44px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(10, 14, 12, 0.7)',
-                backdropFilter: 'blur(10px)',
-                border: '1.5px solid rgba(255, 255, 255, 0.25)',
+                backgroundColor: 'rgba(10, 14, 12, 0.65)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.24)',
                 color: '#FFFFFF',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                transition: 'all 0.25s ease',
+                transition: 'transform 100ms ease-out, background-color 180ms ease',
+              }}
+              onPointerDown={(e) => {
+                e.currentTarget.style.transform = 'scale(0.92)';
+              }}
+              onPointerUp={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#009E52';
-                e.currentTarget.style.borderColor = '#009E52';
+                e.currentTarget.style.backgroundColor = '#007A43';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(10, 14, 12, 0.7)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.backgroundColor = 'rgba(10, 14, 12, 0.65)';
               }}
               aria-label="Previous Slide"
             >
@@ -663,26 +772,31 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
             <button
               onClick={handleNextSlide}
               style={{
-                width: '42px',
-                height: '42px',
+                width: '44px',
+                height: '44px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(10, 14, 12, 0.7)',
-                backdropFilter: 'blur(10px)',
-                border: '1.5px solid rgba(255, 255, 255, 0.25)',
+                backgroundColor: 'rgba(10, 14, 12, 0.65)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.24)',
                 color: '#FFFFFF',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
-                transition: 'all 0.25s ease',
+                transition: 'transform 100ms ease-out, background-color 180ms ease',
+              }}
+              onPointerDown={(e) => {
+                e.currentTarget.style.transform = 'scale(0.92)';
+              }}
+              onPointerUp={(e) => {
+                e.currentTarget.style.transform = 'scale(1)';
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#009E52';
-                e.currentTarget.style.borderColor = '#009E52';
+                e.currentTarget.style.backgroundColor = '#007A43';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(10, 14, 12, 0.7)';
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.25)';
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.backgroundColor = 'rgba(10, 14, 12, 0.65)';
               }}
               aria-label="Next Slide"
             >
@@ -692,52 +806,48 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
         </div>
       </div>
 
-      {/* Keyframe and responsive CSS */}
       <style>{`
         @keyframes autoSlideProgress {
           0% { width: 0%; }
           100% { width: 100%; }
         }
         @media (min-width: 769px) {
-          .mobile-view-photo-bar {
-            display: none !important;
-          }
+          .mobile-view-photo-bar,
           .mobile-minimized-pill {
             display: none !important;
           }
         }
         @media (max-width: 768px) {
           #hero {
-            height: 94vh !important;
-            min-height: 620px !important;
-            max-height: 860px !important;
-            padding: 0 !important;
+            height: 90dvh !important;
+            min-height: 600px !important;
+            max-height: 840px !important;
           }
           .hero-slide-item {
             align-items: flex-end !important;
             justify-content: flex-end !important;
           }
           .hero-slide-img {
-            object-position: center 10% !important;
+            object-position: center 12% !important;
           }
           .portrait-caption-pill {
             bottom: auto !important;
             top: 1rem !important;
-            font-size: 0.65rem !important;
-            padding: 0.2rem 0.65rem !important;
+            font-size: 0.66rem !important;
+            padding: 0.22rem 0.68rem !important;
           }
           .hero-dark-overlay {
             background: linear-gradient(
               to top,
-              rgba(5, 14, 9, 0.95) 0%,
-              rgba(5, 14, 9, 0.78) 32%,
-              rgba(5, 14, 9, 0.18) 55%,
-              transparent 72%
+              rgba(6, 14, 10, 0.92) 0%,
+              rgba(6, 14, 10, 0.68) 34%,
+              rgba(6, 14, 10, 0.14) 58%,
+              transparent 74%
             ) !important;
           }
           .hero-content-wrapper {
             padding-top: 0 !important;
-            padding-bottom: 4.8rem !important;
+            padding-bottom: 4.6rem !important;
             padding-left: 1rem !important;
             padding-right: 1rem !important;
             display: flex !important;
@@ -745,22 +855,17 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
             justify-content: flex-end !important;
           }
           .hero-glass-box {
-            padding: 1.15rem 1.25rem !important;
+            padding: 1.25rem !important;
             border-radius: 20px !important;
-            gap: 0.75rem !important;
-            backdrop-filter: none !important;
-            -webkit-backdrop-filter: none !important;
-            background: linear-gradient(180deg, rgba(8, 22, 14, 0.9) 0%, rgba(4, 12, 8, 0.98) 100%) !important;
-            border: 1px solid rgba(0, 158, 82, 0.4) !important;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.65) !important;
+            gap: 0.72rem !important;
           }
           .hero-badge-parliament {
-            font-size: 0.7rem !important;
-            padding: 0.25rem 0.7rem !important;
+            font-size: 0.66rem !important;
+            padding: 0.24rem 0.68rem !important;
           }
           .hero-title-text {
-            font-size: 1.45rem !important;
-            line-height: 1.2 !important;
+            font-size: 1.48rem !important;
+            line-height: 1.16 !important;
           }
           .hero-desc-text {
             font-size: 0.86rem !important;
@@ -774,14 +879,9 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
             padding-top: 0.2rem !important;
             gap: 0.6rem !important;
           }
-          .hero-btn-primary {
-            padding: 0.65rem 1.15rem !important;
-            font-size: 0.82rem !important;
-            flex: 1 1 auto;
-            justify-content: center;
-          }
+          .hero-btn-primary,
           .hero-btn-secondary {
-            padding: 0.65rem 1.15rem !important;
+            padding: 0.68rem 1.15rem !important;
             font-size: 0.82rem !important;
             flex: 1 1 auto;
             justify-content: center;

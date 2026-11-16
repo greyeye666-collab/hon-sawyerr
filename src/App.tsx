@@ -1,5 +1,6 @@
+import { MotionConfig } from 'motion/react';
 import { useState } from 'react';
-import type { PageView, Project, NewsArticle } from './types';
+import type { PageView, Project, NewsArticle, BlogPost } from './types';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { AboutSection } from './components/AboutSection';
@@ -14,6 +15,8 @@ import { ArticleDetailPage } from './components/ArticleDetailPage';
 import { DedicatedAboutPage } from './components/DedicatedAboutPage';
 import { DedicatedImpactPage } from './components/DedicatedImpactPage';
 import { DedicatedNewsPage } from './components/DedicatedNewsPage';
+import { DedicatedBlogPage } from './components/DedicatedBlogPage';
+import { BlogDetailPage } from './components/BlogDetailPage';
 import { DedicatedGalleryPage } from './components/DedicatedGalleryPage';
 import { DedicatedContactPage } from './components/DedicatedContactPage';
 
@@ -21,6 +24,7 @@ export function App() {
   const [currentPage, setCurrentPage] = useState<PageView>('home');
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
+  const [selectedBlogPost, setSelectedBlogPost] = useState<BlogPost | null>(null);
 
   // Sync window scroll on page transition
   const handleNavigate = (page: PageView) => {
@@ -37,6 +41,12 @@ export function App() {
   const handleSelectArticle = (article: NewsArticle) => {
     setSelectedArticle(article);
     setCurrentPage('article-detail');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleSelectBlogPost = (post: BlogPost) => {
+    setSelectedBlogPost(post);
+    setCurrentPage('blog-detail');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -58,7 +68,8 @@ export function App() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-cream)' }}>
+    <MotionConfig reducedMotion="user">
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-cream)' }}>
       {/* Persistent Elegant Sticky Navbar */}
       <Navbar
         currentPage={currentPage}
@@ -135,6 +146,25 @@ export function App() {
           />
         )}
 
+        {/* VIEW: DEDICATED BLOG PAGE */}
+        {currentPage === 'blog' && (
+          <DedicatedBlogPage
+            onBack={() => handleNavigate('home')}
+            onSelectPost={handleSelectBlogPost}
+            onNavigate={handleNavigate}
+          />
+        )}
+
+        {/* VIEW: INDIVIDUAL BLOG POST DETAIL PAGE */}
+        {currentPage === 'blog-detail' && selectedBlogPost && (
+          <BlogDetailPage
+            post={selectedBlogPost}
+            onBack={() => handleNavigate('blog')}
+            onSelectPost={handleSelectBlogPost}
+            onNavigate={handleNavigate}
+          />
+        )}
+
         {/* VIEW: DEDICATED GALLERY PAGE */}
         {currentPage === 'gallery' && (
           <DedicatedGalleryPage
@@ -155,6 +185,7 @@ export function App() {
       {/* Persistent Luxury Footer */}
       <Footer onNavigate={handleNavigate} />
     </div>
+    </MotionConfig>
   );
 }
 

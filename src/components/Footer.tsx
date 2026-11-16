@@ -178,6 +178,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               { label: 'About Mama Pokua', page: 'about' as PageView },
               { label: 'Impact & Projects', page: 'impact' as PageView },
               { label: 'News & Press Releases', page: 'news' as PageView },
+              { label: "The MP's Notebook (Blog)", page: 'blog' as PageView },
               { label: 'Community Photo Gallery', page: 'gallery' as PageView },
               { label: 'Constituent Secretariat', page: 'contact' as PageView },
             ].map((link) => (

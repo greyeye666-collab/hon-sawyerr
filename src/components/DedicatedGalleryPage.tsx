@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import type { GalleryItem, PageView } from '../types';
 import { GALLERY_ITEMS } from '../data/mockData';
 import {
@@ -25,6 +25,20 @@ export const DedicatedGalleryPage: React.FC<DedicatedGalleryPageProps> = ({ onBa
     ? GALLERY_ITEMS
     : GALLERY_ITEMS.filter((item) => item.category === selectedCategory);
 
+  const handleNext = useCallback(() => {
+    if (!activeItem) return;
+    const currentIndex = filteredItems.findIndex((item) => item.id === activeItem.id);
+    const nextIndex = (currentIndex + 1) % filteredItems.length;
+    setActiveItem(filteredItems[nextIndex]);
+  }, [activeItem, filteredItems]);
+
+  const handlePrev = useCallback(() => {
+    if (!activeItem) return;
+    const currentIndex = filteredItems.findIndex((item) => item.id === activeItem.id);
+    const prevIndex = (currentIndex - 1 + filteredItems.length) % filteredItems.length;
+    setActiveItem(filteredItems[prevIndex]);
+  }, [activeItem, filteredItems]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!activeItem) return;
@@ -35,21 +49,7 @@ export const DedicatedGalleryPage: React.FC<DedicatedGalleryPageProps> = ({ onBa
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [activeItem]);
-
-  const handleNext = () => {
-    if (!activeItem) return;
-    const currentIndex = filteredItems.findIndex((item) => item.id === activeItem.id);
-    const nextIndex = (currentIndex + 1) % filteredItems.length;
-    setActiveItem(filteredItems[nextIndex]);
-  };
-
-  const handlePrev = () => {
-    if (!activeItem) return;
-    const currentIndex = filteredItems.findIndex((item) => item.id === activeItem.id);
-    const prevIndex = (currentIndex - 1 + filteredItems.length) % filteredItems.length;
-    setActiveItem(filteredItems[prevIndex]);
-  };
+  }, [activeItem, handleNext, handlePrev]);
 
   return (
     <div style={{ backgroundColor: 'var(--bg-cream)', minHeight: '100vh', paddingBottom: '6rem' }}>
