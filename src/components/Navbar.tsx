@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } from 'motion/react';
 import type { PageView } from '../types';
-import { MP_DETAILS } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import { MenuIcon, CloseIcon } from './Icons';
 
 interface NavbarProps {
@@ -15,6 +15,7 @@ function rubberband(overshoot: number, dimension = 300, constant = 0.55): number
 }
 
 export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onScrollToSection }) => {
+  const { mpDetails } = useSiteData();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
@@ -475,7 +476,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage, onNavigate, onScrol
                   Constituent Service Desk
                 </button>
                 <div style={{ textAlign: 'center', fontSize: '0.8rem', color: 'rgba(243, 229, 194, 0.88)', fontWeight: 500 }}>
-                  Hotline: {MP_DETAILS.hotlinePhone}
+                  Hotline: {mpDetails.hotlinePhone}
                 </div>
               </div>
             </motion.div>

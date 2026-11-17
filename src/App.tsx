@@ -1,6 +1,7 @@
 import { MotionConfig } from 'motion/react';
 import { useState } from 'react';
 import type { PageView, Project, NewsArticle, BlogPost } from './types';
+import { SiteDataProvider } from './context/SiteDataProvider';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { AboutSection } from './components/AboutSection';
@@ -68,7 +69,8 @@ export function App() {
   };
 
   return (
-    <MotionConfig reducedMotion="user">
+    <SiteDataProvider>
+      <MotionConfig reducedMotion="user">
       <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--bg-cream)' }}>
       {/* Persistent Elegant Sticky Navbar */}
       <Navbar
@@ -186,6 +188,7 @@ export function App() {
       <Footer onNavigate={handleNavigate} />
     </div>
     </MotionConfig>
+    </SiteDataProvider>
   );
 }
 

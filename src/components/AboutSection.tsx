@@ -1,9 +1,8 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { MP_DETAILS } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import type { PageView } from '../types';
 import { ArrowRightIcon, QuoteIcon, AwardIcon, ShieldIcon, BookIcon, UsersIcon } from './Icons';
-import H2Img from '../assets/H2.jpg';
 
 interface AboutSectionProps {
   onNavigate: (page: PageView) => void;
@@ -12,6 +11,7 @@ interface AboutSectionProps {
 const APPLE_SPRING = { type: 'spring' as const, bounce: 0, duration: 0.44 };
 
 export const AboutSection: React.FC<AboutSectionProps> = ({ onNavigate }) => {
+  const { mpDetails } = useSiteData();
   const keyRoles = [
     {
       title: 'Member of Parliament, Agona East',
@@ -105,8 +105,8 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onNavigate }) => {
             >
               <div className="img-zoom-container" style={{ aspectRatio: '4 / 5' }}>
                 <img
-                  src={H2Img}
-                  alt={MP_DETAILS.fullName}
+                  src={mpDetails.portraitAbout}
+                  alt={mpDetails.fullName}
                   loading="lazy"
                   style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center 20%' }}
                 />
@@ -132,8 +132,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onNavigate }) => {
                         lineHeight: 1.6,
                       }}
                     >
-                      &quot;Leadership is about service to the vulnerable. When we empower a child with education
-                      and support a mother with dignity, we build a nation.&quot;
+                      &quot;{mpDetails.aboutQuote || 'Leadership is about service to the vulnerable. When we empower a child with education and support a mother with dignity, we build a nation.'}&quot;
                     </blockquote>
                     <cite
                       style={{
@@ -145,7 +144,7 @@ export const AboutSection: React.FC<AboutSectionProps> = ({ onNavigate }) => {
                         fontStyle: 'normal',
                       }}
                     >
-                      — Hon. Queenstar Maame Pokua Sawyerr
+                      — {mpDetails.fullName}
                     </cite>
                   </div>
                 </div>

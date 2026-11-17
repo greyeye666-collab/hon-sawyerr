@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { BlogPost, PageView } from '../types';
-import { BLOG_POSTS, MP_DETAILS } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -24,9 +24,10 @@ export const BlogDetailPage: React.FC<BlogDetailPageProps> = ({
   onSelectPost,
   onNavigate,
 }) => {
+  const { blogPosts, mpDetails } = useSiteData();
   const [copied, setCopied] = useState(false);
 
-  const relatedPosts = BLOG_POSTS.filter((p) => p.id !== post.id).slice(0, 3);
+  const relatedPosts = blogPosts.filter((p) => p.id !== post.id).slice(0, 3);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href);
@@ -203,7 +204,7 @@ export const BlogDetailPage: React.FC<BlogDetailPageProps> = ({
             }}
           >
             <img
-              src={post.author.avatar || MP_DETAILS.portraitAbout}
+              src={post.author.avatar || mpDetails.portraitAbout}
               alt={post.author.name}
               style={{
                 width: '52px',
@@ -471,7 +472,7 @@ export const BlogDetailPage: React.FC<BlogDetailPageProps> = ({
           }}
         >
           <img
-            src={post.author.avatar || MP_DETAILS.portraitAbout}
+            src={post.author.avatar || mpDetails.portraitAbout}
             alt={post.author.name}
             style={{
               width: '84px',

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import type { Project, PageView } from '../types';
-import { PROJECTS } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import { ArrowRightIcon, MapPinIcon, CheckIcon, SparklesIcon } from './Icons';
 
 interface ImpactSectionProps {
@@ -12,17 +12,19 @@ interface ImpactSectionProps {
 const APPLE_SPRING = { type: 'spring' as const, bounce: 0, duration: 0.38 };
 
 export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, onNavigate }) => {
+  const { projects } = useSiteData();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
   const categories = ['All', 'Education', 'Healthcare', 'Women & Economy', 'Infrastructure', 'Youth & Skills'];
 
   const filteredProjects =
     selectedCategory === 'All'
-      ? PROJECTS
-      : PROJECTS.filter((p) => p.category === selectedCategory);
+      ? projects
+      : projects.filter((p) => p.category === selectedCategory);
 
-  const flagshipProject = filteredProjects[0];
-  const secondaryProjects = filteredProjects.slice(1);
+  const flagshipProject =
+    filteredProjects.find((p) => p.isFlagship) || filteredProjects[0];
+  const secondaryProjects = filteredProjects.filter((p) => p.id !== flagshipProject?.id);
 
   return (
     <section

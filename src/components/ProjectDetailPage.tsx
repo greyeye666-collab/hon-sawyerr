@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Project, PageView } from '../types';
-import { PROJECTS } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import { ArrowLeftIcon, MapPinIcon, CalendarIcon, AwardIcon, CheckCircleIcon, QuoteIcon } from './Icons';
 
 interface ProjectDetailPageProps {
@@ -16,7 +16,8 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
   onSelectProject,
   onNavigate,
 }) => {
-  const relatedProjects = PROJECTS.filter((p) => p.id !== project.id).slice(0, 3);
+  const { projects } = useSiteData();
+  const relatedProjects = projects.filter((p) => p.id !== project.id).slice(0, 3);
 
   return (
     <div style={{ backgroundColor: 'var(--bg-cream)', minHeight: '100vh', paddingBottom: '6rem' }}>

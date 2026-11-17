@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { PageView } from '../types';
+import { useSiteData } from '../hooks/useSiteData';
 import { ArrowRightIcon, FacebookIcon, TwitterIcon, InstagramIcon, YoutubeIcon, CheckIcon } from './Icons';
 
 interface FooterProps {
@@ -7,13 +8,25 @@ interface FooterProps {
 }
 
 export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
+  const { mpDetails, subscribeNewsletter } = useSiteData();
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [subscribeError, setSubscribeError] = useState<string | null>(null);
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newsletterEmail) return;
-    setSubscribed(true);
+    if (!newsletterEmail || submitting) return;
+    setSubmitting(true);
+    setSubscribeError(null);
+    const res = await subscribeNewsletter(newsletterEmail, 'footer');
+    setSubmitting(false);
+    if (res.ok) {
+      setSubscribed(true);
+      setNewsletterEmail('');
+    } else {
+      setSubscribeError(res.error || 'Subscription failed.');
+    }
   };
 
   return (
@@ -80,7 +93,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
 
             <div style={{ display: 'flex', gap: '0.6rem', marginTop: '0.5rem' }}>
               <a
-                href="https://facebook.com"
+                href={mpDetails.socialLinks?.facebook || 'https://facebook.com'}
                 target="_blank"
                 rel="noreferrer"
                 style={{
@@ -99,7 +112,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <FacebookIcon size={16} />
               </a>
               <a
-                href="https://x.com"
+                href={mpDetails.socialLinks?.x || 'https://x.com'}
                 target="_blank"
                 rel="noreferrer"
                 style={{
@@ -118,7 +131,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <TwitterIcon size={16} />
               </a>
               <a
-                href="https://instagram.com"
+                href={mpDetails.socialLinks?.instagram || 'https://instagram.com'}
                 target="_blank"
                 rel="noreferrer"
                 style={{
@@ -137,7 +150,7 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                 <InstagramIcon size={16} />
               </a>
               <a
-                href="https://youtube.com"
+                href={mpDetails.socialLinks?.youtube || 'https://youtube.com'}
                 target="_blank"
                 rel="noreferrer"
                 style={{
@@ -298,13 +311,15 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                   />
                   <button
                     type="submit"
+                    disabled={submitting}
                     style={{
                       backgroundColor: '#006B3F',
                       border: 'none',
                       borderRadius: '8px',
                       color: '#FFFFFF',
                       padding: '0.75rem 1rem',
-                      cursor: 'pointer',
+                      cursor: submitting ? 'not-allowed' : 'pointer',
+                      opacity: submitting ? 0.7 : 1,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -314,6 +329,11 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
                     <ArrowRightIcon size={16} />
                   </button>
                 </div>
+                {subscribeError && (
+                  <span style={{ fontSize: '0.75rem', color: '#FCA5A5' }}>
+                    {subscribeError}
+                  </span>
+                )}
                 <span style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.45)' }}>
                   We respect your privacy. No spam.
                 </span>

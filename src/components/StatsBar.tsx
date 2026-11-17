@@ -1,8 +1,9 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { QUICK_STATS } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 
 export const StatsBar: React.FC = () => {
+  const { quickStats } = useSiteData();
   return (
     <section
       style={{
@@ -22,7 +23,7 @@ export const StatsBar: React.FC = () => {
             alignItems: 'center',
           }}
         >
-          {QUICK_STATS.map((stat, idx) => (
+          {quickStats.map((stat, idx) => (
             <motion.div
               key={idx}
               initial={{ opacity: 0, y: 12 }}

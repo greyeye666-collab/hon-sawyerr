@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import type { BlogPost, PageView } from '../types';
-import { BLOG_POSTS, MP_DETAILS } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import { ArrowLeftIcon, ArrowRightIcon, CalendarIcon, ClockIcon, BookIcon, SparklesIcon } from './Icons';
 
 interface DedicatedBlogPageProps {
@@ -17,8 +17,13 @@ export const DedicatedBlogPage: React.FC<DedicatedBlogPageProps> = ({
   onSelectPost,
   onNavigate,
 }) => {
+  const { blogPosts, mpDetails, subscribeNewsletter } = useSiteData();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [dispatchEmail, setDispatchEmail] = useState<string>('');
+  const [dispatchSubscribed, setDispatchSubscribed] = useState<boolean>(false);
+  const [dispatchSubmitting, setDispatchSubmitting] = useState<boolean>(false);
+  const [dispatchError, setDispatchError] = useState<string | null>(null);
 
   const categories = [
     'All',
@@ -29,7 +34,7 @@ export const DedicatedBlogPage: React.FC<DedicatedBlogPageProps> = ({
     'Community Reflections',
   ];
 
-  const filteredPosts = BLOG_POSTS.filter((post) => {
+  const filteredPosts = blogPosts.filter((post) => {
     const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
     const matchesSearch =
       searchQuery.trim() === '' ||
@@ -39,7 +44,7 @@ export const DedicatedBlogPage: React.FC<DedicatedBlogPageProps> = ({
     return matchesCategory && matchesSearch;
   });
 
-  const featuredPost = BLOG_POSTS.find((p) => p.featured) || BLOG_POSTS[0];
+  const featuredPost = blogPosts.find((p) => p.featured) || blogPosts[0];
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: 'var(--bg-cream)' }}>
@@ -398,7 +403,7 @@ export const DedicatedBlogPage: React.FC<DedicatedBlogPageProps> = ({
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                   <img
-                    src={featuredPost.author.avatar || MP_DETAILS.portraitAbout}
+                    src={featuredPost.author.avatar || mpDetails.portraitAbout}
                     alt={featuredPost.author.name}
                     style={{
                       width: '42px',
@@ -682,37 +687,71 @@ export const DedicatedBlogPage: React.FC<DedicatedBlogPageProps> = ({
               Receive direct updates from the Office of Hon. Queenstar Maame Pokua Sawyerr, including constituency development reports, community durbars, and parliamentary bills.
             </p>
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                alert('Thank you for subscribing to the Agona East Parliamentary Dispatches.');
-              }}
-              style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}
-            >
-              <input
-                type="email"
-                required
-                placeholder="Enter your email address"
+            {dispatchSubscribed ? (
+              <div
                 style={{
-                  flex: '1 1 280px',
-                  padding: '0.85rem 1.25rem',
-                  borderRadius: '999px',
-                  border: '1px solid rgba(255, 255, 255, 0.22)',
-                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                  color: '#FFFFFF',
-                  fontSize: '0.94rem',
-                  outline: 'none',
+                  backgroundColor: 'rgba(0, 122, 67, 0.22)',
+                  border: '1px solid rgba(0, 158, 82, 0.45)',
+                  borderRadius: '14px',
+                  padding: '0.95rem 1.25rem',
+                  color: '#A7F3D0',
+                  fontSize: '0.92rem',
+                  fontWeight: 600,
                 }}
-              />
-              <button
-                type="submit"
-                className="btn-primary-green"
-                style={{ padding: '0.85rem 1.8rem', fontSize: '0.92rem' }}
               >
-                <span>Subscribe</span>
-                <ArrowRightIcon size={14} />
-              </button>
-            </form>
+                Thank you for subscribing to the Agona East Parliamentary Dispatches.
+              </div>
+            ) : (
+              <form
+                onSubmit={async (e) => {
+                  e.preventDefault();
+                  if (!dispatchEmail || dispatchSubmitting) return;
+                  setDispatchSubmitting(true);
+                  setDispatchError(null);
+                  const res = await subscribeNewsletter(dispatchEmail, 'blog');
+                  setDispatchSubmitting(false);
+                  if (res.ok) {
+                    setDispatchSubscribed(true);
+                    setDispatchEmail('');
+                  } else {
+                    setDispatchError(res.error || 'Unable to subscribe right now.');
+                  }
+                }}
+                style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}
+              >
+                <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                  <input
+                    type="email"
+                    required
+                    placeholder="Enter your email address"
+                    value={dispatchEmail}
+                    onChange={(e) => setDispatchEmail(e.target.value)}
+                    style={{
+                      flex: '1 1 280px',
+                      padding: '0.85rem 1.25rem',
+                      borderRadius: '999px',
+                      border: '1px solid rgba(255, 255, 255, 0.22)',
+                      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                      color: '#FFFFFF',
+                      fontSize: '0.94rem',
+                      outline: 'none',
+                    }}
+                  />
+                  <button
+                    type="submit"
+                    disabled={dispatchSubmitting}
+                    className="btn-primary-green"
+                    style={{ padding: '0.85rem 1.8rem', fontSize: '0.92rem', opacity: dispatchSubmitting ? 0.72 : 1 }}
+                  >
+                    <span>{dispatchSubmitting ? 'Subscribing...' : 'Subscribe'}</span>
+                    <ArrowRightIcon size={14} />
+                  </button>
+                </div>
+                {dispatchError && (
+                  <span style={{ color: '#FCA5A5', fontSize: '0.84rem' }}>{dispatchError}</span>
+                )}
+              </form>
+            )}
           </div>
         </section>
       </div>

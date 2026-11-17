@@ -43,6 +43,7 @@ export interface Project {
   fullDescription: string;
   keyHighlights: string[];
   galleryImages: string[];
+  isFlagship?: boolean;
   testimonial?: {
     quote: string;
     author: string;
@@ -85,4 +86,54 @@ export interface TimelineMilestone {
   title: string;
   role: string;
   description: string;
+}
+
+export interface QuickStat {
+  value: string;
+  label: string;
+  subtext: string;
+}
+
+export interface HeroSlide {
+  id: string | number;
+  type: 'landscape' | 'paired-portrait';
+  tag: string;
+  badgeColor: 'green' | 'red';
+  title: string;
+  titleHighlight: string;
+  description: string;
+  landscapeImage?: string;
+  portraitImages?: {
+    src: string;
+    caption: string;
+  }[];
+}
+
+export interface MPProfile {
+  fullName: string;
+  shortName: string;
+  popularTitle: string;
+  slogan: string;
+  heroTagline: string;
+  role: string;
+  party: string;
+  constituency: string;
+  region: string;
+  tenure: string;
+  parliamentEmail: string;
+  officeEmail: string;
+  constituencyPhone: string;
+  hotlinePhone: string;
+  officeAddress: string;
+  parliamentAddress: string;
+  portraitHero: string;
+  portraitAbout: string;
+  portraitCommunity: string;
+  aboutQuote?: string;
+  socialLinks?: {
+    facebook?: string;
+    x?: string;
+    instagram?: string;
+    youtube?: string;
+  };
 }

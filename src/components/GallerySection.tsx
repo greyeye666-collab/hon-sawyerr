@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react';
 import type { GalleryItem, PageView } from '../types';
-import { GALLERY_ITEMS } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import {
   CloseIcon,
   ArrowRightIcon,
@@ -24,6 +24,7 @@ function rubberband(overshoot: number, dimension = 320, constant = 0.55): number
 }
 
 export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) => {
+  const { galleryItems } = useSiteData();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
   const prefersReducedMotion = useReducedMotion();
@@ -41,8 +42,8 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
 
   const filteredItems =
     selectedCategory === 'All'
-      ? GALLERY_ITEMS
-      : GALLERY_ITEMS.filter((item) => item.category === selectedCategory);
+      ? galleryItems
+      : galleryItems.filter((item) => item.category === selectedCategory);
 
   const handleNext = useCallback(() => {
     if (!activeItem || filteredItems.length === 0) return;
