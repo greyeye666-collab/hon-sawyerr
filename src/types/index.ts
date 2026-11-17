@@ -37,6 +37,7 @@ export interface Project {
   category: 'Education' | 'Healthcare' | 'Women & Economy' | 'Infrastructure' | 'Youth & Skills';
   impactMetric: string;
   image: string;
+  slideshowImages?: string[];
   completionYear: string;
   location: string;
   beneficiariesCount: string;

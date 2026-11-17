@@ -1,5 +1,49 @@
 import type { Project, NewsArticle, GalleryItem, CoreValue, TimelineMilestone, BlogPost } from '../types';
 import H2Img from '../assets/H2.jpg';
+import gr1 from '../assets/bece/gr1.jpg';
+import bec1 from '../assets/bece/bec1.jpg';
+import bec2 from '../assets/bece/bec2.jpg';
+import bec3 from '../assets/bece/bec3.jpg';
+import bec4 from '../assets/bece/bec4.jpg';
+import bec5 from '../assets/bece/bec5.jpg';
+import bec6 from '../assets/bece/bec6.jpg';
+import bec7 from '../assets/bece/bec7.jpg';
+import bec8 from '../assets/bece/bec8.jpg';
+import bec9 from '../assets/bece/bec9.jpg';
+import bec10 from '../assets/bece/bec10.jpg';
+import bec11 from '../assets/bece/bec11.jpg';
+import bec12 from '../assets/bece/bec12.jpg';
+import pk1 from '../assets/pk/pk1.jpg';
+import pk2 from '../assets/pk/pk2.jpg';
+import pk3 from '../assets/pk/pk3.jpg';
+import pk4 from '../assets/pk/pk4.jpg';
+import pk5 from '../assets/pk/pk5.jpg';
+import pk6 from '../assets/pk/pk6.jpg';
+import og1 from '../assets/og/og1.jpg';
+import og2 from '../assets/og/og2.jpg';
+import og3 from '../assets/og/og3.jpg';
+import og4 from '../assets/og/og4.jpg';
+import og5 from '../assets/og/og5.jpg';
+import og6 from '../assets/og/og6.jpg';
+import cw1 from '../assets/water/cw1.jpg';
+import cw2 from '../assets/water/cw2.jpg';
+import cw3 from '../assets/water/cw3.jpg';
+import cw4 from '../assets/water/cw4.jpg';
+import cw5 from '../assets/water/cw5.jpg';
+import cw6 from '../assets/water/cw6.jpg';
+import cw7 from '../assets/water/cw7.jpg';
+import vl1 from '../assets/roads/vl1.jpg';
+import vl2 from '../assets/roads/vl2.jpg';
+import vl3 from '../assets/roads/vl3.jpg';
+import vl4 from '../assets/roads/vl4.jpg';
+import vl5 from '../assets/roads/vl5.jpg';
+import vl6 from '../assets/roads/vl6.jpg';
+import vl7 from '../assets/roads/vl7.jpg';
+import vl8 from '../assets/roads/vl8.jpg';
+import vl9 from '../assets/roads/vl9.jpg';
+import vl10 from '../assets/roads/vl10.jpg';
+import yt1 from '../assets/youth/yt1.jpg';
+import yt2 from '../assets/youth/yt2.jpg';
 
 export const MP_DETAILS = {
   fullName: 'Hon. Queenstar Maame Pokua Sawyerr',
@@ -71,7 +115,28 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Annual distribution of over 3,500 mathematical sets, revision materials, and daily warm nutritious meals to all BECE candidates across Agona East.',
     category: 'Education',
     impactMetric: '35,000+ Students Reached',
-    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1000&q=80',
+    image: bec1,
+    slideshowImages: [
+      gr1,
+      bec1,
+      bec2,
+      bec3,
+      bec4,
+      bec5,
+      bec6,
+      bec7,
+      bec8,
+      bec9,
+      bec10,
+      bec11,
+      bec12,
+      pk1,
+      pk2,
+      pk3,
+      pk4,
+      pk5,
+      pk6,
+    ],
     completionYear: 'Ongoing Annual Initiative',
     location: 'All 42 Junior High Schools in Agona East',
     beneficiariesCount: '35,000+ candidates over 10 years',
@@ -83,9 +148,25 @@ export const PROJECTS: Project[] = [
       'Financial prizes awarded to top-performing girls and boys in the district',
     ],
     galleryImages: [
-      'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1588072432836-e10032774350?auto=format&fit=crop&w=1000&q=80',
+      gr1,
+      bec1,
+      bec2,
+      bec3,
+      bec4,
+      bec5,
+      bec6,
+      bec7,
+      bec8,
+      bec9,
+      bec10,
+      bec11,
+      bec12,
+      pk1,
+      pk2,
+      pk3,
+      pk4,
+      pk5,
+      pk6,
     ],
     testimonial: {
       quote: "Mama Pokua's mock exams and free math sets took away all my anxiety before BECE. Today I am at Wesley Girls High School because she believed in us.",
@@ -99,7 +180,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Revolving interest-free micro-credit and business training empowering market women, petty traders, and agricultural processors.',
     category: 'Women & Economy',
     impactMetric: 'GH₵ 4.5M+ Seed Capital',
-    image: 'https://images.unsplash.com/photo-1594708767771-a7502209ff51?auto=format&fit=crop&w=1000&q=80',
+    image: og2,
+    slideshowImages: [og1, og2, og3, og4, og5, og6],
     completionYear: '2015 – Present',
     location: 'Nsaba, Duakwa, Kwanyako, and Mankrong Markets',
     beneficiariesCount: '4,800+ Female Entrepreneurs',
@@ -111,8 +193,12 @@ export const PROJECTS: Project[] = [
       'Zero defaults through a peer-guaranteed communal solidarity lending model',
     ],
     galleryImages: [
-      'https://images.unsplash.com/photo-1594708767771-a7502209ff51?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1000&q=80',
+      og1,
+      og2,
+      og3,
+      og4,
+      og5,
+      og6,
     ],
     testimonial: {
       quote: 'When the market fire destroyed my shed, Mama Pokua visited us that very evening and gave us capital to restart. She is truly a mother to Agona East.',
@@ -153,7 +239,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Installation of 32 mechanized solar water boreholes with high-capacity storage tanks providing potable water to farming communities.',
     category: 'Infrastructure',
     impactMetric: '32 Mechanized Boreholes',
-    image: 'https://images.unsplash.com/photo-1541888946425-d0fbb1861564?auto=format&fit=crop&w=1000&q=80',
+    image: cw1,
+    slideshowImages: [cw1, cw2, cw3, cw4, cw5, cw6, cw7],
     completionYear: '2020 – 2024',
     location: 'Agona Kwanyako, Seth Okai, Fante Bawjiase, Ninta',
     beneficiariesCount: '45,000+ Residents',
@@ -165,8 +252,13 @@ export const PROJECTS: Project[] = [
       'Local water management committees trained in each town for long-term sustainability',
     ],
     galleryImages: [
-      'https://images.unsplash.com/photo-1541888946425-d0fbb1861564?auto=format&fit=crop&w=1000&q=80',
-      'https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1000&q=80',
+      cw1,
+      cw2,
+      cw3,
+      cw4,
+      cw5,
+      cw6,
+      cw7,
     ],
     testimonial: {
       quote: 'Our school children no longer arrive late or fall sick from stream water. We bless Mama Pokua for giving our village this priceless gift of clean water.',
@@ -180,7 +272,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Sponsoring apprenticeships and distributing free sewing machines, hairdryers, auto-mechanic sets, and masonry tool kits to graduating youth.',
     category: 'Youth & Skills',
     impactMetric: '2,200+ Artisans Equipped',
-    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1000&q=80',
+    image: yt1,
+    slideshowImages: [yt1, yt2],
     completionYear: 'Ongoing',
     location: 'Constituency-Wide across Agona East',
     beneficiariesCount: '2,200+ Young Men and Women',
@@ -192,7 +285,8 @@ export const PROJECTS: Project[] = [
       'Financial management seminars for budding young self-employed contractors',
     ],
     galleryImages: [
-      'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1000&q=80',
+      yt1,
+      yt2,
     ],
     testimonial: {
       quote: 'I finished my tailoring apprenticeship with nothing to buy a machine. Mama Pokua bought me my first machine and paid my graduation dues. Today I employ three others.',
@@ -206,7 +300,8 @@ export const PROJECTS: Project[] = [
     shortDescription: 'Constructing reinforced culverts, bridges, and shaping unpaved feeder roads to allow farmers to transport produce to urban market centers.',
     category: 'Infrastructure',
     impactMetric: '75+ km Roads Shaped',
-    image: 'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1000&q=80',
+    image: vl1,
+    slideshowImages: [vl1, vl2, vl3, vl4, vl5, vl6, vl7, vl8, vl9, vl10],
     completionYear: '2019 – Present',
     location: 'Nsaba-Kwanyako Bypass, Duakwa-Akroso Corridor, Mankrong',
     beneficiariesCount: '30,000+ Farmers & Drivers',
@@ -218,7 +313,16 @@ export const PROJECTS: Project[] = [
       'Immediate emergency repairs following devastating heavy rains',
     ],
     galleryImages: [
-      'https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&w=1000&q=80',
+      vl1,
+      vl2,
+      vl3,
+      vl4,
+      vl5,
+      vl6,
+      vl7,
+      vl8,
+      vl9,
+      vl10,
     ],
     testimonial: {
       quote: 'During harvest season our cocoa used to rot in the bush because vehicles refused to ply our roads. The new culvert and grading saved our livelihood.',
@@ -235,7 +339,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
     date: 'July 14, 2024',
     category: 'Education',
     readTime: '4 min read',
-    thumbnail: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1000&q=80',
+    thumbnail: bec1,
     excerpt: 'The Member of Parliament reaffirmed her 12-year tradition of personally visiting every examination center in the constituency to motivate candidates and provide free examination supplies.',
     featured: true,
     author: 'Constituency Communications Directorate',
@@ -253,7 +357,7 @@ export const NEWS_ARTICLES: NewsArticle[] = [
     date: 'May 28, 2024',
     category: 'Community',
     readTime: '3 min read',
-    thumbnail: 'https://images.unsplash.com/photo-1541888946425-d0fbb1861564?auto=format&fit=crop&w=1000&q=80',
+    thumbnail: cw1,
     excerpt: 'Over 6,000 residents celebrate as modern solar mechanized water systems replace distant muddy streams in Seth Okai, Ninta, and adjacent settlements.',
     author: 'Constituency Communications Directorate',
     tags: ['Water', 'Infrastructure', 'Healthcare', 'Agona East'],
@@ -320,7 +424,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     id: 'gal-1',
     title: 'BECE Candidates Stationery & Nutrition Distribution',
     category: 'Education',
-    image: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1000&q=80',
+    image: bec1,
     date: 'July 2024',
     location: 'Agona Nsaba Presby JHS',
     caption: 'Hon. Queenstar Maame Pokua Sawyerr presenting mathematical sets and study guides to final-year candidates.',
@@ -329,7 +433,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     id: 'gal-2',
     title: 'Market Women Traders Empowerment Session',
     category: 'Community',
-    image: 'https://images.unsplash.com/photo-1594708767771-a7502209ff51?auto=format&fit=crop&w=1000&q=80',
+    image: og2,
     date: 'January 2024',
     location: 'Agona Duakwa Central Market',
     caption: 'Engaging with market queenmothers and distributing microfinance grants to petty traders.',
@@ -338,7 +442,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     id: 'gal-3',
     title: 'Commissioning of Solar-Powered Mechanized Water Project',
     category: 'Community',
-    image: 'https://images.unsplash.com/photo-1541888946425-d0fbb1861564?auto=format&fit=crop&w=1000&q=80',
+    image: cw1,
     date: 'May 2024',
     location: 'Seth Okai Community',
     caption: 'Official handover of 10,000-liter clean water borehole facility to the town development committee.',
@@ -365,7 +469,7 @@ export const GALLERY_ITEMS: GalleryItem[] = [
     id: 'gal-6',
     title: 'Youth Vocational Graduation & Tool Kits Presentation',
     category: 'Education',
-    image: 'https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1000&q=80',
+    image: yt1,
     date: 'December 2023',
     location: 'Agona Kwanyako Community Center',
     caption: 'Presenting sewing machines and artisan start-up kits to 150 young men and women apprentices.',
@@ -446,7 +550,7 @@ export const BLOG_POSTS: BlogPost[] = [
     category: 'Education & Youth',
     publishDate: 'October 14, 2024',
     readTime: '6 min read',
-    coverImage: 'https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1200&q=80',
+    coverImage: bec1,
     featured: true,
     excerpt: 'A hungry child cannot master algebra, and a candidate without mathematical instruments enters the examination hall defeated before the bell rings. Over the past decade, our annual BECE interventions have demonstrated that educational equity is not about complex rhetoric—it begins with dignity in the classroom.',
     author: {

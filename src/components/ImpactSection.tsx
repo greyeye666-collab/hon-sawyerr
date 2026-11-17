@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import type { Project, PageView } from '../types';
 import { PROJECTS } from '../data/mockData';
@@ -10,6 +10,350 @@ interface ImpactSectionProps {
 }
 
 const APPLE_SPRING = { type: 'spring' as const, bounce: 0, duration: 0.38 };
+
+const FlagshipPhotographicPlate: React.FC<{ project: Project }> = ({ project }) => {
+  const images =
+    project.slideshowImages && project.slideshowImages.length > 0
+      ? project.slideshowImages
+      : [project.image];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+
+  // Reset index when project changes
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [project.id]);
+
+  // Smooth auto-fade every 3.8 seconds
+  useEffect(() => {
+    if (images.length <= 1 || isHovered) return;
+    const timer = window.setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 3800);
+    return () => window.clearInterval(timer);
+  }, [images.length, isHovered]);
+
+  return (
+    <div
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{
+        position: 'relative',
+        minHeight: '400px',
+        height: '100%',
+        overflow: 'hidden',
+        backgroundColor: '#0F1813',
+      }}
+    >
+      {/* Stacked Images for Ultra-Smooth Crossfade */}
+      {images.map((imgSrc, idx) => {
+        const isActive = idx === currentIndex;
+        return (
+          <div
+            key={idx}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              opacity: isActive ? 1 : 0,
+              transition: 'opacity 1100ms cubic-bezier(0.4, 0, 0.2, 1)',
+              pointerEvents: 'none',
+              zIndex: isActive ? 2 : 1,
+            }}
+          >
+            <img
+              src={imgSrc}
+              alt={`${project.title} visual ${idx + 1}`}
+              loading={idx === 0 ? 'eager' : 'lazy'}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center 25%',
+                display: 'block',
+                transform: isActive ? 'scale(1.035)' : 'scale(1)',
+                transition: 'transform 6000ms ease-out',
+              }}
+            />
+          </div>
+        );
+      })}
+
+      {/* Atmospheric Gradients for High Legibility */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background:
+            'linear-gradient(to top, rgba(12, 20, 16, 0.82) 0%, rgba(12, 20, 16, 0.22) 35%, transparent 60%), linear-gradient(to bottom, rgba(12, 20, 16, 0.45) 0%, transparent 30%)',
+          pointerEvents: 'none',
+          zIndex: 4,
+        }}
+      />
+
+      {/* Top Floating Badge with Live Counter */}
+      {images.length > 1 && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '1.25rem',
+            right: '1.25rem',
+            zIndex: 10,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.45rem',
+            backgroundColor: 'rgba(12, 20, 16, 0.72)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            color: '#FFFFFF',
+            border: '1px solid rgba(255, 255, 255, 0.22)',
+            borderRadius: '999px',
+            padding: '0.32rem 0.85rem',
+            fontSize: '0.74rem',
+            fontWeight: 600,
+            letterSpacing: '0.04em',
+            boxShadow: '0 4px 14px rgba(0, 0, 0, 0.3)',
+          }}
+        >
+          <span
+            style={{
+              width: '6px',
+              height: '6px',
+              borderRadius: '50%',
+              backgroundColor: '#009E52',
+              boxShadow: '0 0 6px #009E52',
+            }}
+          />
+          <span>Field Photo {currentIndex + 1} of {images.length}</span>
+        </div>
+      )}
+
+      {/* Bottom Interactive Dot Strip */}
+      {images.length > 1 && (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '3.75rem',
+            left: '1.5rem',
+            zIndex: 10,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.45rem',
+            backgroundColor: 'rgba(12, 20, 16, 0.65)',
+            backdropFilter: 'blur(10px)',
+            WebkitBackdropFilter: 'blur(10px)',
+            padding: '0.3rem 0.65rem',
+            borderRadius: '999px',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
+          }}
+        >
+          {images.map((_, dotIdx) => (
+            <button
+              key={dotIdx}
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setCurrentIndex(dotIdx);
+              }}
+              aria-label={`View photo ${dotIdx + 1}`}
+              style={{
+                border: 'none',
+                padding: 0,
+                cursor: 'pointer',
+                width: dotIdx === currentIndex ? '22px' : '7px',
+                height: '7px',
+                borderRadius: '999px',
+                backgroundColor: dotIdx === currentIndex ? '#FFFFFF' : 'rgba(255, 255, 255, 0.45)',
+                transition: 'width 260ms cubic-bezier(0.22, 1, 0.36, 1), background-color 200ms ease',
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Bottom Metadata Bar */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '1.25rem',
+          left: '1.5rem',
+          right: '1.5rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '0.75rem',
+          zIndex: 10,
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.45rem',
+            color: '#F3E5C2',
+            fontSize: '0.82rem',
+            fontWeight: 500,
+          }}
+        >
+          <MapPinIcon size={14} className="text-[#C9963B]" />
+          <span>{project.location}</span>
+        </div>
+        <div
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            color: 'var(--ndc-green-dark)',
+            fontSize: '0.74rem',
+            fontWeight: 700,
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em',
+            padding: '0.3rem 0.8rem',
+            borderRadius: '999px',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.16)',
+          }}
+        >
+          {project.completionYear}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const ProjectCardPhotoPlate: React.FC<{ project: Project; index: number }> = ({ project, index }) => {
+  const images =
+    project.slideshowImages && project.slideshowImages.length > 0
+      ? project.slideshowImages
+      : [project.image];
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [project.id]);
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const timer = window.setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % images.length);
+    }, 3900);
+    return () => window.clearInterval(timer);
+  }, [images.length]);
+
+  return (
+    <div style={{ height: '210px', position: 'relative', overflow: 'hidden', backgroundColor: '#0F1813' }}>
+      {images.map((imgSrc, idx) => {
+        const isActive = idx === currentIndex;
+        return (
+          <div
+            key={idx}
+            style={{
+              position: 'absolute',
+              inset: 0,
+              opacity: isActive ? 1 : 0,
+              transition: 'opacity 1000ms cubic-bezier(0.4, 0, 0.2, 1)',
+              pointerEvents: 'none',
+              zIndex: isActive ? 2 : 1,
+            }}
+          >
+            <img
+              src={imgSrc}
+              alt={`${project.title} - ${idx + 1}`}
+              loading="lazy"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center 25%',
+                display: 'block',
+                transform: isActive ? 'scale(1.03)' : 'scale(1)',
+                transition: 'transform 5000ms ease-out',
+              }}
+            />
+          </div>
+        );
+      })}
+
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(to top, rgba(17, 20, 18, 0.65) 0%, transparent 60%)',
+          zIndex: 3,
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* Subtle index number watermark */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '0.85rem',
+          right: '1rem',
+          fontFamily: 'var(--font-serif)',
+          fontSize: '1.2rem',
+          fontWeight: 700,
+          color: 'rgba(255, 255, 255, 0.85)',
+          textShadow: '0 2px 8px rgba(0,0,0,0.4)',
+          zIndex: 4,
+        }}
+      >
+        #{String(index + 2).padStart(2, '0')}
+      </div>
+
+      {/* Multiple images dot indicator strip */}
+      {images.length > 1 && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '0.85rem',
+            left: '1rem',
+            zIndex: 4,
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.3rem',
+            backgroundColor: 'rgba(12, 20, 16, 0.65)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            padding: '0.22rem 0.5rem',
+            borderRadius: '999px',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+          }}
+        >
+          {images.map((_, dotIdx) => (
+            <span
+              key={dotIdx}
+              style={{
+                width: dotIdx === currentIndex ? '14px' : '5px',
+                height: '5px',
+                borderRadius: '999px',
+                backgroundColor: dotIdx === currentIndex ? '#FFFFFF' : 'rgba(255, 255, 255, 0.45)',
+                transition: 'width 250ms ease, background-color 200ms ease',
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      <div style={{ position: 'absolute', bottom: '0.85rem', left: '1rem', zIndex: 4 }}>
+        <span
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.94)',
+            backdropFilter: 'blur(8px)',
+            color: 'var(--rich-black)',
+            fontSize: '0.72rem',
+            fontWeight: 700,
+            letterSpacing: '0.06em',
+            textTransform: 'uppercase',
+            padding: '0.28rem 0.72rem',
+            borderRadius: '999px',
+            border: '1px solid rgba(17, 20, 18, 0.06)',
+          }}
+        >
+          {project.category}
+        </span>
+      </div>
+    </div>
+  );
+};
 
 export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, onNavigate }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -156,59 +500,8 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
               marginBottom: '3rem',
             }}
           >
-            {/* Left Photographic Plate */}
-            <div style={{ position: 'relative', minHeight: '380px', overflow: 'hidden' }}>
-              <img
-                src={flagshipProject.image}
-                alt={flagshipProject.title}
-                loading="lazy"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  display: 'block',
-                }}
-              />
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'linear-gradient(to top, rgba(15, 24, 19, 0.75) 0%, transparent 60%)',
-                }}
-              />
-              <div
-                style={{
-                  position: 'absolute',
-                  bottom: '1.25rem',
-                  left: '1.5rem',
-                  right: '1.5rem',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  flexWrap: 'wrap',
-                  gap: '0.75rem',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', color: '#F3E5C2', fontSize: '0.82rem' }}>
-                  <MapPinIcon size={14} className="text-[#C9963B]" />
-                  <span>{flagshipProject.location}</span>
-                </div>
-                <div
-                  style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                    color: 'var(--ndc-green-dark)',
-                    fontSize: '0.74rem',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.08em',
-                    padding: '0.3rem 0.8rem',
-                    borderRadius: '999px',
-                  }}
-                >
-                  {flagshipProject.completionYear}
-                </div>
-              </div>
-            </div>
+            {/* Left Photographic Plate with Smooth Image Fade Slideshow */}
+            <FlagshipPhotographicPlate project={flagshipProject} />
 
             {/* Right Editorial Dossier */}
             <div style={{ padding: 'clamp(2rem, 4vw, 3rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
@@ -355,62 +648,8 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
                   e.currentTarget.style.boxShadow = 'var(--shadow-sm)';
                 }}
               >
-                {/* Photo Plate with Integrated Editorial Overline */}
-                <div style={{ height: '210px', position: 'relative', overflow: 'hidden' }}>
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    loading="lazy"
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      objectFit: 'cover',
-                      display: 'block',
-                      transition: 'transform 300ms ease-out',
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: 'absolute',
-                      inset: 0,
-                      background: 'linear-gradient(to top, rgba(17, 20, 18, 0.5) 0%, transparent 60%)',
-                    }}
-                  />
-                  {/* Subtle index number watermark */}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      top: '0.85rem',
-                      right: '1rem',
-                      fontFamily: 'var(--font-serif)',
-                      fontSize: '1.2rem',
-                      fontWeight: 700,
-                      color: 'rgba(255, 255, 255, 0.85)',
-                      textShadow: '0 2px 8px rgba(0,0,0,0.4)',
-                    }}
-                  >
-                    #{String(index + 2).padStart(2, '0')}
-                  </div>
-
-                  <div style={{ position: 'absolute', bottom: '0.85rem', left: '1rem' }}>
-                    <span
-                      style={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.94)',
-                        backdropFilter: 'blur(8px)',
-                        color: 'var(--rich-black)',
-                        fontSize: '0.72rem',
-                        fontWeight: 700,
-                        letterSpacing: '0.06em',
-                        textTransform: 'uppercase',
-                        padding: '0.28rem 0.72rem',
-                        borderRadius: '999px',
-                        border: '1px solid rgba(17, 20, 18, 0.06)',
-                      }}
-                    >
-                      {project.category}
-                    </span>
-                  </div>
-                </div>
+                {/* Photo Plate with Integrated Editorial Overline & Smooth Slideshow */}
+                <ProjectCardPhotoPlate project={project} index={index} />
 
                 {/* Editorial Content Block */}
                 <div style={{ padding: '1.75rem', display: 'flex', flexDirection: 'column', flex: 1 }}>

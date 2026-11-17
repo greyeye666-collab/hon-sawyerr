@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
 import { animate, motion, useMotionValue, useReducedMotion } from 'motion/react';
 import type { PageView } from '../types';
 import { ArrowRightIcon, ArrowLeftIcon, EyeIcon, EyeOffIcon } from './Icons';
@@ -20,6 +20,29 @@ import img13 from '../assets/hero-slider/13.jpg';
 import img14 from '../assets/hero-slider/14.jpg';
 import img15 from '../assets/hero-slider/15.jpg';
 import h2Img from '../assets/H2.jpg';
+
+// Additional user provided images fa1 to fa18
+import fa1 from '../assets/fa/fa1.jpg';
+import fa2 from '../assets/fa/fa2.jpg';
+import fa3 from '../assets/fa/fa3.jpg';
+import fa4 from '../assets/fa/fa4.jpg';
+import fa5 from '../assets/fa/fa5.jpg';
+import fa6 from '../assets/fa/fa6.jpg';
+import fa7 from '../assets/fa/fa7.jpg';
+import fa8 from '../assets/fa/fa8.jpg';
+import fa9 from '../assets/fa/fa9.jpg';
+import fa10 from '../assets/fa/fa10.jpg';
+import fa11 from '../assets/fa/fa11.jpg';
+import fa12 from '../assets/fa/fa12.jpg';
+import fa13 from '../assets/fa/fa13.jpg';
+import fa14 from '../assets/fa/fa14.jpg';
+import fa15 from '../assets/fa/fa15.jpg';
+import fa16 from '../assets/fa/fa16.jpg';
+import fa17 from '../assets/fa/fa17.jpg';
+import fa18 from '../assets/fa/fa18.jpg';
+import fa19 from '../assets/fa/fa19.jpg';
+import fa20 from '../assets/fa/fa20.jpg';
+import fa21 from '../assets/fa/fa21.jpg';
 
 interface HeroProps {
   onNavigate: (page: PageView) => void;
@@ -156,7 +179,152 @@ const SLIDES: HeroSlide[] = [
       { src: h2Img, caption: 'Servant of Agona East' },
     ],
   },
+  {
+    id: 9,
+    type: 'paired-portrait',
+    tag: 'Constituency Engagement',
+    badgeColor: 'green',
+    title: 'Deeply Rooted in Agona East.',
+    titleHighlight: 'Listening to Every Voice.',
+    description:
+      'Walking through every village and hamlet, listening to elders, youth, and families with humility, dedication, and active care.',
+    portraitImages: [
+      { src: fa1, caption: 'Grassroots Listening Tour' },
+      { src: fa2, caption: 'Heart of Agona East' },
+    ],
+  },
+  {
+    id: 10,
+    type: 'paired-portrait',
+    tag: 'Servant Leadership',
+    badgeColor: 'red',
+    title: 'Standing with the People.',
+    titleHighlight: 'In Every Season of Life.',
+    description:
+      'Accessible, hands-on leadership that meets people right where they are, bringing hope and practical solutions to daily community challenges.',
+    portraitImages: [
+      { src: fa3, caption: 'Community Fellowship' },
+      { src: fa4, caption: 'Mama Pokua in Service' },
+      { src: fa5, caption: 'Grassroots Engagement' },
+    ],
+  },
+  {
+    id: 11,
+    type: 'paired-portrait',
+    tag: 'Women Empowerment',
+    badgeColor: 'green',
+    title: 'Championing Mothers & Families.',
+    titleHighlight: 'Economic Dignity in Every Home.',
+    description:
+      'Standing firmly behind market women, farmers, and family heads with revolving micro-grants, mechanized processing tools, and business guidance.',
+    portraitImages: [
+      { src: fa6, caption: 'Market Women Solidarity' },
+      { src: fa7, caption: 'Maternal Dignity' },
+    ],
+  },
+  {
+    id: 12,
+    type: 'paired-portrait',
+    tag: 'Youth Development',
+    badgeColor: 'red',
+    title: 'Inspiring the Next Generation.',
+    titleHighlight: 'Unlocking Boundless Potential.',
+    description:
+      'Empowering our youth through educational subsidies, vocational skills apprenticeship, and educational supplies to build a prosperous tomorrow.',
+    portraitImages: [
+      { src: fa8, caption: 'Youth Mentorship' },
+      { src: fa9, caption: 'Future Leaders of Agona' },
+    ],
+  },
+  {
+    id: 13,
+    type: 'paired-portrait',
+    tag: 'Unity & Heritage',
+    badgeColor: 'green',
+    title: 'United in Heritage & Purpose.',
+    titleHighlight: 'Honoring Our Traditions.',
+    description:
+      'Partnering closely with revered traditional chiefs, queenmothers, and community custodians to foster peace, cultural pride, and inclusive development.',
+    portraitImages: [
+      { src: fa10, caption: 'Traditional Durbar' },
+      { src: fa11, caption: 'Cultural Heritage' },
+      { src: fa12, caption: 'Community Solidarity' },
+    ],
+  },
+  {
+    id: 14,
+    type: 'paired-portrait',
+    tag: 'Infrastructure Oversight',
+    badgeColor: 'red',
+    title: 'Delivering Everyday Results.',
+    titleHighlight: 'Action and Accountability.',
+    description:
+      'Personally inspecting rural roads, water boreholes, school facilities, and CHPS clinics to ensure uncompromising quality for our people.',
+    portraitImages: [
+      { src: fa13, caption: 'Field Project Inspection' },
+      { src: fa14, caption: 'Development in Action' },
+    ],
+  },
+  {
+    id: 15,
+    type: 'paired-portrait',
+    tag: 'A Mother to All',
+    badgeColor: 'green',
+    title: 'A Pillar of Compassion.',
+    titleHighlight: 'Beloved Across the Central Region.',
+    description:
+      'Affectionately called Mama Pokua for her unwavering warmth, accessible presence, and lifelong dedication to uplifting the vulnerable.',
+    portraitImages: [
+      { src: fa15, caption: 'Grassroots Warmth' },
+      { src: fa16, caption: 'Mama Pokua with Constituents' },
+      { src: fa17, caption: "The People's Choice" },
+    ],
+  },
+  {
+    id: 16,
+    type: 'landscape',
+    tag: 'Agona East Rising',
+    badgeColor: 'green',
+    title: 'Forward Together for Agona East.',
+    titleHighlight: 'Building a Resilient Constituency.',
+    description:
+      'A unified constituency forging forward in mutual respect, sustainable economic growth, and steadfast leadership for the generations ahead.',
+    landscapeImage: fa18,
+  },
+  {
+    id: 17,
+    type: 'paired-portrait',
+    tag: 'Community Progress',
+    badgeColor: 'red',
+    title: 'Transforming Lives Daily.',
+    titleHighlight: 'Agona East Flourishes.',
+    description:
+      'Working tirelessly on the ground with grassroots communities, women traders, and local champions to bring real, lasting development across Agona East.',
+    portraitImages: [
+      { src: fa19, caption: 'Community Dialogue' },
+      { src: fa20, caption: 'Grassroots Solidarity' },
+    ],
+  },
+  {
+    id: 18,
+    type: 'landscape',
+    tag: 'A Future of Hope',
+    badgeColor: 'green',
+    title: 'Visionary Leadership.',
+    titleHighlight: 'Empowering Every Citizen.',
+    description:
+      'Steadfast dedication to uplifting Agona East through accessible leadership, robust infrastructure, and educational excellence for every family.',
+    landscapeImage: fa21,
+  },
 ];
+
+// Seamless infinite loop: [clone of last, ...slides, clone of first]
+const SLIDE_COUNT = SLIDES.length;
+const RENDERED_SLIDES: HeroSlide[] = [SLIDES[SLIDE_COUNT - 1], ...SLIDES, SLIDES[0]];
+
+// Gentle, editorial ease-in-out for autoplay / arrows / dots
+const SLIDE_EASE: [number, number, number, number] = [0.65, 0, 0.35, 1];
+const SLIDE_DURATION = 0.95;
 
 export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
@@ -166,71 +334,117 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
 
   const containerRef = useRef<HTMLElement | null>(null);
   const trackX = useMotionValue(0);
+  // Position within RENDERED_SLIDES (real slides live at 1..SLIDE_COUNT)
+  const posRef = useRef(1);
+  const animRef = useRef<ReturnType<typeof animate> | null>(null);
   const dragStateRef = useRef({
     active: false,
     committed: false,
     startX: 0,
     startY: 0,
     startTrackX: 0,
+    startPos: 1,
     width: 1200,
     samples: [] as Array<{ x: number; t: number }>,
   });
 
-  const springToSlide = useCallback(
-    (index: number, velocity = 0) => {
-      const clamped = Math.max(0, Math.min(SLIDES.length - 1, index));
-      const width = containerRef.current?.clientWidth || window.innerWidth;
-      const targetX = -clamped * width;
-      setCurrentSlideIndex(clamped);
+  const getWidth = useCallback(
+    () => containerRef.current?.clientWidth || window.innerWidth,
+    []
+  );
+
+  // If we are sitting on (or moving toward) a clone, jump to the identical real slide.
+  // Clones look exactly like their real counterparts, so the jump is invisible.
+  const rebase = useCallback(() => {
+    const width = getWidth();
+    if (posRef.current >= SLIDE_COUNT + 1) {
+      posRef.current -= SLIDE_COUNT;
+      trackX.set(trackX.get() + SLIDE_COUNT * width);
+    } else if (posRef.current <= 0) {
+      posRef.current += SLIDE_COUNT;
+      trackX.set(trackX.get() - SLIDE_COUNT * width);
+    }
+  }, [getWidth, trackX]);
+
+  const goToPos = useCallback(
+    (pos: number, velocity?: number) => {
+      const width = getWidth();
+      animRef.current?.stop();
+      posRef.current = pos;
+      setCurrentSlideIndex((((pos - 1) % SLIDE_COUNT) + SLIDE_COUNT) % SLIDE_COUNT);
+      const targetX = -pos * width;
 
       if (prefersReducedMotion) {
         trackX.set(targetX);
+        rebase();
         return;
       }
 
-      animate(trackX, targetX, {
-        type: 'spring',
-        bounce: 0,
-        duration: 0.48,
-        velocity,
-      });
+      animRef.current = animate(
+        trackX,
+        targetX,
+        velocity !== undefined
+          ? { type: 'spring', bounce: 0, duration: 0.7, velocity, onComplete: rebase }
+          : { type: 'tween', duration: SLIDE_DURATION, ease: SLIDE_EASE, onComplete: rebase }
+      );
     },
-    [prefersReducedMotion, trackX]
+    [getWidth, prefersReducedMotion, rebase, trackX]
   );
+
+  const goToSlide = useCallback(
+    (index: number) => {
+      rebase();
+      goToPos(index + 1);
+    },
+    [goToPos, rebase]
+  );
+
+  const goNext = useCallback(() => {
+    rebase();
+    goToPos(posRef.current + 1);
+  }, [goToPos, rebase]);
+
+  const goPrev = useCallback(() => {
+    rebase();
+    goToPos(posRef.current - 1);
+  }, [goToPos, rebase]);
+
+  // Start on the first real slide (position 1) before first paint
+  useLayoutEffect(() => {
+    trackX.set(-posRef.current * getWidth());
+  }, [getWidth, trackX]);
 
   // Keep track aligned on viewport resize
   useEffect(() => {
     const syncWidth = () => {
-      const width = containerRef.current?.clientWidth || window.innerWidth;
-      trackX.set(-currentSlideIndex * width);
+      animRef.current?.stop();
+      rebase();
+      trackX.set(-posRef.current * getWidth());
     };
     window.addEventListener('resize', syncWidth);
     return () => window.removeEventListener('resize', syncWidth);
-  }, [currentSlideIndex, trackX]);
+  }, [getWidth, rebase, trackX]);
 
-  // Auto-advance cleanly when idle and motion is allowed
+  // Auto-advance (always forward, wrapping seamlessly from last to first)
   useEffect(() => {
     if (isPaused || prefersReducedMotion) return;
-    const timer = window.setInterval(() => {
-      const next = (currentSlideIndex + 1) % SLIDES.length;
-      springToSlide(next);
-    }, 7000);
-    return () => clearInterval(timer);
-  }, [currentSlideIndex, isPaused, prefersReducedMotion, springToSlide]);
+    const timer = window.setTimeout(goNext, 7000);
+    return () => clearTimeout(timer);
+  }, [currentSlideIndex, isPaused, prefersReducedMotion, goNext]);
 
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
     // Allow interactive buttons inside hero to work cleanly without capturing clicks
     if ((e.target as HTMLElement).closest('button, a')) return;
     if (prefersReducedMotion) return;
 
-    const width = containerRef.current?.clientWidth || window.innerWidth;
     dragStateRef.current = {
       active: true,
       committed: false,
       startX: e.clientX,
       startY: e.clientY,
       startTrackX: trackX.get(),
-      width,
+      startPos: posRef.current,
+      width: getWidth(),
       samples: [{ x: e.clientX, t: performance.now() }],
     };
     setIsPaused(true);
@@ -253,10 +467,18 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
       }
       if (Math.abs(dx) < 10) return;
       d.committed = true;
+      // Take over from any running animation without a jump
+      animRef.current?.stop();
+      rebase();
+      d.startX = e.clientX;
+      d.startTrackX = trackX.get();
+      d.startPos = Math.round(-d.startTrackX / d.width);
+      d.samples = [{ x: e.clientX, t: performance.now() }];
+      return;
     }
 
-    const minX = -(SLIDES.length - 1) * d.width;
-    const rawX = d.startTrackX + dx;
+    const minX = -(SLIDE_COUNT + 1) * d.width;
+    const rawX = d.startTrackX + (e.clientX - d.startX);
     let clampedX = rawX;
     if (rawX > 0) {
       clampedX = rubberband(rawX, d.width);
@@ -285,20 +507,20 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
       if (dt > 0.005) velocity = (last.x - first.x) / dt;
     }
 
-    // Momentum projection to nearest slide snap point
+    // Momentum projection, limited to one slide per swipe for a calm feel
     const currentX = trackX.get();
     const projectedX = currentX + project(velocity, 0.995);
-    const projectedIndex = Math.round(-projectedX / d.width);
-    const clampedIndex = Math.max(0, Math.min(SLIDES.length - 1, projectedIndex));
-    springToSlide(clampedIndex, velocity);
+    const projectedPos = Math.round(-projectedX / d.width);
+    const targetPos = Math.max(d.startPos - 1, Math.min(d.startPos + 1, projectedPos));
+    goToPos(Math.max(0, Math.min(SLIDE_COUNT + 1, targetPos)), velocity);
   };
 
   const handlePrevSlide = () => {
-    springToSlide((currentSlideIndex - 1 + SLIDES.length) % SLIDES.length);
+    goPrev();
   };
 
   const handleNextSlide = () => {
-    springToSlide((currentSlideIndex + 1) % SLIDES.length);
+    goNext();
   };
 
   return (
@@ -360,9 +582,10 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
           touchAction: 'pan-y',
         }}
       >
-        {SLIDES.map((slide) => (
+        {RENDERED_SLIDES.map((slide, renderIdx) => (
           <div
-            key={slide.id}
+            key={`${slide.id}-${renderIdx}`}
+            aria-hidden={renderIdx === 0 || renderIdx === SLIDE_COUNT + 1 ? true : undefined}
             style={{
               minWidth: '100%',
               width: '100%',
@@ -374,7 +597,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
               alignItems: 'center',
               userSelect: 'none',
             }}
-            className="hero-slide-item"
+            className={`hero-slide-item${slide.id === SLIDES[currentSlideIndex].id ? ' is-active' : ''}`}
           >
             {slide.type === 'landscape' && slide.landscapeImage && (
               <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
@@ -698,17 +921,17 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
           }}
         >
           {/* Indicator Pills */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', flexWrap: 'wrap', maxWidth: '65vw' }}>
             {SLIDES.map((s, sIdx) => {
               const isCurrent = sIdx === currentSlideIndex;
               return (
                 <button
                   key={s.id}
-                  onClick={() => springToSlide(sIdx)}
+                  onClick={() => goToSlide(sIdx)}
                   style={{
                     background: 'none',
                     border: 'none',
-                    padding: '0.35rem 0.25rem',
+                    padding: '0.35rem 0.15rem',
                     cursor: 'pointer',
                   }}
                   aria-label={`Go to slide ${sIdx + 1}`}
@@ -716,8 +939,8 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                   <span
                     style={{
                       display: 'block',
-                      width: isCurrent ? '30px' : '8px',
-                      height: '7px',
+                      width: isCurrent ? '22px' : '6px',
+                      height: '6px',
                       borderRadius: '999px',
                       backgroundColor: isCurrent ? '#FFFFFF' : 'rgba(255, 255, 255, 0.42)',
                       transition: 'width 260ms cubic-bezier(0.22, 1, 0.36, 1), background-color 200ms ease',
@@ -729,9 +952,9 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
           </div>
 
           <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#F3E5C2', letterSpacing: '0.08em' }}>
-            <span>0{currentSlideIndex + 1}</span>
+            <span>{String(currentSlideIndex + 1).padStart(2, '0')}</span>
             <span style={{ color: 'rgba(255, 255, 255, 0.4)', margin: '0 0.4rem' }}>/</span>
-            <span style={{ color: 'rgba(255, 255, 255, 0.72)' }}>0{SLIDES.length}</span>
+            <span style={{ color: 'rgba(255, 255, 255, 0.72)' }}>{String(SLIDES.length).padStart(2, '0')}</span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
@@ -811,6 +1034,21 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
           0% { width: 0%; }
           100% { width: 100%; }
         }
+        .hero-slide-img {
+          transform: scale(1.06);
+          transition: transform 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+          backface-visibility: hidden;
+        }
+        .hero-slide-item.is-active .hero-slide-img {
+          transform: scale(1);
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-slide-img,
+          .hero-slide-item.is-active .hero-slide-img {
+            transform: none;
+            transition: none;
+          }
+        }
         @media (min-width: 769px) {
           .mobile-view-photo-bar,
           .mobile-minimized-pill {
@@ -833,8 +1071,13 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
           .portrait-caption-pill {
             bottom: auto !important;
             top: 1rem !important;
-            font-size: 0.66rem !important;
-            padding: 0.22rem 0.68rem !important;
+            font-size: 0.64rem !important;
+            padding: 0.22rem 0.65rem !important;
+            max-width: 90% !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            text-align: center !important;
+            white-space: nowrap !important;
           }
           .hero-dark-overlay {
             background: linear-gradient(

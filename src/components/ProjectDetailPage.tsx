@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { Project, PageView } from '../types';
 import { PROJECTS } from '../data/mockData';
 import { ArrowLeftIcon, MapPinIcon, CalendarIcon, AwardIcon, CheckCircleIcon, QuoteIcon } from './Icons';
@@ -16,7 +16,26 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
   onSelectProject,
   onNavigate,
 }) => {
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const relatedProjects = PROJECTS.filter((p) => p.id !== project.id).slice(0, 3);
+
+  const heroImages =
+    project.slideshowImages && project.slideshowImages.length > 0
+      ? project.slideshowImages
+      : [project.image];
+  const [heroIndex, setHeroIndex] = useState(0);
+
+  React.useEffect(() => {
+    setHeroIndex(0);
+  }, [project.id]);
+
+  React.useEffect(() => {
+    if (heroImages.length <= 1) return;
+    const timer = window.setInterval(() => {
+      setHeroIndex((prev) => (prev + 1) % heroImages.length);
+    }, 4200);
+    return () => window.clearInterval(timer);
+  }, [heroImages.length]);
 
   return (
     <div style={{ backgroundColor: 'var(--bg-cream)', minHeight: '100vh', paddingBottom: '6rem' }}>
@@ -148,22 +167,136 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
         >
           {/* Left / Main Details Column */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem', gridColumn: 'span 2' }}>
-            {/* Primary Featured Image */}
+            {/* Primary Featured Image / Crossfade Gallery */}
             <div
+              onClick={() => setSelectedImage(heroImages[heroIndex])}
               style={{
                 borderRadius: '24px',
                 overflow: 'hidden',
                 boxShadow: 'var(--shadow-xl)',
                 border: '4px solid #FFFFFF',
-                backgroundColor: '#FFFFFF',
-                maxHeight: '480px',
+                backgroundColor: '#0F1813',
+                height: '440px',
+                position: 'relative',
+                cursor: 'pointer',
               }}
             >
-              <img
-                src={project.image}
-                alt={project.title}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              {heroImages.map((imgSrc, idx) => {
+                const isActive = idx === heroIndex;
+                return (
+                  <div
+                    key={idx}
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      opacity: isActive ? 1 : 0,
+                      transition: 'opacity 1000ms cubic-bezier(0.4, 0, 0.2, 1)',
+                      pointerEvents: 'none',
+                      zIndex: isActive ? 2 : 1,
+                    }}
+                  >
+                    <img
+                      src={imgSrc}
+                      alt={`${project.title} - ${idx + 1}`}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'cover',
+                        objectPosition: 'center 30%',
+                        display: 'block',
+                        transform: isActive ? 'scale(1.03)' : 'scale(1)',
+                        transition: 'transform 6000ms ease-out',
+                      }}
+                    />
+                  </div>
+                );
+              })}
+
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(to top, rgba(17, 20, 18, 0.55) 0%, transparent 45%)',
+                  pointerEvents: 'none',
+                  zIndex: 3,
+                }}
               />
+
+              {/* Floating Live Badge */}
+              {heroImages.length > 1 && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: '1.25rem',
+                    right: '1.25rem',
+                    zIndex: 10,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
+                    backgroundColor: 'rgba(12, 20, 16, 0.72)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    color: '#FFFFFF',
+                    border: '1px solid rgba(255, 255, 255, 0.22)',
+                    borderRadius: '999px',
+                    padding: '0.35rem 0.9rem',
+                    fontSize: '0.75rem',
+                    fontWeight: 600,
+                  }}
+                >
+                  <span
+                    style={{
+                      width: '6px',
+                      height: '6px',
+                      borderRadius: '50%',
+                      backgroundColor: '#009E52',
+                    }}
+                  />
+                  <span>
+                    Field Record {heroIndex + 1} of {heroImages.length}
+                  </span>
+                </div>
+              )}
+
+              {/* Bottom Dot Strip */}
+              {heroImages.length > 1 && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: '1.25rem',
+                    left: '1.5rem',
+                    zIndex: 10,
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    backgroundColor: 'rgba(12, 20, 16, 0.65)',
+                    backdropFilter: 'blur(8px)',
+                    padding: '0.28rem 0.65rem',
+                    borderRadius: '999px',
+                    border: '1px solid rgba(255, 255, 255, 0.18)',
+                  }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {heroImages.map((_, dotIdx) => (
+                    <button
+                      key={dotIdx}
+                      type="button"
+                      onClick={() => setHeroIndex(dotIdx)}
+                      aria-label={`View photo ${dotIdx + 1}`}
+                      style={{
+                        border: 'none',
+                        padding: 0,
+                        cursor: 'pointer',
+                        width: dotIdx === heroIndex ? '20px' : '6px',
+                        height: '6px',
+                        borderRadius: '999px',
+                        backgroundColor: dotIdx === heroIndex ? '#FFFFFF' : 'rgba(255, 255, 255, 0.45)',
+                        transition: 'width 250ms ease, background-color 200ms ease',
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* In-depth Overview Card */}
@@ -280,35 +413,131 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
                   boxShadow: 'var(--shadow-sm)',
                 }}
               >
-                <h3
+                <div
                   style={{
-                    fontSize: '1.4rem',
-                    fontFamily: 'var(--font-serif)',
-                    marginBottom: '1.25rem',
-                    color: 'var(--rich-black)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginBottom: '1.5rem',
+                    flexWrap: 'wrap',
+                    gap: '0.75rem',
                   }}
                 >
-                  Project Visual Documentation
-                </h3>
+                  <div>
+                    <div
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.4rem',
+                        color: 'var(--ndc-green)',
+                        fontSize: '0.76rem',
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.08em',
+                        marginBottom: '0.25rem',
+                      }}
+                    >
+                      <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#009E52' }} />
+                      <span>Verified Field Photography</span>
+                    </div>
+                    <h3
+                      style={{
+                        fontSize: '1.5rem',
+                        fontFamily: 'var(--font-serif)',
+                        color: 'var(--rich-black)',
+                        margin: 0,
+                      }}
+                    >
+                      Project Visual Documentation
+                    </h3>
+                  </div>
+                  <span
+                    style={{
+                      fontSize: '0.78rem',
+                      color: 'var(--ndc-green-dark)',
+                      backgroundColor: 'rgba(0, 122, 67, 0.08)',
+                      border: '1px solid rgba(0, 122, 67, 0.2)',
+                      padding: '0.35rem 0.85rem',
+                      borderRadius: '999px',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {project.galleryImages.length} Field Records
+                  </span>
+                </div>
+
                 <div
                   style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-                    gap: '1rem',
+                    gap: '1.25rem',
                   }}
                 >
                   {project.galleryImages.map((imgUrl, idx) => (
                     <div
                       key={idx}
                       className="img-zoom-container"
+                      onClick={() => setSelectedImage(imgUrl)}
                       style={{
-                        height: '200px',
-                        borderRadius: '14px',
+                        height: '220px',
+                        borderRadius: '16px',
                         overflow: 'hidden',
                         boxShadow: 'var(--shadow-sm)',
+                        border: '1px solid rgba(17, 20, 18, 0.08)',
+                        position: 'relative',
+                        cursor: 'pointer',
+                        backgroundColor: '#0F1813',
                       }}
                     >
-                      <img src={imgUrl} alt={`${project.title} visual ${idx + 1}`} />
+                      <img
+                        src={imgUrl}
+                        alt={`${project.title} field documentation ${idx + 1}`}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          objectPosition: 'center 25%',
+                          display: 'block',
+                          transition: 'transform 360ms cubic-bezier(0.22, 1, 0.36, 1)',
+                        }}
+                      />
+                      <div
+                        style={{
+                          position: 'absolute',
+                          inset: 0,
+                          background:
+                            'linear-gradient(to top, rgba(12, 20, 16, 0.72) 0%, transparent 50%)',
+                          opacity: 0.85,
+                          transition: 'opacity 200ms ease',
+                        }}
+                      />
+                      <div
+                        style={{
+                          position: 'absolute',
+                          bottom: '0.75rem',
+                          left: '0.85rem',
+                          right: '0.85rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          color: '#FFFFFF',
+                          fontSize: '0.74rem',
+                          fontWeight: 600,
+                        }}
+                      >
+                        <span style={{ color: '#F3E5C2' }}>Field Record #{idx + 1}</span>
+                        <span
+                          style={{
+                            fontSize: '0.68rem',
+                            backgroundColor: 'rgba(255, 255, 255, 0.22)',
+                            backdropFilter: 'blur(4px)',
+                            padding: '0.15rem 0.5rem',
+                            borderRadius: '999px',
+                          }}
+                        >
+                          Enlarge ⤢
+                        </span>
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -466,6 +695,75 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      {selectedImage && (
+        <div
+          onClick={() => setSelectedImage(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 9999,
+            backgroundColor: 'rgba(5, 12, 8, 0.92)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '2rem',
+            cursor: 'zoom-out',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'relative',
+              maxWidth: '920px',
+              width: '100%',
+              maxHeight: '85vh',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              cursor: 'default',
+            }}
+          >
+            <button
+              onClick={() => setSelectedImage(null)}
+              style={{
+                position: 'absolute',
+                top: '-2.75rem',
+                right: '0',
+                background: 'rgba(255, 255, 255, 0.15)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                color: '#FFFFFF',
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.2rem',
+                cursor: 'pointer',
+              }}
+              aria-label="Close Preview"
+            >
+              ✕
+            </button>
+            <img
+              src={selectedImage}
+              alt="Project documentation expanded"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '80vh',
+                borderRadius: '16px',
+                boxShadow: '0 24px 60px rgba(0, 0, 0, 0.6)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                objectFit: 'contain',
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
