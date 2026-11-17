@@ -489,7 +489,7 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
               overflow: 'hidden',
               boxShadow: 'var(--shadow-md)',
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
               marginBottom: '3rem',
             }}
           >
@@ -607,7 +607,7 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
               gap: '2.25rem',
             }}
           >

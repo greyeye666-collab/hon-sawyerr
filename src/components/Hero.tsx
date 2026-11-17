@@ -623,7 +623,7 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
           }}
         >
           {/* Indicator Pills */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', flexWrap: 'wrap', maxWidth: '65vw' }}>
+          <div className="hero-indicator-pills" style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', flexWrap: 'wrap', maxWidth: '65vw' }}>
             {SLIDES.map((s, sIdx) => {
               const isCurrent = sIdx === currentSlideIndex;
               return (
@@ -792,12 +792,15 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
           }
           .hero-content-wrapper {
             padding-top: 0 !important;
-            padding-bottom: 4.6rem !important;
+            padding-bottom: 5.5rem !important;
             padding-left: 1rem !important;
             padding-right: 1rem !important;
             display: flex !important;
             flex-direction: column !important;
             justify-content: flex-end !important;
+          }
+          .hero-indicator-pills {
+            display: none !important;
           }
           .hero-glass-box {
             padding: 1.25rem !important;

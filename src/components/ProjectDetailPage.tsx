@@ -162,15 +162,9 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
 
       {/* Main Content Body */}
       <div className="container-custom" style={{ marginTop: '-2.5rem', position: 'relative', zIndex: 10 }}>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '2.5rem',
-          }}
-        >
+        <div className="project-detail-grid">
           {/* Left / Main Details Column */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem', gridColumn: 'span 2' }}>
+          <div className="project-detail-main" style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
             {/* Primary Featured Image / Crossfade Gallery */}
             <div
               onClick={() => setSelectedImage(heroImages[heroIndex])}
@@ -180,7 +174,7 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
                 boxShadow: 'var(--shadow-xl)',
                 border: '4px solid #FFFFFF',
                 backgroundColor: '#0F1813',
-                height: '440px',
+                height: 'clamp(260px, 52vw, 440px)',
                 position: 'relative',
                 cursor: 'pointer',
               }}
@@ -768,6 +762,20 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
           </div>
         </div>
       )}
+
+      <style>{`
+        .project-detail-grid {
+          display: grid;
+          grid-template-columns: 1fr;
+          gap: 2rem;
+        }
+        @media (min-width: 960px) {
+          .project-detail-grid {
+            grid-template-columns: 2fr 1fr;
+            gap: 2.5rem;
+          }
+        }
+      `}</style>
     </div>
   );
 };

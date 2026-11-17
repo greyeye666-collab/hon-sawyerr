@@ -115,7 +115,7 @@ export const DedicatedBlogPage: React.FC<DedicatedBlogPageProps> = ({
               About the MP
             </button>
             <span style={{ color: 'rgba(255, 255, 255, 0.3)' }}>/</span>
-            <span style={{ color: '#F3E5C2', fontSize: '0.86rem', fontWeight: 600 }}>The MP\'s Notebook</span>
+            <span style={{ color: '#F3E5C2', fontSize: '0.86rem', fontWeight: 600 }}>The MP&apos;s Notebook</span>
           </div>
 
           <div style={{ maxWidth: '820px' }}>
@@ -148,7 +148,7 @@ export const DedicatedBlogPage: React.FC<DedicatedBlogPageProps> = ({
                 marginBottom: '1.25rem',
               }}
             >
-              The MP\'s Notebook &amp; Dispatches
+              The MP&apos;s Notebook &amp; Dispatches
             </h1>
 
             <p style={{ fontSize: 'clamp(1.05rem, 1.6vw, 1.2rem)', color: '#C2CBC5', lineHeight: 1.68, maxWidth: '680px' }}>
@@ -287,7 +287,7 @@ export const DedicatedBlogPage: React.FC<DedicatedBlogPageProps> = ({
               overflow: 'hidden',
               boxShadow: 'var(--shadow-md)',
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
               marginBottom: '3.5rem',
               cursor: 'pointer',
               transition: 'transform 240ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 240ms cubic-bezier(0.22, 1, 0.36, 1), border-color 240ms ease',
@@ -476,7 +476,7 @@ export const DedicatedBlogPage: React.FC<DedicatedBlogPageProps> = ({
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
               gap: '2.25rem',
             }}
           >

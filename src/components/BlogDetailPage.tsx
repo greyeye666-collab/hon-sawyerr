@@ -545,7 +545,7 @@ export const BlogDetailPage: React.FC<BlogDetailPageProps> = ({
                 <span>Continued Reading</span>
               </div>
               <h2 style={{ fontSize: 'clamp(1.6rem, 2.5vw, 2.2rem)', fontFamily: 'var(--font-serif)', color: 'var(--rich-black)' }}>
-                More from the MP\'s Notebook
+                More from the MP&apos;s Notebook
               </h2>
             </div>
 
@@ -571,7 +571,7 @@ export const BlogDetailPage: React.FC<BlogDetailPageProps> = ({
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 300px), 1fr))',
               gap: '2rem',
             }}
           >

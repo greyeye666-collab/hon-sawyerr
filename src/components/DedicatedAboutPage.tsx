@@ -127,7 +127,7 @@ export const DedicatedAboutPage: React.FC<DedicatedAboutPageProps> = ({ onBack, 
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
             gap: '3.5rem',
             alignItems: 'start',
           }}
@@ -146,7 +146,7 @@ export const DedicatedAboutPage: React.FC<DedicatedAboutPageProps> = ({ onBack, 
               <img
                 src={mpDetails.portraitAbout}
                 alt={mpDetails.fullName}
-                style={{ width: '100%', height: 'auto', maxHeight: '520px', objectFit: 'cover', display: 'block' }}
+                style={{ width: '100%', height: 'auto', maxHeight: '520px', objectFit: 'cover', objectPosition: 'center top', display: 'block' }}
               />
               <div style={{ padding: '1.5rem', backgroundColor: '#FFFFFF' }}>
                 <div style={{ fontWeight: 800, fontFamily: 'var(--font-serif)', fontSize: '1.2rem', color: 'var(--rich-black)' }}>

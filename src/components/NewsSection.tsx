@@ -69,7 +69,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectArticle, onNav
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 340px), 1fr))',
             gap: '2.5rem',
             alignItems: 'start',
           }}
@@ -406,7 +406,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectArticle, onNav
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.45rem' }}>
               <BookIcon size={14} className="text-[#F3E5C2]" />
               <span style={{ fontSize: '0.74rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: '#F3E5C2', fontWeight: 700 }}>
-                The MP\'s Notebook &amp; Essays
+                The MP&apos;s Notebook &amp; Essays
               </span>
             </div>
             <h3 style={{ fontSize: 'clamp(1.25rem, 2vw, 1.6rem)', fontFamily: 'var(--font-serif)', color: '#FFFFFF', marginBottom: '0.45rem' }}>
@@ -425,7 +425,7 @@ export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectArticle, onNav
             className="btn-primary-green"
             style={{ padding: '0.82rem 1.75rem', fontSize: '0.92rem' }}
           >
-            <span>Read The MP\'s Notebook</span>
+            <span>Read The MP&apos;s Notebook</span>
             <ArrowRightIcon size={15} />
           </button>
         </motion.div>
