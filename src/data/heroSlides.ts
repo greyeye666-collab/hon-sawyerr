@@ -36,6 +36,7 @@ import fa18 from '../assets/fa/fa18.jpg';
 import fa19 from '../assets/fa/fa19.jpg';
 import fa20 from '../assets/fa/fa20.jpg';
 import fa21 from '../assets/fa/fa21.jpg';
+import fa22 from '../assets/fa/fa22.jpg';
 
 export const DEFAULT_HERO_SLIDES: HeroSlide[] = [
   {
@@ -280,5 +281,16 @@ export const DEFAULT_HERO_SLIDES: HeroSlide[] = [
     description:
       'Steadfast dedication to uplifting Agona East through accessible leadership, robust infrastructure, and educational excellence for every family.',
     landscapeImage: fa21,
+  },
+  {
+    id: 19,
+    type: 'landscape',
+    tag: 'Community Solidarity',
+    badgeColor: 'green',
+    title: 'A Vision for Greater Agona East.',
+    titleHighlight: 'Inclusive Growth & Prosperity.',
+    description:
+      'Standing shoulder to shoulder with the hardworking men, women, and youth of Agona East to foster sustainable community advancement.',
+    landscapeImage: fa22,
   },
 ];

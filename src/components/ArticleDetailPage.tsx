@@ -27,6 +27,7 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({
 }) => {
   const { newsArticles } = useSiteData();
   const [copied, setCopied] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const relatedArticles = newsArticles.filter((a) => a.id !== article.id).slice(0, 3);
 
@@ -111,13 +112,16 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({
 
         {/* Hero Featured Photo */}
         <div
+          onClick={() => setSelectedImage(article.thumbnail)}
           style={{
             borderRadius: '24px',
             overflow: 'hidden',
             boxShadow: 'var(--shadow-xl)',
             border: '4px solid #FFFFFF',
-            backgroundColor: '#FFFFFF',
+            backgroundColor: '#0F1813',
             marginBottom: '3rem',
+            cursor: 'pointer',
+            position: 'relative',
           }}
         >
           <img
@@ -125,8 +129,24 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({
             alt={article.title}
             style={{ width: '100%', height: 'auto', maxHeight: '520px', objectFit: 'cover', display: 'block' }}
           />
-          <div style={{ padding: '0.85rem 1.5rem', fontSize: '0.82rem', color: '#88827C', fontStyle: 'italic', backgroundColor: '#FFFFFF' }}>
-            Official Press Coverage • Hon. Queenstar Maame Pokua Sawyerr in Agona East
+          <div
+            style={{
+              padding: '0.85rem 1.5rem',
+              fontSize: '0.82rem',
+              color: '#88827C',
+              fontStyle: 'italic',
+              backgroundColor: '#FFFFFF',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              flexWrap: 'wrap',
+              gap: '0.5rem',
+            }}
+          >
+            <span>Official Press Coverage • Hon. Queenstar Maame Pokua Sawyerr in Agona East</span>
+            <span style={{ color: 'var(--ndc-green)', fontWeight: 600, fontSize: '0.75rem', fontStyle: 'normal' }}>
+              Click to Enlarge ⤢
+            </span>
           </div>
         </div>
 
@@ -262,6 +282,149 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({
           </div>
         </div>
 
+        {/* Photo Gallery for Article / Event Visual Documentation */}
+        {article.galleryImages && article.galleryImages.length > 0 && (
+          <div
+            style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '24px',
+              padding: '2.5rem',
+              border: '1px solid var(--border-light)',
+              boxShadow: 'var(--shadow-sm)',
+              marginTop: '2.5rem',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginBottom: '1.5rem',
+                flexWrap: 'wrap',
+                gap: '0.75rem',
+              }}
+            >
+              <div>
+                <div
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    color: 'var(--ndc-green)',
+                    fontSize: '0.76rem',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.08em',
+                    marginBottom: '0.25rem',
+                  }}
+                >
+                  <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#009E52' }} />
+                  <span>Verified Event Coverage</span>
+                </div>
+                <h3
+                  style={{
+                    fontSize: '1.5rem',
+                    fontFamily: 'var(--font-serif)',
+                    color: 'var(--rich-black)',
+                    margin: 0,
+                  }}
+                >
+                  Event Photo Documentation
+                </h3>
+              </div>
+              <span
+                style={{
+                  fontSize: '0.78rem',
+                  color: 'var(--ndc-green-dark)',
+                  backgroundColor: 'rgba(0, 122, 67, 0.08)',
+                  border: '1px solid rgba(0, 122, 67, 0.2)',
+                  padding: '0.35rem 0.85rem',
+                  borderRadius: '999px',
+                  fontWeight: 600,
+                }}
+              >
+                {article.galleryImages.length} Photographs
+              </span>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+                gap: '1.25rem',
+              }}
+            >
+              {article.galleryImages.map((imgUrl, idx) => (
+                <div
+                  key={idx}
+                  className="img-zoom-container"
+                  onClick={() => setSelectedImage(imgUrl)}
+                  style={{
+                    height: '210px',
+                    borderRadius: '16px',
+                    overflow: 'hidden',
+                    boxShadow: 'var(--shadow-sm)',
+                    border: '1px solid rgba(17, 20, 18, 0.08)',
+                    position: 'relative',
+                    cursor: 'pointer',
+                    backgroundColor: '#0F1813',
+                  }}
+                >
+                  <img
+                    src={imgUrl}
+                    alt={`${article.title} event documentation ${idx + 1}`}
+                    loading="lazy"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      objectPosition: 'center 25%',
+                      display: 'block',
+                      transition: 'transform 360ms cubic-bezier(0.22, 1, 0.36, 1)',
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(to top, rgba(12, 20, 16, 0.72) 0%, transparent 50%)',
+                      opacity: 0.85,
+                      transition: 'opacity 200ms ease',
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: '0.75rem',
+                      left: '0.85rem',
+                      right: '0.85rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      color: '#FFFFFF',
+                      fontSize: '0.74rem',
+                      fontWeight: 600,
+                    }}
+                  >
+                    <span style={{ color: '#F3E5C2' }}>Field Record #{idx + 1}</span>
+                    <span
+                      style={{
+                        fontSize: '0.68rem',
+                        backgroundColor: 'rgba(255, 255, 255, 0.22)',
+                        backdropFilter: 'blur(4px)',
+                        padding: '0.15rem 0.5rem',
+                        borderRadius: '999px',
+                      }}
+                    >
+                      Enlarge ⤢
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Related Articles Section */}
         <div style={{ marginTop: '4rem' }}>
           <h2
@@ -318,6 +481,75 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Lightbox Modal */}
+      {selectedImage && (
+        <div
+          onClick={() => setSelectedImage(null)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 9999,
+            backgroundColor: 'rgba(5, 12, 8, 0.92)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '2rem',
+            cursor: 'zoom-out',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: 'relative',
+              maxWidth: '920px',
+              width: '100%',
+              maxHeight: '85vh',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              cursor: 'default',
+            }}
+          >
+            <button
+              onClick={() => setSelectedImage(null)}
+              style={{
+                position: 'absolute',
+                top: '-2.75rem',
+                right: '0',
+                background: 'rgba(255, 255, 255, 0.15)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                color: '#FFFFFF',
+                width: '36px',
+                height: '36px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '1.2rem',
+                cursor: 'pointer',
+              }}
+              aria-label="Close Preview"
+            >
+              ✕
+            </button>
+            <img
+              src={selectedImage}
+              alt="Expanded event coverage"
+              style={{
+                maxWidth: '100%',
+                maxHeight: '80vh',
+                borderRadius: '16px',
+                boxShadow: '0 24px 60px rgba(0, 0, 0, 0.6)',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                objectFit: 'contain',
+              }}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

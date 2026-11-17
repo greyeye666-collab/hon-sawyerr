@@ -13,6 +13,7 @@ import {
 
 interface GallerySectionProps {
   onNavigate: (page: PageView) => void;
+  onSelectCategoryPage?: (category: string) => void;
 }
 
 function project(initialVelocityPxPerSec: number, decelerationRate = 0.996): number {
@@ -23,7 +24,7 @@ function rubberband(overshoot: number, dimension = 320, constant = 0.55): number
   return (overshoot * dimension * constant) / (dimension + constant * Math.abs(overshoot));
 }
 
-export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) => {
+export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate, onSelectCategoryPage }) => {
   const { galleryItems } = useSiteData();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
@@ -38,7 +39,29 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
     samples: [] as Array<{ y: number; t: number }>,
   });
 
-  const categories = ['All', 'Education', 'Community', 'Parliament', 'Healthcare', 'Festivals'];
+  const categories = [
+    'All',
+    'Community',
+    'Education',
+    'Infrastructure',
+    'Healthcare',
+    'Festivals',
+    'Parliament',
+  ];
+
+  const getItemCount = (cat: string) => {
+    if (cat === 'All') return galleryItems.length;
+    return galleryItems.filter((item) => item.category === cat).length;
+  };
+
+  const handleCategoryTabClick = (cat: string) => {
+    if (onSelectCategoryPage) {
+      onSelectCategoryPage(cat);
+    } else {
+      setSelectedCategory(cat);
+      onNavigate('gallery');
+    }
+  };
 
   const filteredItems =
     selectedCategory === 'All'
@@ -204,12 +227,13 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
                   key={cat}
                   role="tab"
                   aria-selected={isSelected}
-                  onClick={() => setSelectedCategory(cat)}
+                  onClick={() => handleCategoryTabClick(cat)}
+                  title={`View all ${getItemCount(cat)} ${cat} photos`}
                   style={{
                     position: 'relative',
                     border: 'none',
                     cursor: 'pointer',
-                    padding: '0.55rem 1.2rem',
+                    padding: '0.55rem 1.15rem',
                     minHeight: '40px',
                     borderRadius: '999px',
                     fontSize: '0.84rem',
@@ -217,6 +241,9 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
                     backgroundColor: 'transparent',
                     color: isSelected ? '#FFFFFF' : '#434A46',
                     zIndex: 1,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.45rem',
                     transition: 'color 180ms ease, transform 100ms ease-out',
                   }}
                 >
@@ -234,7 +261,19 @@ export const GallerySection: React.FC<GallerySectionProps> = ({ onNavigate }) =>
                       }}
                     />
                   )}
-                  {cat}
+                  <span>{cat}</span>
+                  <span
+                    style={{
+                      fontSize: '0.72rem',
+                      opacity: isSelected ? 0.95 : 0.65,
+                      backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.25)' : 'rgba(0, 0, 0, 0.06)',
+                      padding: '0.12rem 0.45rem',
+                      borderRadius: '999px',
+                      fontWeight: 700,
+                    }}
+                  >
+                    {getItemCount(cat)}
+                  </span>
                 </button>
               );
             })}

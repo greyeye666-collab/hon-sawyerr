@@ -64,12 +64,14 @@ export interface NewsArticle {
   featured?: boolean;
   author: string;
   tags: string[];
+  galleryImages?: string[];
+  slideshowImages?: string[];
 }
 
 export interface GalleryItem {
   id: string;
   title: string;
-  category: 'Community' | 'Education' | 'Parliament' | 'Healthcare' | 'Festivals';
+  category: 'Community' | 'Education' | 'Parliament' | 'Healthcare' | 'Festivals' | 'Infrastructure';
   image: string;
   date: string;
   location: string;

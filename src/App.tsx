@@ -26,10 +26,17 @@ export function App() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedArticle, setSelectedArticle] = useState<NewsArticle | null>(null);
   const [selectedBlogPost, setSelectedBlogPost] = useState<BlogPost | null>(null);
+  const [galleryCategory, setGalleryCategory] = useState<string>('All');
 
   // Sync window scroll on page transition
   const handleNavigate = (page: PageView) => {
     setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenGalleryCategory = (category: string) => {
+    setGalleryCategory(category);
+    setCurrentPage('gallery');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -97,7 +104,10 @@ export function App() {
               onSelectArticle={handleSelectArticle}
               onNavigate={handleNavigate}
             />
-            <GallerySection onNavigate={handleNavigate} />
+            <GallerySection
+              onNavigate={handleNavigate}
+              onSelectCategoryPage={handleOpenGalleryCategory}
+            />
             <ContactSection />
           </>
         )}
@@ -170,6 +180,7 @@ export function App() {
         {/* VIEW: DEDICATED GALLERY PAGE */}
         {currentPage === 'gallery' && (
           <DedicatedGalleryPage
+            initialCategory={galleryCategory}
             onBack={() => handleNavigate('home')}
             onNavigate={handleNavigate}
           />

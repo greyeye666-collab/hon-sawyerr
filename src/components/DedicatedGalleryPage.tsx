@@ -13,14 +13,76 @@ import {
 interface DedicatedGalleryPageProps {
   onBack: () => void;
   onNavigate: (page: PageView) => void;
+  initialCategory?: string;
 }
 
-export const DedicatedGalleryPage: React.FC<DedicatedGalleryPageProps> = ({ onBack, onNavigate }) => {
+const CATEGORY_META: Record<string, { title: string; subtitle: string; tag: string }> = {
+  All: {
+    title: 'Complete Visual Archive of Service',
+    subtitle: 'Comprehensive photographic records covering education, community empowerment, infrastructure, healthcare, cultural heritage, and parliamentary representation across Agona East.',
+    tag: 'All Field Records',
+  },
+  Community: {
+    title: 'Women Economic Empowerment & Grassroots Development',
+    subtitle: 'Empowering market women with seed capital grants, agro-processing equipment, and community durbars across Agona Duakwa, Nsaba, Kwanyako, and beyond.',
+    tag: 'Impact Focus Area',
+  },
+  Education: {
+    title: 'Educational Advancement & BECE Candidate Support',
+    subtitle: 'Comprehensive annual mock examinations, distribution of stationery, mathematical sets, student meals, and educational infrastructure in Agona East.',
+    tag: 'Impact Focus Area',
+  },
+  Infrastructure: {
+    title: 'Clean Water Systems & Rural Feeder Road Upgrades',
+    subtitle: 'Solar-powered mechanized boreholes delivering potable drinking water, coupled with farm-to-market feeder road rehabilitation and culvert works.',
+    tag: 'Impact Focus Area',
+  },
+  Healthcare: {
+    title: 'Rural Maternal Healthcare & CHPS Modernization',
+    subtitle: 'Refurbished maternity blocks, vital medical supplies, and maternal health outreach ensuring safe delivery and quality rural care.',
+    tag: 'Impact Focus Area',
+  },
+  Festivals: {
+    title: 'Akwambo Festival Celebrations & Cultural Heritage',
+    subtitle: 'Traditional durbars, festive pageantry, royal courtesies, and community solidarity during the annual Akwambo celebrations.',
+    tag: 'Cultural Heritage',
+  },
+  Parliament: {
+    title: 'Parliamentary Advocacy & State Representation',
+    subtitle: 'Legislative debates, committee scrutiny, national policy advocacy, and official engagements representing the constituents of Agona East.',
+    tag: 'Legislative Record',
+  },
+};
+
+export const DedicatedGalleryPage: React.FC<DedicatedGalleryPageProps> = ({
+  onBack,
+  onNavigate,
+  initialCategory = 'All',
+}) => {
   const { galleryItems } = useSiteData();
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
 
-  const categories = ['All', 'Community', 'Education', 'Parliament', 'Healthcare', 'Festivals'];
+  useEffect(() => {
+    if (initialCategory) {
+      setSelectedCategory(initialCategory);
+    }
+  }, [initialCategory]);
+
+  const categories = [
+    'All',
+    'Community',
+    'Education',
+    'Infrastructure',
+    'Healthcare',
+    'Festivals',
+    'Parliament',
+  ];
+
+  const getItemCount = (cat: string) => {
+    if (cat === 'All') return galleryItems.length;
+    return galleryItems.filter((item) => item.category === cat).length;
+  };
 
   const filteredItems = selectedCategory === 'All'
     ? galleryItems
@@ -144,31 +206,116 @@ export const DedicatedGalleryPage: React.FC<DedicatedGalleryPageProps> = ({ onBa
             justifyContent: 'center',
             gap: '0.6rem',
             flexWrap: 'wrap',
-            marginBottom: '3rem',
+            marginBottom: '2rem',
           }}
         >
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
+          {categories.map((cat) => {
+            const count = getItemCount(cat);
+            const isSelected = selectedCategory === cat;
+            return (
+              <button
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
+                style={{
+                  padding: '0.6rem 1.25rem',
+                  borderRadius: '999px',
+                  fontSize: '0.88rem',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  border: '1px solid',
+                  backgroundColor: isSelected ? '#006B3F' : '#FFFFFF',
+                  color: isSelected ? '#FFFFFF' : '#4A4643',
+                  borderColor: isSelected ? '#006B3F' : 'var(--border-light)',
+                  boxShadow: isSelected ? '0 4px 14px rgba(0, 107, 63, 0.25)' : 'none',
+                  transition: 'var(--transition-smooth)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                }}
+              >
+                <span>{cat}</span>
+                <span
+                  style={{
+                    backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.25)' : '#F1EFE8',
+                    color: isSelected ? '#FFFFFF' : '#6B655F',
+                    fontSize: '0.75rem',
+                    fontWeight: 700,
+                    padding: '0.15rem 0.5rem',
+                    borderRadius: '999px',
+                  }}
+                >
+                  {count}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Category Topic Header Card */}
+        {CATEGORY_META[selectedCategory] && (
+          <div
+            style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '20px',
+              border: '1px solid var(--border-light)',
+              padding: '1.75rem 2rem',
+              marginBottom: '2.5rem',
+              boxShadow: '0 4px 20px rgba(0, 0, 0, 0.04)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem' }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span className="pill-category" style={{ backgroundColor: '#006B3F', color: '#FFFFFF' }}>
+                  {CATEGORY_META[selectedCategory].tag}
+                </span>
+                <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#C5A059', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+                  {filteredItems.length} Photographs Documented
+                </span>
+              </div>
+              {selectedCategory !== 'All' && (
+                <button
+                  onClick={() => setSelectedCategory('All')}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: 'var(--ndc-green)',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
+                  }}
+                >
+                  View All ({galleryItems.length})
+                </button>
+              )}
+            </div>
+            <h2
               style={{
-                padding: '0.6rem 1.4rem',
-                borderRadius: '999px',
-                fontSize: '0.88rem',
-                fontWeight: 600,
-                cursor: 'pointer',
-                border: '1px solid',
-                backgroundColor: selectedCategory === cat ? '#006B3F' : '#FFFFFF',
-                color: selectedCategory === cat ? '#FFFFFF' : '#4A4643',
-                borderColor: selectedCategory === cat ? '#006B3F' : 'var(--border-light)',
-                boxShadow: selectedCategory === cat ? '0 4px 14px rgba(0, 107, 63, 0.25)' : 'none',
-                transition: 'var(--transition-smooth)',
+                fontFamily: 'var(--font-serif)',
+                fontSize: '1.6rem',
+                fontWeight: 700,
+                color: 'var(--text-primary)',
+                margin: '0.35rem 0 0.15rem 0',
               }}
             >
-              {cat}
-            </button>
-          ))}
-        </div>
+              {CATEGORY_META[selectedCategory].title}
+            </h2>
+            <p
+              style={{
+                fontSize: '0.98rem',
+                color: 'var(--text-secondary)',
+                lineHeight: 1.6,
+                margin: 0,
+                maxWidth: '900px',
+              }}
+            >
+              {CATEGORY_META[selectedCategory].subtitle}
+            </p>
+          </div>
+        )}
 
         {/* Masonry / Photo Cards */}
         <div
