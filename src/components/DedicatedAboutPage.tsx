@@ -1,5 +1,5 @@
 import React from 'react';
-import { MP_DETAILS, CORE_VALUES, TIMELINE_MILESTONES } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import type { PageView } from '../types';
 import {
   ArrowLeftIcon,
@@ -18,6 +18,7 @@ interface DedicatedAboutPageProps {
 }
 
 export const DedicatedAboutPage: React.FC<DedicatedAboutPageProps> = ({ onBack, onNavigate }) => {
+  const { mpDetails, coreValues, timelineMilestones } = useSiteData();
   const renderIcon = (name: string) => {
     switch (name) {
       case 'heart':
@@ -143,8 +144,8 @@ export const DedicatedAboutPage: React.FC<DedicatedAboutPageProps> = ({ onBack, 
               }}
             >
               <img
-                src={MP_DETAILS.portraitAbout}
-                alt={MP_DETAILS.fullName}
+                src={mpDetails.portraitAbout}
+                alt={mpDetails.fullName}
                 style={{ width: '100%', height: 'auto', maxHeight: '520px', objectFit: 'cover', display: 'block' }}
               />
               <div style={{ padding: '1.5rem', backgroundColor: '#FFFFFF' }}>
@@ -297,7 +298,7 @@ export const DedicatedAboutPage: React.FC<DedicatedAboutPageProps> = ({ onBack, 
                   gap: '1.25rem',
                 }}
               >
-                {CORE_VALUES.map((val, idx) => (
+                {coreValues.map((val, idx) => (
                   <div
                     key={idx}
                     style={{
@@ -355,7 +356,7 @@ export const DedicatedAboutPage: React.FC<DedicatedAboutPageProps> = ({ onBack, 
               </h2>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', position: 'relative' }}>
-                {TIMELINE_MILESTONES.map((milestone, idx) => (
+                {timelineMilestones.map((milestone, idx) => (
                   <div
                     key={idx}
                     style={{
@@ -388,7 +389,7 @@ export const DedicatedAboutPage: React.FC<DedicatedAboutPageProps> = ({ onBack, 
                     <div
                       style={{
                         paddingBottom: '1.5rem',
-                        borderBottom: idx < TIMELINE_MILESTONES.length - 1 ? '1px solid var(--border-light)' : 'none',
+                        borderBottom: idx < timelineMilestones.length - 1 ? '1px solid var(--border-light)' : 'none',
                         flex: 1,
                       }}
                     >

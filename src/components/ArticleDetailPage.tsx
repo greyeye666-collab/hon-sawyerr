@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { NewsArticle, PageView } from '../types';
-import { NEWS_ARTICLES } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import {
   ArrowLeftIcon,
   CalendarIcon,
@@ -25,9 +25,10 @@ export const ArticleDetailPage: React.FC<ArticleDetailPageProps> = ({
   onSelectArticle,
   onNavigate,
 }) => {
+  const { newsArticles } = useSiteData();
   const [copied, setCopied] = useState(false);
 
-  const relatedArticles = NEWS_ARTICLES.filter((a) => a.id !== article.id).slice(0, 3);
+  const relatedArticles = newsArticles.filter((a) => a.id !== article.id).slice(0, 3);
 
   const handleCopyLink = () => {
     if (navigator.clipboard) {

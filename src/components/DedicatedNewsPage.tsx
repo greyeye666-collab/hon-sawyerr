@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { NewsArticle, PageView } from '../types';
-import { NEWS_ARTICLES } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import { ArrowLeftIcon, ArrowRightIcon, CalendarIcon, ClockIcon } from './Icons';
 
 interface DedicatedNewsPageProps {
@@ -14,12 +14,13 @@ export const DedicatedNewsPage: React.FC<DedicatedNewsPageProps> = ({
   onSelectArticle,
   onNavigate,
 }) => {
+  const { newsArticles } = useSiteData();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
   const categories = ['All', 'Press Release', 'Education', 'Healthcare', 'Parliament', 'Community'];
 
-  const filteredArticles = NEWS_ARTICLES.filter((article) => {
+  const filteredArticles = newsArticles.filter((article) => {
     const matchesCategory = selectedCategory === 'All' || article.category === selectedCategory;
     const matchesSearch =
       article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||

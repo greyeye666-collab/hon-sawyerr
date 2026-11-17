@@ -1,6 +1,6 @@
 import React, { useId, useState } from 'react';
 import { motion } from 'motion/react';
-import { MP_DETAILS, CONSTITUENCY_TOWNS } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import {
   MailIcon,
   PhoneIcon,
@@ -17,26 +17,37 @@ const APPLE_SPRING = { type: 'spring' as const, bounce: 0, duration: 0.42 };
 
 export const ContactSection: React.FC = () => {
   const uid = useId();
+  const { mpDetails, constituencyTowns, submitContactInquiry } = useSiteData();
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
     phone: '',
-    town: CONSTITUENCY_TOWNS[0],
+    town: constituencyTowns[0] || 'Agona Nsaba (Capital)',
     category: 'Constituent Assistance',
     message: '',
     volunteer: false,
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [refNumber, setRefNumber] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.fullName || !formData.phone) return;
+    if (!formData.fullName || !formData.phone || isSubmitting) return;
 
-    const randomRef = `AE-${Math.floor(100000 + Math.random() * 900000)}`;
-    setRefNumber(randomRef);
-    setSubmitted(true);
+    setIsSubmitting(true);
+    setSubmitError(null);
+    const result = await submitContactInquiry(formData);
+    setIsSubmitting(false);
+
+    if (result.ok && result.referenceNumber) {
+      setRefNumber(result.referenceNumber);
+      setSubmitted(true);
+    } else {
+      setSubmitError(result.error || 'Unable to submit your inquiry right now. Please try again.');
+    }
   };
 
   const handleReset = () => {
@@ -44,11 +55,12 @@ export const ContactSection: React.FC = () => {
       fullName: '',
       email: '',
       phone: '',
-      town: CONSTITUENCY_TOWNS[0],
+      town: constituencyTowns[0] || 'Agona Nsaba (Capital)',
       category: 'Constituent Assistance',
       message: '',
       volunteer: false,
     });
+    setSubmitError(null);
     setSubmitted(false);
   };
 
@@ -260,7 +272,7 @@ export const ContactSection: React.FC = () => {
                       onChange={(e) => setFormData({ ...formData, town: e.target.value })}
                       style={inputStyle}
                     >
-                      {CONSTITUENCY_TOWNS.map((town) => (
+                      {constituencyTowns.map((town) => (
                         <option key={town} value={town}>
                           {town}
                         </option>
@@ -314,9 +326,30 @@ export const ContactSection: React.FC = () => {
                   <span>I want to join Mama Pokua&#39;s grassroots volunteer and campaign team.</span>
                 </label>
 
+                {submitError && (
+                  <div
+                    role="alert"
+                    style={{
+                      padding: '0.75rem 1rem',
+                      borderRadius: '10px',
+                      backgroundColor: 'rgba(214, 31, 51, 0.08)',
+                      border: '1px solid rgba(214, 31, 51, 0.28)',
+                      color: 'var(--ndc-red-dark)',
+                      fontSize: '0.86rem',
+                    }}
+                  >
+                    {submitError}
+                  </div>
+                )}
+
                 <div style={{ display: 'flex', gap: '0.85rem', marginTop: '0.35rem', flexWrap: 'wrap' }}>
-                  <button type="submit" className="btn-primary-green" style={{ flex: 1 }}>
-                    Submit Message
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="btn-primary-green"
+                    style={{ flex: 1, opacity: isSubmitting ? 0.72 : 1 }}
+                  >
+                    {isSubmitting ? 'Submitting...' : 'Submit Message'}
                   </button>
                   <button
                     type="button"
@@ -343,7 +376,7 @@ export const ContactSection: React.FC = () => {
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', marginBottom: '0.65rem' }}>
                 <span className="pill-category">Constituency Office</span>
-                <span style={{ fontSize: '0.8rem', color: 'var(--muted-gray)' }}>Agona East</span>
+                <span style={{ fontSize: '0.8rem', color: 'var(--muted-gray)' }}>{mpDetails.constituency}</span>
               </div>
 
               <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: 'var(--rich-black)', marginBottom: '0.85rem' }}>
@@ -353,15 +386,15 @@ export const ContactSection: React.FC = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', fontSize: '0.92rem', color: '#4F5752' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.65rem' }}>
                   <MapPinIcon size={18} className="text-[#007A43] flex-shrink-0" />
-                  <span>{MP_DETAILS.officeAddress}</span>
+                  <span>{mpDetails.officeAddress}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                   <PhoneIcon size={18} className="text-[#007A43] flex-shrink-0" />
-                  <span>Hotline: {MP_DETAILS.hotlinePhone} / {MP_DETAILS.constituencyPhone}</span>
+                  <span>Hotline: {mpDetails.hotlinePhone} / {mpDetails.constituencyPhone}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                   <MailIcon size={18} className="text-[#007A43] flex-shrink-0" />
-                  <span>{MP_DETAILS.officeEmail}</span>
+                  <span>{mpDetails.officeEmail}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                   <ClockIcon size={18} className="text-[#007A43] flex-shrink-0" />
@@ -391,11 +424,11 @@ export const ContactSection: React.FC = () => {
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', fontSize: '0.92rem', color: '#4F5752' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.65rem' }}>
                   <MapPinIcon size={18} className="text-[#D61F33] flex-shrink-0" />
-                  <span>{MP_DETAILS.parliamentAddress}</span>
+                  <span>{mpDetails.parliamentAddress}</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
                   <MailIcon size={18} className="text-[#D61F33] flex-shrink-0" />
-                  <span>{MP_DETAILS.parliamentEmail}</span>
+                  <span>{mpDetails.parliamentEmail}</span>
                 </div>
               </div>
             </div>
@@ -420,23 +453,23 @@ export const ContactSection: React.FC = () => {
                 Official Social Media Channels
               </h3>
               <p style={{ color: 'rgba(255, 255, 255, 0.72)', fontSize: '0.85rem', marginBottom: '1.25rem' }}>
-                Follow Hon. Queenstar Maame Pokua Sawyerr for daily updates, live floor appearances, and community broadcasts.
+                Follow {mpDetails.fullName} for daily updates, live floor appearances, and community broadcasts.
               </p>
 
               <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap' }}>
-                <a href="https://facebook.com" target="_blank" rel="noreferrer" className="btn-glass" style={{ padding: '0.52rem 0.95rem', fontSize: '0.82rem' }}>
+                <a href={mpDetails.socialLinks?.facebook || 'https://facebook.com'} target="_blank" rel="noreferrer" className="btn-glass" style={{ padding: '0.52rem 0.95rem', fontSize: '0.82rem' }}>
                   <FacebookIcon size={15} />
                   <span>Facebook</span>
                 </a>
-                <a href="https://x.com" target="_blank" rel="noreferrer" className="btn-glass" style={{ padding: '0.52rem 0.95rem', fontSize: '0.82rem' }}>
+                <a href={mpDetails.socialLinks?.x || 'https://x.com'} target="_blank" rel="noreferrer" className="btn-glass" style={{ padding: '0.52rem 0.95rem', fontSize: '0.82rem' }}>
                   <TwitterIcon size={15} />
                   <span>Twitter (X)</span>
                 </a>
-                <a href="https://instagram.com" target="_blank" rel="noreferrer" className="btn-glass" style={{ padding: '0.52rem 0.95rem', fontSize: '0.82rem' }}>
+                <a href={mpDetails.socialLinks?.instagram || 'https://instagram.com'} target="_blank" rel="noreferrer" className="btn-glass" style={{ padding: '0.52rem 0.95rem', fontSize: '0.82rem' }}>
                   <InstagramIcon size={15} />
                   <span>Instagram</span>
                 </a>
-                <a href="https://youtube.com" target="_blank" rel="noreferrer" className="btn-glass" style={{ padding: '0.52rem 0.95rem', fontSize: '0.82rem' }}>
+                <a href={mpDetails.socialLinks?.youtube || 'https://youtube.com'} target="_blank" rel="noreferrer" className="btn-glass" style={{ padding: '0.52rem 0.95rem', fontSize: '0.82rem' }}>
                   <YoutubeIcon size={15} />
                   <span>YouTube</span>
                 </a>

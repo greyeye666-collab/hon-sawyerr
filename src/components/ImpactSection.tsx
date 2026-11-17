@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import type { Project, PageView } from '../types';
-import { PROJECTS } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import { ArrowRightIcon, MapPinIcon, CheckIcon, SparklesIcon } from './Icons';
 
 interface ImpactSectionProps {
@@ -19,11 +19,6 @@ const FlagshipPhotographicPlate: React.FC<{ project: Project }> = ({ project }) 
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
-
-  // Reset index when project changes
-  useEffect(() => {
-    setCurrentIndex(0);
-  }, [project.id]);
 
   // Smooth auto-fade every 3.8 seconds
   useEffect(() => {
@@ -227,10 +222,6 @@ const ProjectCardPhotoPlate: React.FC<{ project: Project; index: number }> = ({ 
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    setCurrentIndex(0);
-  }, [project.id]);
-
-  useEffect(() => {
     if (images.length <= 1) return;
     const timer = window.setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % images.length);
@@ -356,17 +347,19 @@ const ProjectCardPhotoPlate: React.FC<{ project: Project; index: number }> = ({ 
 };
 
 export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, onNavigate }) => {
+  const { projects } = useSiteData();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
   const categories = ['All', 'Education', 'Healthcare', 'Women & Economy', 'Infrastructure', 'Youth & Skills'];
 
   const filteredProjects =
     selectedCategory === 'All'
-      ? PROJECTS
-      : PROJECTS.filter((p) => p.category === selectedCategory);
+      ? projects
+      : projects.filter((p) => p.category === selectedCategory);
 
-  const flagshipProject = filteredProjects[0];
-  const secondaryProjects = filteredProjects.slice(1);
+  const flagshipProject =
+    filteredProjects.find((p) => p.isFlagship) || filteredProjects[0];
+  const secondaryProjects = filteredProjects.filter((p) => p.id !== flagshipProject?.id);
 
   return (
     <section
@@ -501,7 +494,7 @@ export const ImpactSection: React.FC<ImpactSectionProps> = ({ onSelectProject, o
             }}
           >
             {/* Left Photographic Plate with Smooth Image Fade Slideshow */}
-            <FlagshipPhotographicPlate project={flagshipProject} />
+            <FlagshipPhotographicPlate key={flagshipProject.id} project={flagshipProject} />
 
             {/* Right Editorial Dossier */}
             <div style={{ padding: 'clamp(2rem, 4vw, 3rem)', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>

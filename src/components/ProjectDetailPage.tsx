@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Project, PageView } from '../types';
-import { PROJECTS } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import { ArrowLeftIcon, MapPinIcon, CalendarIcon, AwardIcon, CheckCircleIcon, QuoteIcon } from './Icons';
 
 interface ProjectDetailPageProps {
@@ -16,26 +16,30 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
   onSelectProject,
   onNavigate,
 }) => {
+  const { projects } = useSiteData();
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const relatedProjects = PROJECTS.filter((p) => p.id !== project.id).slice(0, 3);
+  const relatedProjects = projects.filter((p) => p.id !== project.id).slice(0, 3);
 
   const heroImages =
     project.slideshowImages && project.slideshowImages.length > 0
       ? project.slideshowImages
       : [project.image];
-  const [heroIndex, setHeroIndex] = useState(0);
-
-  React.useEffect(() => {
-    setHeroIndex(0);
-  }, [project.id]);
+  const [heroState, setHeroState] = useState<{ projectId: string; index: number }>({
+    projectId: project.id,
+    index: 0,
+  });
+  const heroIndex = heroState.projectId === project.id ? heroState.index : 0;
 
   React.useEffect(() => {
     if (heroImages.length <= 1) return;
     const timer = window.setInterval(() => {
-      setHeroIndex((prev) => (prev + 1) % heroImages.length);
+      setHeroState((prev) => ({
+        projectId: project.id,
+        index: ((prev.projectId === project.id ? prev.index : 0) + 1) % heroImages.length,
+      }));
     }, 4200);
     return () => window.clearInterval(timer);
-  }, [heroImages.length]);
+  }, [heroImages.length, project.id]);
 
   return (
     <div style={{ backgroundColor: 'var(--bg-cream)', minHeight: '100vh', paddingBottom: '6rem' }}>
@@ -281,7 +285,7 @@ export const ProjectDetailPage: React.FC<ProjectDetailPageProps> = ({
                     <button
                       key={dotIdx}
                       type="button"
-                      onClick={() => setHeroIndex(dotIdx)}
+                      onClick={() => setHeroState({ projectId: project.id, index: dotIdx })}
                       aria-label={`View photo ${dotIdx + 1}`}
                       style={{
                         border: 'none',

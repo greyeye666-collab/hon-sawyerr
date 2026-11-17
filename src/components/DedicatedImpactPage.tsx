@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import type { Project, PageView } from '../types';
-import { PROJECTS, QUICK_STATS } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import { ArrowLeftIcon, ArrowRightIcon, MapPinIcon } from './Icons';
 
 interface DedicatedImpactPageProps {
@@ -14,12 +14,13 @@ export const DedicatedImpactPage: React.FC<DedicatedImpactPageProps> = ({
   onSelectProject,
   onNavigate,
 }) => {
+  const { projects, quickStats } = useSiteData();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
   const categories = ['All', 'Education', 'Healthcare', 'Women & Economy', 'Infrastructure', 'Youth & Skills'];
 
-  const filteredProjects = PROJECTS.filter((p) => {
+  const filteredProjects = projects.filter((p) => {
     const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
     const matchesSearch =
       p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -119,7 +120,7 @@ export const DedicatedImpactPage: React.FC<DedicatedImpactPageProps> = ({
               gap: '1.25rem',
             }}
           >
-            {QUICK_STATS.map((stat, idx) => (
+            {quickStats.map((stat, idx) => (
               <div
                 key={idx}
                 style={{

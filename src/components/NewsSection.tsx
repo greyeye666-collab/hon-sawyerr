@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import type { NewsArticle, PageView } from '../types';
-import { NEWS_ARTICLES } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import { ArrowRightIcon, CalendarIcon, ClockIcon, BookIcon } from './Icons';
 
 interface NewsSectionProps {
@@ -12,8 +12,9 @@ interface NewsSectionProps {
 const APPLE_SPRING = { type: 'spring' as const, bounce: 0, duration: 0.42 };
 
 export const NewsSection: React.FC<NewsSectionProps> = ({ onSelectArticle, onNavigate }) => {
-  const featuredArticle = NEWS_ARTICLES.find((a) => a.featured) || NEWS_ARTICLES[0];
-  const dispatchArticles = NEWS_ARTICLES.filter((a) => a.id !== featuredArticle.id).slice(0, 3);
+  const { newsArticles } = useSiteData();
+  const featuredArticle = newsArticles.find((a) => a.featured) || newsArticles[0];
+  const dispatchArticles = newsArticles.filter((a) => a.id !== featuredArticle?.id).slice(0, 3);
 
   return (
     <section

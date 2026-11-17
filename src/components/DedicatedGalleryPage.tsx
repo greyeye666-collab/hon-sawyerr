@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import type { GalleryItem, PageView } from '../types';
-import { GALLERY_ITEMS } from '../data/mockData';
+import { useSiteData } from '../hooks/useSiteData';
 import {
   ArrowLeftIcon,
   ArrowRightIcon,
@@ -16,14 +16,15 @@ interface DedicatedGalleryPageProps {
 }
 
 export const DedicatedGalleryPage: React.FC<DedicatedGalleryPageProps> = ({ onBack, onNavigate }) => {
+  const { galleryItems } = useSiteData();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
 
   const categories = ['All', 'Community', 'Education', 'Parliament', 'Healthcare', 'Festivals'];
 
   const filteredItems = selectedCategory === 'All'
-    ? GALLERY_ITEMS
-    : GALLERY_ITEMS.filter((item) => item.category === selectedCategory);
+    ? galleryItems
+    : galleryItems.filter((item) => item.category === selectedCategory);
 
   const handleNext = useCallback(() => {
     if (!activeItem) return;
