@@ -63,12 +63,6 @@ export const DedicatedGalleryPage: React.FC<DedicatedGalleryPageProps> = ({
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
 
-  useEffect(() => {
-    if (initialCategory) {
-      setSelectedCategory(initialCategory);
-    }
-  }, [initialCategory]);
-
   const categories = [
     'All',
     'Community',

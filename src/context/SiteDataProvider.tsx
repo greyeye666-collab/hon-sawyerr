@@ -127,7 +127,7 @@ async function querySupabaseSnapshot(): Promise<SupabaseSnapshot> {
 
   if (!slidesRes.error && slidesRes.data && slidesRes.data.length > 0) {
     snapshot.isLiveConnected = true;
-    snapshot.heroSlides = slidesRes.data.map((s: any) => ({
+    snapshot.heroSlides = slidesRes.data.map((s) => ({
       id: s.id,
       type: s.type === 'paired-portrait' ? 'paired-portrait' : 'landscape',
       tag: s.tag,
@@ -142,7 +142,7 @@ async function querySupabaseSnapshot(): Promise<SupabaseSnapshot> {
 
   if (!statsRes.error && statsRes.data && statsRes.data.length > 0) {
     snapshot.isLiveConnected = true;
-    snapshot.quickStats = statsRes.data.map((st: any) => ({
+    snapshot.quickStats = statsRes.data.map((st) => ({
       value: st.value,
       label: st.label,
       subtext: st.subtext,
@@ -151,7 +151,7 @@ async function querySupabaseSnapshot(): Promise<SupabaseSnapshot> {
 
   if (!valuesRes.error && valuesRes.data && valuesRes.data.length > 0) {
     snapshot.isLiveConnected = true;
-    snapshot.coreValues = valuesRes.data.map((v: any) => ({
+    snapshot.coreValues = valuesRes.data.map((v) => ({
       title: v.title,
       description: v.description,
       iconName: v.icon_name as CoreValue['iconName'],
@@ -160,7 +160,7 @@ async function querySupabaseSnapshot(): Promise<SupabaseSnapshot> {
 
   if (!timelineRes.error && timelineRes.data && timelineRes.data.length > 0) {
     snapshot.isLiveConnected = true;
-    snapshot.timelineMilestones = timelineRes.data.map((m: any) => ({
+    snapshot.timelineMilestones = timelineRes.data.map((m) => ({
       year: m.year,
       title: m.title,
       role: m.role,
@@ -170,7 +170,7 @@ async function querySupabaseSnapshot(): Promise<SupabaseSnapshot> {
 
   if (!projectsRes.error && projectsRes.data && projectsRes.data.length > 0) {
     snapshot.isLiveConnected = true;
-    snapshot.projects = projectsRes.data.map((proj: any) => ({
+    snapshot.projects = projectsRes.data.map((proj) => ({
       id: proj.id,
       title: proj.title,
       shortDescription: proj.short_description,
@@ -194,7 +194,7 @@ async function querySupabaseSnapshot(): Promise<SupabaseSnapshot> {
 
   if (!newsRes.error && newsRes.data && newsRes.data.length > 0) {
     snapshot.isLiveConnected = true;
-    snapshot.newsArticles = newsRes.data.map((n: any) => ({
+    snapshot.newsArticles = newsRes.data.map((n) => ({
       id: n.id,
       title: n.title,
       date: n.published_date,
@@ -211,7 +211,7 @@ async function querySupabaseSnapshot(): Promise<SupabaseSnapshot> {
 
   if (!blogRes.error && blogRes.data && blogRes.data.length > 0) {
     snapshot.isLiveConnected = true;
-    snapshot.blogPosts = blogRes.data.map((b: any) => ({
+    snapshot.blogPosts = blogRes.data.map((b) => ({
       id: b.id,
       title: b.title,
       slug: b.slug,
@@ -234,7 +234,7 @@ async function querySupabaseSnapshot(): Promise<SupabaseSnapshot> {
 
   if (!galleryRes.error && galleryRes.data && galleryRes.data.length > 0) {
     snapshot.isLiveConnected = true;
-    snapshot.galleryItems = galleryRes.data.map((g: any) => ({
+    snapshot.galleryItems = galleryRes.data.map((g) => ({
       id: g.id,
       title: g.title,
       category: g.category as GalleryItem['category'],

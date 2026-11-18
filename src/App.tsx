@@ -180,6 +180,7 @@ export function App() {
         {/* VIEW: DEDICATED GALLERY PAGE */}
         {currentPage === 'gallery' && (
           <DedicatedGalleryPage
+            key={galleryCategory || 'All'}
             initialCategory={galleryCategory}
             onBack={() => handleNavigate('home')}
             onNavigate={handleNavigate}
