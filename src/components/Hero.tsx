@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useLayoutEffect, useRef, useCallback } from 'react';
-import { animate, motion, useMotionValue, useReducedMotion } from 'motion/react';
+import { AnimatePresence, animate, motion, useMotionValue, useReducedMotion } from 'motion/react';
 import type { HeroSlide, PageView } from '../types';
 import { useSiteData } from '../hooks/useSiteData';
 import { ArrowRightIcon, ArrowLeftIcon, EyeIcon, EyeOffIcon } from './Icons';
@@ -411,26 +411,31 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                 paddingBottom: '3.75rem',
               }}
             >
-              {/* Mobile Quick Toggle */}
-              <div className="mobile-view-photo-bar">
+              {/* Quick Visibility Toggle Bar (Desktop & Mobile) */}
+              <div className="hero-view-photo-bar mobile-view-photo-bar">
                 <button
                   type="button"
                   onClick={() => setIsCardMinimized(!isCardMinimized)}
+                  className="hero-visibility-toggle-btn"
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
                     gap: '0.45rem',
                     backgroundColor: isCardMinimized ? '#007A43' : 'rgba(10, 18, 14, 0.78)',
                     backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
                     border: '1px solid rgba(255, 255, 255, 0.28)',
                     color: '#FFFFFF',
                     borderRadius: '999px',
-                    padding: '0.4rem 0.95rem',
-                    fontSize: '0.76rem',
+                    padding: '0.42rem 1rem',
+                    fontSize: '0.78rem',
                     fontWeight: 600,
                     cursor: 'pointer',
+                    boxShadow: '0 4px 16px rgba(0, 0, 0, 0.25)',
+                    transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
                   }}
                   aria-label={isCardMinimized ? 'Show Slide Details' : 'View Full Photo'}
+                  title={isCardMinimized ? 'Show slide details' : 'Hide tile to view full photo'}
                 >
                   {isCardMinimized ? (
                     <>
@@ -446,43 +451,66 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                 </button>
               </div>
 
-              {isCardMinimized ? (
-                <div
-                  onClick={() => setIsCardMinimized(false)}
-                  className="mobile-minimized-pill"
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    backgroundColor: 'rgba(8, 22, 14, 0.88)',
-                    backdropFilter: 'blur(16px)',
-                    border: '1px solid rgba(255, 255, 255, 0.22)',
-                    borderRadius: '999px',
-                    padding: '0.68rem 1.2rem',
-                    cursor: 'pointer',
-                    width: '100%',
-                    maxWidth: '420px',
-                    margin: '0 auto',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', overflow: 'hidden' }}>
-                    <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#009E52', flexShrink: 0 }} />
-                    <span style={{ color: '#FFFFFF', fontSize: '0.84rem', fontWeight: 600, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
-                      {slide.title}
+              <AnimatePresence mode="wait">
+                {isCardMinimized ? (
+                  <motion.div
+                    key="minimized"
+                    initial={{ opacity: 0, y: 12, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 12, scale: 0.97 }}
+                    transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+                    onClick={() => setIsCardMinimized(false)}
+                    className="hero-minimized-pill mobile-minimized-pill"
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setIsCardMinimized(false);
+                      }
+                    }}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      backgroundColor: 'rgba(8, 22, 14, 0.88)',
+                      backdropFilter: 'blur(16px)',
+                      WebkitBackdropFilter: 'blur(16px)',
+                      border: '1px solid rgba(255, 255, 255, 0.22)',
+                      borderRadius: '999px',
+                      padding: '0.68rem 1.25rem',
+                      cursor: 'pointer',
+                      width: '100%',
+                      maxWidth: '460px',
+                      boxShadow: '0 12px 30px rgba(0, 0, 0, 0.4)',
+                    }}
+                    aria-label="Click to expand slide details"
+                    title="Click to expand slide details"
+                  >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', overflow: 'hidden' }}>
+                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#009E52', flexShrink: 0 }} />
+                      <span style={{ color: '#FFFFFF', fontSize: '0.86rem', fontWeight: 600, whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                        {slide.title}
+                      </span>
+                    </div>
+                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', color: '#F3E5C2', fontSize: '0.78rem', fontWeight: 700, flexShrink: 0, paddingLeft: '0.5rem' }}>
+                      <EyeIcon size={14} />
+                      <span>Show Details ↑</span>
                     </span>
-                  </div>
-                  <span style={{ color: '#F3E5C2', fontSize: '0.75rem', fontWeight: 700, flexShrink: 0, paddingLeft: '0.5rem' }}>
-                    Show ↑
-                  </span>
-                </div>
-              ) : (
-                <div
-                  className="hero-glass-box apple-frosted-card"
-                  style={{
-                    maxWidth: '610px',
-                    backgroundColor: 'rgba(10, 18, 14, 0.6)',
-                    backdropFilter: 'blur(26px) saturate(180%)',
-                    WebkitBackdropFilter: 'blur(26px) saturate(180%)',
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="expanded"
+                    initial={{ opacity: 0, y: 16, scale: 0.99 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 16, scale: 0.99 }}
+                    transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+                    className="hero-glass-box apple-frosted-card"
+                    style={{
+                      maxWidth: '610px',
+                      backgroundColor: 'rgba(10, 18, 14, 0.6)',
+                      backdropFilter: 'blur(26px) saturate(180%)',
+                      WebkitBackdropFilter: 'blur(26px) saturate(180%)',
                     padding: '2.35rem',
                     borderRadius: '24px',
                     border: '1px solid rgba(255, 255, 255, 0.2)',
@@ -595,8 +623,9 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
                       <span>Read Mama Pokua&apos;s Story</span>
                     </button>
                   </div>
-                </div>
+                </motion.div>
               )}
+              </AnimatePresence>
             </div>
           </div>
         ))}
@@ -751,11 +780,22 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
             transition: none;
           }
         }
-        @media (min-width: 769px) {
-          .mobile-view-photo-bar,
-          .mobile-minimized-pill {
-            display: none !important;
-          }
+        .hero-view-photo-bar {
+          display: flex;
+          justify-content: flex-end;
+          max-width: 610px;
+          margin-bottom: 0.75rem;
+          width: 100%;
+        }
+        .hero-view-photo-bar button:hover {
+          background-color: #007A43 !important;
+          border-color: rgba(255, 255, 255, 0.45) !important;
+          transform: translateY(-1px);
+        }
+        .hero-minimized-pill:hover {
+          transform: translateY(-2px);
+          background-color: rgba(10, 32, 20, 0.96) !important;
+          border-color: rgba(255, 255, 255, 0.38) !important;
         }
         @media (max-width: 768px) {
           #hero {
@@ -834,11 +874,18 @@ export const Hero: React.FC<HeroProps> = ({ onNavigate, onExploreProjects }) => 
             flex: 1 1 auto;
             justify-content: center;
           }
-          .mobile-view-photo-bar {
+          .mobile-view-photo-bar,
+          .hero-view-photo-bar {
             display: flex !important;
             justify-content: flex-end;
             margin-bottom: 0.5rem;
             width: 100%;
+          }
+          .mobile-minimized-pill,
+          .hero-minimized-pill {
+            margin: 0 auto !important;
+            max-width: 420px !important;
+            padding: 0.68rem 1.2rem !important;
           }
         }
       `}</style>
